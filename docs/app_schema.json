@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "default": {},
+  "$def": {
+    "backends_items": {},
+    "backends_config": {},
+    "rules_items": {},
+    "rules_config": {}
+  },
+  "patternProperties": {
+    ".*": {
+      "type": "object",
+      "optional": true,
+      "additionalProperties": false,
+      "properties": {
+        "config": {
+          "type": "object",
+          "default": {
+            "app": {
+              "root": null
+            },
+            "tree": {},
+            "rules": {}
+          },
+          "additionalProperties": false,
+          "properties": {
+            "app": {
+              "type": "object",
+              "default": {
+                "root": null
+              },
+              "additionalProperties": false,
+              "properties": {
+                "root": {
+                  "type": "string",
+                  "default": null
+                }
+              }
+            },
+            "tree": {
+              "type": "object",
+              "default": {}
+            },
+            "rules": {
+              "type": "object",
+              "default": {}
+            }
+          }
+        },
+        "tree": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "default": "",
+            "$def": {
+              "items": {}
+            },
+            "oneOf": [
+              {
+                "type": "string",
+                "default": "BLAAAAHHH"
+              },
+              {
+                "type": "object",
+                "additionalProperties": true,
+                "default": {},
+                "properties": {
+                  "schema": {
+                    "default": null,
+                    "optional": true,
+                    "oneOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "default": {},
+                        "properties": {
+                          "data": {
+                            "default": null,
+                            "optional": false,
+                            "anyOf": [
+                              {
+                                "type": "null"
+                              },
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "array"
+                              }
+                            ]
+                          },
+                          "var": {
+                            "type": "string",
+                            "default": "loop_item",
+                            "optional": true
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "rule": {
+                    "default": ".*",
+                    "optional": true,
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "strategy": {
+                    "type": "string",
+                    "default": "schema",
+                    "optional": true
+                  },
+                  "trace": {
+                    "type": "boolean",
+                    "default": false
+                  },
+                  "explain": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "rules": {
+          "type": "array",
+          "default": []
+        }
+      }
+    }
+  }
+}
