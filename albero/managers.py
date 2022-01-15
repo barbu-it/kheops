@@ -13,128 +13,9 @@ import collections
 
 
 from albero.utils import schema_validate, str_ellipsis
-import albero.plugin as TreePlugins
+import albero.plugin as AlberoPlugins
 
 log = logging.getLogger(__name__)
-
-
-
-
-# DEPRECATED class BackendEngineLoader():
-# DEPRECATED 
-# DEPRECATED     def get_class(self, item):
-# DEPRECATED         engine_name = item.get('engine')
-# DEPRECATED         assert (isinstance(engine_name, str)), f"Got: {engine_name} for {item}"
-# DEPRECATED 
-# DEPRECATED         # Check engine presence
-# DEPRECATED         if not hasattr(TreePlugins.engine, engine_name):
-# DEPRECATED             raise Exception(f"No plugin {engine_name} found for entry {item}!")
-# DEPRECATED 
-# DEPRECATED         cls = getattr(TreePlugins.engine, engine_name).Plugin
-# DEPRECATED         return cls
-
-
-
-# def BackendPluginInit(backends, ctx):
-# 
-#     for be in backends:
-#         be.run = {}
-#         be.scope = ctx['scope']
-#         be.key = ctx['key']
-# 
-#     return backends
-
-# def BackendPluginHier(backends, ctx):
-# 
-#     new_backends = []
-#     for cand in backends:
-# 
-#         # Init
-#         plugin_config = cand.config.get("hierarchy", None)
-#         hier_data = plugin_config.get("data", None)
-#         if not hier_data:
-#             new_backends.append(cand)
-#             continue
-# 
-#         # Retrieve config data
-#         hier_var = plugin_config.get("var", "item")
-#         hier_sep = plugin_config.get("separator", "/")
-#         if isinstance(hier_data, str):
-#             hier_data = cand.scope.get(hier_data, None)
-# 
-#         # Build a new list
-# 
-#         pprint (plugin_config)
-#         pprint (hier_data)
-# 
-#         if isinstance(hier_data, str):
-#             r = hier_data.split(hier_sep)
-#         assert (isinstance(r, list)), f"Got: {r}"
-# 
-#         ret1 = []
-#         for index, part in enumerate(r):
-# 
-#             try:
-#                 prefix = ret1[index - 1]
-#             except IndexError:
-#                 prefix = f'{hier_sep}'
-#                 prefix = ""
-#             item = f"{prefix}{part}{hier_sep}"
-#             ret1.append(item)
-# 
-#         ret2 = []
-#         for item in ret1:
-#             _cand = copy.deepcopy(cand)
-#             run = {
-#                     "index": index,
-#                     "hier_value": item,
-#                     "hier_var": hier_var,
-#                     }
-#             _cand.run['hier'] = run
-#             _cand.scope[hier_var] = item
-#             ret2.append(_cand)
-#         print ("RESULT")
-#         pprint (ret2)
-# 
-#         new_backends.extend(ret2)
-#     return new_backends
-# 
-# 
-
-#def BackendPluginLoop(backends, ctx):
-#
-#    new_backends = []
-#    for cand in backends:
-#
-#        # Init
-#        loop_config = cand.config.get("loop", None)
-#        loop_data = loop_config.get("data", None)
-#        if not loop_data:
-#            new_backends.append(cand)
-#            continue
-#
-#        # Retrieve config data
-#        loop_var = loop_config.get("var", "item")
-#        if isinstance(loop_data, str):
-#            loop_data = cand.scope.get(loop_data, None)
-#        assert (isinstance(loop_data, list)), f"Got: {loop_data}"
-#
-#        # Build a new list
-#        ret = []
-#        for idx, item in enumerate(loop_data):
-#            _cand = copy.deepcopy(cand)
-#            run = {
-#                    "loop_index": idx,
-#                    "loop_value": item,
-#                    "loop_var": loop_var,
-#                    }
-#            _cand.run['loop'] = run
-#            _cand.scope[loop_var] = item
-#            ret.append(_cand)
-#        
-#        new_backends.extend(ret)
-#
-#    return new_backends
 
 
 class LoadPlugin():
@@ -210,7 +91,7 @@ class BackendsManager():
         self.config_app = app.conf2['config']['app']
         self.config_main = app.conf2['config']['tree']
         self.config_items = list(app.conf2['tree'])
-        # THIS MAKE A BUG !!!! self.plugin_loader = LoadPlugin(TreePlugins)
+        # THIS MAKE A BUG !!!! self.plugin_loader = LoadPlugin(AlberoPlugins)
 
 
         self.plugins = [
@@ -232,7 +113,7 @@ class BackendsManager():
         log.debug(f"Look for candidates for key '{key}' in backend: {self.backends}")
 
         # Prepare plugins
-        plugin_loader = LoadPlugin(TreePlugins)
+        plugin_loader = LoadPlugin(AlberoPlugins)
         _run = {
                 "key": key,
                 "scope": scope,
@@ -265,7 +146,7 @@ class BackendsManager():
     def get_results(self, backends, trace=False):
 
         # Prepare plugins
-        plugin_loader = LoadPlugin(TreePlugins)
+        plugin_loader = LoadPlugin(AlberoPlugins)
 
         new_results = []
         for backend in backends:
@@ -293,41 +174,6 @@ class BackendsManager():
 
 
 class RulesManager():
-
-    default_merge_schema = {
-        "$schema": 'http://json-schema.org/draft-04/schema#',
-        "oneOf": [
-            {
-                "type": "array",
-                "mergeStrategy": "append",
-#                    "mergeStrategy": "arrayMergeById",
-            },
-            {
-                "type": "object",
-                "mergeStrategy": "objectMerge",
-            },
-            {
-                "type": "boolean",
-                "mergeStrategy": "overwrite",
-            },
-            {
-                "type": "string",
-                "mergeStrategy": "overwrite",
-            },
-            {
-                "type": "integer",
-                "mergeStrategy": "overwrite",
-            },
-            {
-                "type": "number",
-                "mergeStrategy": "overwrite",
-            },
-            {
-                "type": "null",
-                "mergeStrategy": "overwrite",
-            },
-        ],
-    }
 
     rule_schema = {
         "$schema": 'http://json-schema.org/draft-04/schema#',
@@ -428,7 +274,7 @@ class RulesManager():
 
         # Load plugin
         log.debug(f"Run strategy: {strategy}")
-        plugin_loader = LoadPlugin(TreePlugins)
+        plugin_loader = LoadPlugin(AlberoPlugins)
         strategy = plugin_loader.load('strategy',
                 strategy,
                 )(parent=self, app=self.app)
