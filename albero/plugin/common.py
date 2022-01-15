@@ -50,6 +50,9 @@ class Candidate():
 class PluginClass():
     _plugin_type = "none"
     _plugin_value = None
+
+    _schema_props_new = "UNSET PLUGIN PROPRIETIES"
+
     _schema_props_plugin = {
             "engine": {
                     "type": "string",

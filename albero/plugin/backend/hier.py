@@ -18,48 +18,49 @@ log = logging.getLogger(__name__)
 class Plugin(PluginBackendClass):
 
     _plugin_name = "hier"
-    _schema_props_files = {
-            "path": {
-                "anyOf": [
+    _schema_props_new = {
+            "hier": {
+                "default": None,
+                "optional": True,
+                "oneOf": [
                     {
-                    "type": "string",
+                        "type": "null",
                     },
                     {
-                    "type": "array",
-                    "items": {
                         "type": "string",
-                        }
+                    },
+                    {
+                        "additionalProperties": True,
+                        "properties": {
+                            "data": {
+                                "default": None,
+                                "anyOf": [
+                                    { "type": "null" },
+                                    { "type": "string" },
+                                    { "type": "array" },
+                                    ]
+                                },
+                            "var": {
+                                "type": "string",
+                                "default": "hier_item",
+                                "optional": True,
+                                },
+                            "separator": {
+                                "type": "string",
+                                "default": "/",
+                                "optional": True,
+                                },
+                            "reversed": {
+                                "type": "boolean",
+                                "default": False,
+                                "optional": True,
+                            },
+                        },
                     },
                 ]
             }
         }
 
-    sssss_schema_props_default = {        
-            "$schema": 'http://json-schema.org/draft-04/schema#',        
-            "default": "",
-            "oneOf": [
-                {
-                    "type": "string",        
-                    "default": "BLAAAAHHH"
-                },
-                {
-                    "type": "object",        
-                    "additionalProperties": True,        
-                    "default": {},
-                    "properties": {    
-                        "engine": {    
-                            "type": "string",    
-                            "default": "jerakia",    
-                            "optional": False,    
-                        },    
-                        "value": {    
-                            "default": 'UNSET',
-                            "optional": False,    
-                        },    
-                    }, 
-                },
-            ]
-        }    
 
 
     def process(self, backends: list, ctx: dict) -> (list, dict):

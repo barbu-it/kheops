@@ -44,23 +44,48 @@ class LoadPlugin():
         # Return plugin Classe
         return plugin_cls.Plugin
 
+class Manager():
+
+    plugins_kind = []
+
+    _schema_props_default = {}
+    _schema_props_default = {}
+
+    @classmethod
+    def get_schema(cls, plugins_db):
+        pprint (cls.plugins_kind)
+
+        ret = {}
+        ret3 = []
+
+        for kind in cls.plugins_kind:
+            ret[kind] = {}
+            plugin_kind = getattr(plugins_db, kind)
+
+            for plugin_name in [i for i in dir(plugin_kind) if not i.startswith('_')]:
+                plugin = getattr(plugin_kind, plugin_name)
+                print (plugin.Plugin)
+                #pprint (dir(plugin))
+                plugin_cls = getattr(plugin, 'Plugin', None)
+                if plugin_cls:
+                    schema_props = getattr(plugin_cls, '_schema_props_new', 'MISSING ITEM')
+                    if schema_props:
+                        ret[kind][plugin_name] = schema_props
+                        print (plugin_name)
+                        ret3.append( schema_props )
+
+        ret3.append( cls._schema_props_new )
+
+        ret1 = cls._schema_props_default
+        ret1["$def"]["items"] = ret3
+        return ret1
 
 
-class BackendsManager():
+class BackendsManager(Manager):
 
-    _schema_props_default = {        
-            "$schema": 'http://json-schema.org/draft-04/schema#',        
-            "default": "",
-            "oneOf": [
-                {
-                    "type": "string",        
-                    "default": "BLAAAAHHH"
-                },
-                {
-                    "type": "object",        
-                    "additionalProperties": True,        
-                    "default": {},
-                    "properties": {    
+    plugins_kind = ['engine', 'backend']
+
+    _schema_props_new = {
                         "engine": {    
                             "type": "string",    
                             "default": "jerakia",    
@@ -70,7 +95,25 @@ class BackendsManager():
                             "default": 'UNSET',
                             "optional": False,    
                         },    
-                    }, 
+                        #### INSERT HERE SUBSCHEMA !!!!!
+                    }
+
+    _schema_props_default = {        
+            "$schema": 'http://json-schema.org/draft-04/schema#',        
+            "default": "",
+            "$def": {
+                "items": {},
+                },
+            "oneOf": [
+                {
+                    "type": "string",        
+                    "default": "BLAAAAHHH"
+                },
+                {
+                    "type": "object",        
+                    "additionalProperties": True,        
+                    "default": {},
+                    "properties":  { "$ref": "#/$defs/name" },   
                 },
             ]
         }    
@@ -173,13 +216,11 @@ class BackendsManager():
 
 
 
-class RulesManager():
+class RulesManager(Manager):
 
-    rule_schema = {
-        "$schema": 'http://json-schema.org/draft-04/schema#',
-        "type": "object",
-        "additionalProperties": False,
-        "properties": {
+    plugins_kind = ['strategy']
+
+    _schema_props_new = {
             "rule": {
                 "default": ".*",
                 "optional": True,
@@ -192,6 +233,14 @@ class RulesManager():
                         },
                     ],
                 },
+            "strategy": {
+                "type": "string",
+                "default": "schema",
+                # "default": "last",
+                "optional": True,
+                # "enum": ["first", "last", "merge"],
+                },
+
             "trace": {
                 "type": "boolean",
                 "default": False,
@@ -200,26 +249,49 @@ class RulesManager():
                 "type": "boolean",
                 "default": False,
                 },
-            "strategy": {
-                "type": "string",
-                "default": "schema",
-                # "default": "last",
-                "optional": True,
-                # "enum": ["first", "last", "merge"],
+            }
+
+    _schema_props_default = {        
+            "$schema": 'http://json-schema.org/draft-04/schema#',        
+            "default": "",
+            "$def": {
+                "items": {},
                 },
+            "oneOf": [
+                {
+                    "type": "string",        
+                    "default": "BLAAAAHHH"
+                },
+                {
+                    "type": "object",        
+                    "additionalProperties": True,        
+                    "default": {},
+                    "properties":  { "$ref": "#/$defs/name" },   
+                },
+            ]
+        }    
+
+    OLD_rule_schema = {
+        "$schema": 'http://json-schema.org/draft-04/schema#',
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
             "schema": {
                 "type": "object",
                 "default": None,
                 "optional": True,
                 "oneOf": [
                     {
-                    "type": "string",
+                        "type": "null",
                         },
                     {
-                    "type": "null",
+                        "type": "string",        
                         },
                     {
-                    "type": "object",
+                        "type": "object",        
+                        "additionalProperties": True,        
+                        "default": {},
+                        "properties":  { "$ref": "#/$defs/name" },   
                         },
                     ],
                 },
@@ -262,14 +334,14 @@ class RulesManager():
         
         matched_rule['trace'] = trace
         matched_rule['explain'] = explain
-        schema_validate(matched_rule, self.rule_schema)
+        schema_validate(matched_rule, self._schema_props_default)
 
 
 
         # Prepare plugins
         assert(isinstance(matched_candidates, list)), f"Got: {matched_candidates}"
         assert(isinstance(matched_rule, dict)), f"Got: {matched_rule}"
-        strategy = matched_rule.get('strategy', 'first')
+        strategy = matched_rule.get('strategy', 'schema')
         log.debug(f"Key '{key}' matched rule '{rule}' with '{strategy}' strategy")
 
         # Load plugin

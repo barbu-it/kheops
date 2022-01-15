@@ -31,26 +31,23 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
     ### OLD
     _plugin_engine = "jerakia"
-    _schema_props_files = {
+    # _schema_props_files = {
+    _schema_props_new = {
             "path": {
                 "anyOf": [
                     {
-                    "type": "string",
+                        "type": "string",
                     },
                     {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        }
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            }
                     },
                 ]
             }
         }
 
-#    def __repr__(self):
-#        engine = self.config.get('engine')
-#        value = self.
-#        return f"Plugin instance {engine}: {value}"
 
 
     def _init(self):

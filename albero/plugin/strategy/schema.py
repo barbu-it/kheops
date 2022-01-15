@@ -14,6 +14,44 @@ from prettytable import PrettyTable
 class Plugin(PluginStrategyClass):
 
     _plugin_name = "schema"
+    _schema_props_new = {
+        "schema": {
+            "default": None,
+            "optional": True,
+            "oneOf": [
+                {
+                    "type": "null",        
+                },
+                {
+                    "type": "string",        
+                },
+                {
+                    "type": "array",        
+                },
+                {
+                    "type": "object",        
+                    "additionalProperties": True,        
+                    "default": {},
+                    "properties": {    
+                        "data": {    
+                            "default": None,
+                            "optional": False,    
+                            "anyOf":[
+                                    {"type": "null"},
+                                    {"type": "string"},
+                                    {"type": "array"},
+                                ]
+                        },    
+                        "var": {    
+                            "type": "string",    
+                            "default": "loop_item",    
+                            "optional": True,    
+                        },    
+                    }, 
+                },
+            ]
+        }
+    }    
 
     default_merge_schema = {
         "$schema": 'http://json-schema.org/draft-04/schema#',

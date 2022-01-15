@@ -26,6 +26,12 @@ class App():
         "type": "object",
         "additionalProperties": False,
         "default": {},
+        "$def" :{
+            'backends_items': None,
+            'backends_config': None,
+            'rules_items': None,
+            'rules_config': None,
+            },
         "patternProperties": {
             ".*": {
                 "type": "object",
@@ -64,10 +70,12 @@ class App():
                     "tree": {
                             "type": "array",
                             "default": [],
+                            "arrayItem":  { "$ref": "#/$defs/backends_items" },
                         },
                     "rules": {
                             "type": "array",
                             "default": [],
+                            "arrayItem":  { "$ref": "#/$defs/rules_items" },
                         },
                     },
                 },
@@ -102,5 +110,25 @@ class App():
         print ("=== Query Result ===")
         print(anyconfig.dumps(r, ac_parser='yaml'))
         print ("=== Query Result ===")
+
+
+    def dump_schema(self):
+
+        import json
+        import albero.plugin as AlberoPlugins
+        from albero.managers import BackendsManager, RulesManager
+
+        r1 = BackendsManager.get_schema(AlberoPlugins)
+        r2 = RulesManager.get_schema(AlberoPlugins)
+
+        d = self.schema
+        d['$def']['backends_items'] = r1
+        d['$def']['rules_items'] = r2
+        d['$def']['backends_config'] = None
+        d['$def']['rules_config'] = None
+
+        #pprint(d)
+        print(json.dumps(d, indent=2))
+
 
 

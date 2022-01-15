@@ -14,48 +14,41 @@ import textwrap
 class Plugin(PluginBackendClass):
 
     _plugin_name = "loop"
-    _schema_props_files = {
-            "path": {
-                "anyOf": [
-                    {
-                    "type": "string",
-                    },
-                    {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        }
-                    },
-                ]
-            }
-        }
-
-    sssss_schema_props_default = {        
-            "$schema": 'http://json-schema.org/draft-04/schema#',        
-            "default": "",
+    _schema_props_new = {
+        "loop": {
+            "default": None,
+            "optional": True,
             "oneOf": [
                 {
+                    "type": "null",        
+                },
+                {
                     "type": "string",        
-                    "default": "BLAAAAHHH"
                 },
                 {
                     "type": "object",        
                     "additionalProperties": True,        
                     "default": {},
                     "properties": {    
-                        "engine": {    
-                            "type": "string",    
-                            "default": "jerakia",    
+                        "data": {    
+                            "default": None,
                             "optional": False,    
+                            "anyOf":[
+                                    {"type": "null"},
+                                    {"type": "string"},
+                                    {"type": "array"},
+                                ]
                         },    
-                        "value": {    
-                            "default": 'UNSET',
-                            "optional": False,    
+                        "var": {    
+                            "type": "string",    
+                            "default": "loop_item",    
+                            "optional": True,    
                         },    
                     }, 
                 },
             ]
-        }    
+        }
+    }    
 
 
     def process(self, backends: list, ctx: dict) -> (list, dict):

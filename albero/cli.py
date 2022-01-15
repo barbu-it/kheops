@@ -107,6 +107,8 @@ class CmdApp:
         subparsers = parser.add_subparsers(
             title="subcommands", description="valid subcommands", dest="command"
         )
+        # Manage command: schema
+        add_p = subparsers.add_parser("schema")
 
         # Manage command: demo
         add_p = subparsers.add_parser("lookup")
@@ -174,6 +176,14 @@ class CmdApp:
                     trace=self.args.trace,
                     explain=self.args.explain
                     )
+
+    def cli_schema(self):
+        """Display configuration schema"""
+
+        config = '/home/jez/prj/bell/training/tiger-ansible/tree.yml'
+
+        app = Albero.App(config=config) #, namespace=self.args.namespace)
+        app.dump_schema()
 
 
 if __name__ == "__main__":
