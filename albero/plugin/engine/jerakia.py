@@ -1,7 +1,7 @@
 
 from pathlib import Path
-from ansible_tree.utils import render_template
-from ansible_tree.plugin.common import PluginEngineClass, PluginFileGlob, Candidate
+from albero.utils import render_template
+from albero.plugin.common import PluginEngineClass, PluginFileGlob, Candidate
 from pprint import pprint
 
 import logging

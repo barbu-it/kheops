@@ -9,8 +9,8 @@ import yaml
 import anyconfig
 from pprint import pprint
 
-from ansible_tree.managers import BackendsManager, RulesManager
-from ansible_tree.utils import schema_validate
+from albero.managers import BackendsManager, RulesManager
+from albero.utils import schema_validate
 import anyconfig
 # from box import Box
 from pathlib import Path

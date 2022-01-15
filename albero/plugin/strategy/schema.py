@@ -1,8 +1,8 @@
 
 
 import logging
-from ansible_tree.plugin.common import PluginStrategyClass
-from ansible_tree.utils import schema_validate, str_ellipsis
+from albero.plugin.common import PluginStrategyClass
+from albero.utils import schema_validate, str_ellipsis
 
 log = logging.getLogger(__name__)
 

@@ -9,8 +9,8 @@ import yaml
 import anyconfig
 from pprint import pprint
 
-from ansible_tree.query import Query
-from ansible_tree.utils import schema_validate
+from albero.query import Query
+from albero.utils import schema_validate
 import anyconfig
 # from box import Box
 from pathlib import Path

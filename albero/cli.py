@@ -16,7 +16,7 @@ import sys
 # Devel tmp
 sys.path.append("/home/jez/prj/bell/training/tiger-ansible/ext/ansible-tree")
 
-import ansible_tree.app as Albero
+import albero.app as Albero
 
 class CmdApp:
     """Main CmdApp"""
@@ -25,7 +25,7 @@ class CmdApp:
         """Start new App"""
 
         self.get_args()
-        self.get_logger(verbose=self.args.verbose, logger_name="ansible_tree")
+        self.get_logger(verbose=self.args.verbose, logger_name="albero")
         self.cli()
 
     def get_logger(self, logger_name=None, create_file=False, verbose=0):

@@ -1,6 +1,6 @@
 
 import logging
-from ansible_tree.plugin.common import PluginStrategyClass
+from albero.plugin.common import PluginStrategyClass
 
 log = logging.getLogger(__name__)
 

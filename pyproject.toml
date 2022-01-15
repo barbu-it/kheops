@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ansible-tree"
+name = "albero"
 version = "0.1.0"
 description = "Data trees for Ansible"
 authors = ["Robin Cordier"]
@@ -20,4 +20,4 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-albero = "ansible_tree.cli:CmdApp"
+albero = "albero.cli:CmdApp"

@@ -12,8 +12,8 @@ from pprint import pprint
 import collections
 
 
-from ansible_tree.utils import schema_validate, str_ellipsis
-import ansible_tree.plugin as TreePlugins
+from albero.utils import schema_validate, str_ellipsis
+import albero.plugin as TreePlugins
 
 log = logging.getLogger(__name__)
 

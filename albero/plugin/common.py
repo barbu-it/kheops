@@ -11,7 +11,7 @@ import json
 import logging
 log = logging.getLogger(__name__)
 
-from ansible_tree.utils import schema_validate
+from albero.utils import schema_validate
 import copy
 
 # Candidate Classes

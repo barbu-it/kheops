@@ -1,23 +1,19 @@
 
 
 import copy
-# from pathlib import Path
-# from ansible_tree.utils import render_template
-# from ansible_tree.plugin.common import PluginBackendClass
-# from pprint import pprint
-# 
-# import logging
-# import anyconfig
-# import textwrap
-
-from ansible_tree.plugin.common import PluginBackendClass
+from pathlib import Path
+from albero.utils import render_template
+from albero.plugin.common import PluginBackendClass
 from pprint import pprint
+
 import logging
-log = logging.getLogger(__name__)
+import anyconfig
+import textwrap
+
 
 class Plugin(PluginBackendClass):
 
-    _plugin_name = "hier"
+    _plugin_name = "loop"
     _schema_props_files = {
             "path": {
                 "anyOf": [
@@ -64,52 +60,41 @@ class Plugin(PluginBackendClass):
 
     def process(self, backends: list, ctx: dict) -> (list, dict):
 
+
         new_backends = []
         for cand in backends:
+            cand = dict(cand)
 
             # Init
-            plugin_config = cand.get("hier", {})
-            hier_data = plugin_config.get("data", None)
-            if not hier_data:
+            loop_config = cand.get("loop", {})
+            loop_data = loop_config.get("data", None)
+            if not loop_data:
                 new_backends.append(cand)
                 continue
 
             # Retrieve config data
-            hier_var = plugin_config.get("var", "item")
-            hier_sep = plugin_config.get("separator", "/")
-            if isinstance(hier_data, str):
-                hier_data = cand['_run']['scope'].get(hier_data, None)
+            loop_var = loop_config.get("var", "item")
+            if isinstance(loop_data, str):
+                loop_data = cand['_run']['scope'].get(loop_data, None)
+            assert (isinstance(loop_data, list)), f"Got: {loop_data}"
 
             # Build a new list
-
-            if isinstance(hier_data, str):
-                r = hier_data.split(hier_sep)
-            assert (isinstance(r, list)), f"Got: {r}"
-
-            ret1 = []
-            for index, part in enumerate(r):
-
-                try:
-                    prefix = ret1[index - 1]
-                except IndexError:
-                    prefix = f'{hier_sep}'
-                    prefix = ""
-                item = f"{prefix}{part}{hier_sep}"
-                ret1.append(item)
-
-            ret2 = []
-            for item in ret1:
+            ret = []
+            for idx, item in enumerate(loop_data):
                 _cand = copy.deepcopy(cand)
                 run = {
-                        "index": index,
-                        "hier_value": item,
-                        "hier_var": hier_var,
+                        "loop_index": idx,
+                        "loop_value": item,
+                        "loop_var": loop_var,
                         }
-                _cand['_run']['hier'] = run
-                _cand['_run']['scope'][hier_var] = item
-                ret2.append(_cand)
+                _cand['_run']['loop'] = run
+                _cand['_run']['scope'][loop_var] = item
+                #_cand.scope[loop_var] = item
+                ret.append(_cand)
+            
+            new_backends.extend(ret)
 
-            new_backends.extend(ret2)
         return new_backends, ctx
+
 
 

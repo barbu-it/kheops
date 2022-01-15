@@ -1,19 +1,15 @@
 
 
-import copy
-from pathlib import Path
-from ansible_tree.utils import render_template
-from ansible_tree.plugin.common import PluginBackendClass
+from albero.plugin.common import PluginBackendClass
 from pprint import pprint
-
 import logging
-import anyconfig
-import textwrap
+log = logging.getLogger(__name__)
 
+import copy
 
 class Plugin(PluginBackendClass):
 
-    _plugin_name = "loop"
+    _plugin_name = "init"
     _schema_props_files = {
             "path": {
                 "anyOf": [
@@ -57,44 +53,27 @@ class Plugin(PluginBackendClass):
             ]
         }    
 
+    default_engine = 'jerakia'
+
 
     def process(self, backends: list, ctx: dict) -> (list, dict):
 
-
         new_backends = []
-        for cand in backends:
-            cand = dict(cand)
-
-            # Init
-            loop_config = cand.get("loop", {})
-            loop_data = loop_config.get("data", None)
-            if not loop_data:
-                new_backends.append(cand)
-                continue
-
-            # Retrieve config data
-            loop_var = loop_config.get("var", "item")
-            if isinstance(loop_data, str):
-                loop_data = cand['_run']['scope'].get(loop_data, None)
-            assert (isinstance(loop_data, list)), f"Got: {loop_data}"
-
-            # Build a new list
-            ret = []
-            for idx, item in enumerate(loop_data):
-                _cand = copy.deepcopy(cand)
-                run = {
-                        "loop_index": idx,
-                        "loop_value": item,
-                        "loop_var": loop_var,
+        for index, item in enumerate(backends):
+            default = {
+                        "value": item,
                         }
-                _cand['_run']['loop'] = run
-                _cand['_run']['scope'][loop_var] = item
-                #_cand.scope[loop_var] = item
-                ret.append(_cand)
-            
-            new_backends.extend(ret)
+
+            if not isinstance(item, dict):
+                item = default
+
+            item['engine'] = item.get('engine', self.default_engine )
+            item['_run'] =  copy.deepcopy(ctx)
+            item['_run']['backend'] = {
+                    "index": index,
+                    }
+            new_backends.append(item)
 
         return new_backends, ctx
-
 
 
