@@ -16,10 +16,10 @@ import copy
 
 # Candidate Classes
 # =============================
-class Candidate():    
-    engine = None    
-    found = False    
-    data = None    
+class Candidate():
+    engine = None
+    found = False
+    data = None
     run = None
     scope = None
     key = None
@@ -27,9 +27,9 @@ class Candidate():
     def __init__(self, run):
         self.run = copy.deepcopy(run)
 
-    def __repr__(self):    
-        return f"{self.__dict__}"    
-                
+    def __repr__(self):
+        return f"{self.__dict__}"
+
     def _report_data(self, data=None):
         default_data = {
                 #"rule": self.config,
@@ -149,7 +149,7 @@ class PluginEngineClass(PluginClass):
             schema = getattr(self, key)
             props.update(schema)
         self.schema = {
-            "$schema": 'http://json-schema.org/draft-04/schema#',
+            "$schema": 'http://json-schema.org/draft-07/schema#',
             "type": "object",
             "additionalProperties": True,
             "properties": props,
@@ -205,7 +205,7 @@ class PluginFileGlob():
         }
 
     def _glob(self, item):
-        
+
         # DIRECT CALL TO APP< TOFIX
         app_config = self.app.conf2
         root = app_config.get("default", {}).get("config", {}).get("root", f"{Path.cwd()}/tree")

@@ -153,7 +153,7 @@ class CmdApp:
         config = '/home/jez/prj/bell/training/tiger-ansible/tree.yml'
 
 #        self.log.debug(f"Command line vars: {vars(self.args)}")
-        keys = self.args.key or [None] 
+        keys = self.args.key or [None]
 
         # Parse payload from enf file:
         new_params = {}

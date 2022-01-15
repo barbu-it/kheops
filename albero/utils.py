@@ -15,46 +15,46 @@ log = logging.getLogger(__name__)
 
 #   # File parsers
 #   # =====================
-#   
-#   class FileParserClass():    
-#       
-#       def __init__(self, path):    
-#           self.path = path    
-#   
+#
+#   class FileParserClass():
+#
+#       def __init__(self, path):
+#           self.path = path
+#
 #       def from_file(self, file):
 #           raise Exception ("Not implemented")
-#   
+#
 #       def from_string(self, data):
 #           raise Exception ("Not implemented")
-#       
+#
 #       def from_dict(self, data):
 #           raise Exception ("Not implemented")
-#   
-#   class FilesYAMLParser(FileParserClass):    
-#       def get_data(self):    
-#           with open(self.path, "r") as stream:    
-#               try:    
-#                   return yaml.safe_load(stream)    
-#               except yaml.YAMLError as exc:    
-#                   raise Exception(exc)    
-#                   print(exc)    
-#       
-#   
-#   class FilesJSONParser(FileParserClass):    
+#
+#   class FilesYAMLParser(FileParserClass):
+#       def get_data(self):
+#           with open(self.path, "r") as stream:
+#               try:
+#                   return yaml.safe_load(stream)
+#               except yaml.YAMLError as exc:
+#                   raise Exception(exc)
+#                   print(exc)
+#
+#
+#   class FilesJSONParser(FileParserClass):
 #       pass
-#   class FilesRawParser(FileParserClass):    
+#   class FilesRawParser(FileParserClass):
 #       pass
-#   class FilesTOMLParser(FileParserClass):    
+#   class FilesTOMLParser(FileParserClass):
 #       pass
-#   class FilesCSVParser(FileParserClass):    
+#   class FilesCSVParser(FileParserClass):
 #       pass
-#   class FilesINIParser(FileParserClass):    
+#   class FilesINIParser(FileParserClass):
 #       pass
-#   
+#
 #   format_db = {
 #       ".raw": FilesRawParser,
 #       ".yml": FilesYAMLParser,
-#       ".yaml": FilesYAMLParser,  
+#       ".yaml": FilesYAMLParser,
 #       ".json": FilesJSONParser,
 #           }
 

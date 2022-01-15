@@ -22,15 +22,15 @@ log = logging.getLogger(__name__)
 class App():
 
     schema = {
-        "$schema": 'http://json-schema.org/draft-04/schema#',
+        "$schema": 'http://json-schema.org/draft-07/schema#',
         "type": "object",
         "additionalProperties": False,
         "default": {},
         "$def" :{
-            'backends_items': None,
-            'backends_config': None,
-            'rules_items': None,
-            'rules_config': None,
+            'backends_items': {},
+            'backends_config': {},
+            'rules_items': {},
+            'rules_config': {},
             },
         "patternProperties": {
             ".*": {
@@ -65,17 +65,20 @@ class App():
                                         "default": {},
                                     },
                                 },
-                                
+
                         },
                     "tree": {
                             "type": "array",
                             "default": [],
-                            "arrayItem":  { "$ref": "#/$defs/backends_items" },
+                            "items": {
+                                "type": "object",
+                                "properties": { "$ref": "#/$defs/backends_items" },
+                                },
                         },
                     "rules": {
                             "type": "array",
                             "default": [],
-                            "arrayItem":  { "$ref": "#/$defs/rules_items" },
+                            # "arrayItem":  { "$ref": "#/$defs/rules_items" },
                         },
                     },
                 },
@@ -122,12 +125,9 @@ class App():
         r2 = RulesManager.get_schema(AlberoPlugins)
 
         d = self.schema
-        d['$def']['backends_items'] = r1
-        d['$def']['rules_items'] = r2
-        d['$def']['backends_config'] = None
-        d['$def']['rules_config'] = None
+        d['patternProperties']['.*']['properties'] ['tree']['items']['properties'] = r1
+        d['patternProperties']['.*']['properties'] ['tree']['items'] = r2
 
-        #pprint(d)
         print(json.dumps(d, indent=2))
 
 

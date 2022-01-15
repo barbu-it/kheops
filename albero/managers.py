@@ -1,4 +1,6 @@
 
+import dpath.util
+
 import copy
 import json
 import textwrap
@@ -47,37 +49,32 @@ class LoadPlugin():
 class Manager():
 
     plugins_kind = []
-
-    _schema_props_default = {}
-    _schema_props_default = {}
+    _schema_props_default = None
 
     @classmethod
     def get_schema(cls, plugins_db):
-        pprint (cls.plugins_kind)
 
-        ret = {}
-        ret3 = []
-
+        # Properties
+        ret3 = {}
         for kind in cls.plugins_kind:
-            ret[kind] = {}
+            # ret[kind] = {}
             plugin_kind = getattr(plugins_db, kind)
 
             for plugin_name in [i for i in dir(plugin_kind) if not i.startswith('_')]:
                 plugin = getattr(plugin_kind, plugin_name)
-                print (plugin.Plugin)
-                #pprint (dir(plugin))
                 plugin_cls = getattr(plugin, 'Plugin', None)
                 if plugin_cls:
                     schema_props = getattr(plugin_cls, '_schema_props_new', 'MISSING ITEM')
                     if schema_props:
-                        ret[kind][plugin_name] = schema_props
-                        print (plugin_name)
-                        ret3.append( schema_props )
+                        # ret[kind][plugin_name] = schema_props
+                        ret3.update( schema_props )
+        ret3.update( cls._schema_props_new )
 
-        ret3.append( cls._schema_props_new )
-
+        # Injection
         ret1 = cls._schema_props_default
-        ret1["$def"]["items"] = ret3
+        position = cls._props_position
+        dpath.util.set(ret1, position, ret3)
+
         return ret1
 
 
@@ -86,37 +83,42 @@ class BackendsManager(Manager):
     plugins_kind = ['engine', 'backend']
 
     _schema_props_new = {
-                        "engine": {    
-                            "type": "string",    
-                            "default": "jerakia",    
-                            "optional": False,    
-                        },    
-                        "value": {    
+                        "engine": {
+                            "type": "string",
+                            "default": "jerakia",
+                            "optional": False,
+                        },
+                        "value": {
                             "default": 'UNSET',
-                            "optional": False,    
-                        },    
-                        #### INSERT HERE SUBSCHEMA !!!!!
+                            "optional": False,
+                        },
                     }
 
-    _schema_props_default = {        
-            "$schema": 'http://json-schema.org/draft-04/schema#',        
+    _props_position = 'oneOf/0/properties'
+    _schema_props_default = {
+            "$schema": 'http://json-schema.org/draft-07/schema#',
             "default": "",
-            "$def": {
-                "items": {},
-                },
+            # This does not work :(
+            #"$def": {
+            #    "props": {},
+            #    },
             "oneOf": [
                 {
-                    "type": "string",        
-                    "default": "BLAAAAHHH"
+                    "type": "object",
+                    "additionalProperties": True,
+                    "default": {},
+                    "title": "object",
+                    "properties": {},
+                    "description": "Object to configure a bacjend item",
                 },
                 {
-                    "type": "object",        
-                    "additionalProperties": True,        
-                    "default": {},
-                    "properties":  { "$ref": "#/$defs/name" },   
+                    "type": "string",
+                    "default": "BLAAAAHHH",
+                    "title": "string",
+                    "description": "Enter a simple string configuration value for default engine",
                 },
             ]
-        }    
+        }
 
     def _validate_item(self, item):
         if isinstance(item, str):
@@ -251,28 +253,29 @@ class RulesManager(Manager):
                 },
             }
 
-    _schema_props_default = {        
-            "$schema": 'http://json-schema.org/draft-04/schema#',        
+    _props_position = 'oneOf/1/properties'
+    _schema_props_default = {
+            "$schema": 'http://json-schema.org/draft-07/schema#',
             "default": "",
             "$def": {
                 "items": {},
                 },
             "oneOf": [
                 {
-                    "type": "string",        
+                    "type": "string",
                     "default": "BLAAAAHHH"
                 },
                 {
-                    "type": "object",        
-                    "additionalProperties": True,        
+                    "type": "object",
+                    "additionalProperties": True,
                     "default": {},
-                    "properties":  { "$ref": "#/$defs/name" },   
+                    "properties":  { "$ref": "#/$defs/name" },
                 },
             ]
-        }    
+        }
 
     OLD_rule_schema = {
-        "$schema": 'http://json-schema.org/draft-04/schema#',
+        "$schema": 'http://json-schema.org/draft-07/schema#',
         "type": "object",
         "additionalProperties": False,
         "properties": {
@@ -285,13 +288,13 @@ class RulesManager(Manager):
                         "type": "null",
                         },
                     {
-                        "type": "string",        
+                        "type": "string",
                         },
                     {
-                        "type": "object",        
-                        "additionalProperties": True,        
+                        "type": "object",
+                        "additionalProperties": True,
                         "default": {},
-                        "properties":  { "$ref": "#/$defs/name" },   
+                        "properties":  { "$ref": "#/$defs/name" },
                         },
                     ],
                 },
@@ -331,7 +334,7 @@ class RulesManager(Manager):
             else:
                 matched_rule = rule[0]
                 log.debug(f"Matcher rule for {key}: {matched_rule}")
-        
+
         matched_rule['trace'] = trace
         matched_rule['explain'] = explain
         schema_validate(matched_rule, self._schema_props_default)

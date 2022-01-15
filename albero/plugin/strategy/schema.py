@@ -20,41 +20,41 @@ class Plugin(PluginStrategyClass):
             "optional": True,
             "oneOf": [
                 {
-                    "type": "null",        
+                    "type": "null",
                 },
                 {
-                    "type": "string",        
+                    "type": "string",
                 },
                 {
-                    "type": "array",        
+                    "type": "array",
                 },
                 {
-                    "type": "object",        
-                    "additionalProperties": True,        
+                    "type": "object",
+                    "additionalProperties": True,
                     "default": {},
-                    "properties": {    
-                        "data": {    
+                    "properties": {
+                        "data": {
                             "default": None,
-                            "optional": False,    
+                            "optional": False,
                             "anyOf":[
                                     {"type": "null"},
                                     {"type": "string"},
                                     {"type": "array"},
                                 ]
-                        },    
-                        "var": {    
-                            "type": "string",    
-                            "default": "loop_item",    
-                            "optional": True,    
-                        },    
-                    }, 
+                        },
+                        "var": {
+                            "type": "string",
+                            "default": "loop_item",
+                            "optional": True,
+                        },
+                    },
                 },
             ]
         }
-    }    
+    }
 
     default_merge_schema = {
-        "$schema": 'http://json-schema.org/draft-04/schema#',
+        "$schema": 'http://json-schema.org/draft-07/schema#',
         "oneOf": [
             {
                 "type": "array",
