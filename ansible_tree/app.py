@@ -9,7 +9,7 @@ import yaml
 import anyconfig
 from pprint import pprint
 
-from ansible_tree.files import BackendsManager, RulesManager
+from ansible_tree.query import Query
 from ansible_tree.utils import schema_validate
 import anyconfig
 # from box import Box
@@ -20,93 +20,86 @@ log = logging.getLogger(__name__)
 
 
 
-class Query():
-
-    matcher_merge_schema = {
-        "$schema": 'http://json-schema.org/draft-04/schema#',
-        "oneOf": [
-            {
-                "type": "array",
-                "mergeStrategy": "append",
-#                    "mergeStrategy": "arrayMergeById",
-            },
-            {
-                "type": "object",
-                "mergeStrategy": "objectMerge",
-            },
-            {
-                "type": "string",
-                "mergeStrategy": "overwrite",
-            },
-            {
-                "type": "number",
-                "mergeStrategy": "overwrite",
-            },
-            {
-                "type": "null",
-                "mergeStrategy": "overwrite",
-            },
-        ],
-    }
-
-    def __init__(self, app):
-
-        self.app = app
-
-        self.key = None
-        self.scope = None
-
-        self.paths = None
-        self.data = None
-        self.result = None
-
-
-        self.matcher_schema = {
-            "$schema": 'http://json-schema.org/draft-04/schema#',
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {
-                "rule": {
-                    "type": "string",
-                    "default": ".*",
-                    "optional": True,
-                    },
-                "strategy": {
-                    "type": "string",
-                    "default": "merge",
-                    "optional": True,
-                    "enum": ["first", "last", "merge"],
-                    },
-                "schema": {
-                    "type": "object",
-                    "default": self.matcher_merge_schema,
-                    #"default": {},
-                    "optional": True,
-                    },
-                }
-            }
-
-
-
-    def exec(self, key=None, scope=None, policy=None, trace=False, explain=False):
-
-        bm = BackendsManager(app=self.app)
-        mm = RulesManager(app=self.app)
-
-        log.debug(f"New query created")
-        candidates = bm.query(key, scope, trace=trace)
-        result = mm.get_result(candidates, key=key, trace=trace, explain=explain)
-        return result
-
-    def dump(self):
-
-        ret = {}
-        for i in dir(self):
-            if not i.startswith('_'):
-                ret[i] = getattr(self, i)
-
-        pprint (ret)
-
+#class Query():
+#
+#    #matcher_merge_schema = {
+#    #    "$schema": 'http://json-schema.org/draft-04/schema#',
+#    #    "oneOf": [
+#    #        {
+#    #            "type": "array",
+#    #            "mergeStrategy": "append",
+##   #                 "mergeStrategy": "arrayMergeById",
+#    #        },
+#    #        {
+#    #            "type": "object",
+#    #            "mergeStrategy": "objectMerge",
+#    #        },
+#    #        {
+#    #            "type": "string",
+#    #            "mergeStrategy": "overwrite",
+#    #        },
+#    #        {
+#    #            "type": "number",
+#    #            "mergeStrategy": "overwrite",
+#    #        },
+#    #        {
+#    #            "type": "null",
+#    #            "mergeStrategy": "overwrite",
+#    #        },
+#    #    ],
+#    #}
+#
+#    def __init__(self, app):
+#
+#        self.app = app
+#
+#
+#        #self.matcher_schema = {
+#        #    "$schema": 'http://json-schema.org/draft-04/schema#',
+#        #    "type": "object",
+#        #    "additionalProperties": False,
+#        #    "properties": {
+#        #        "rule": {
+#        #            "type": "string",
+#        #            "default": ".*",
+#        #            "optional": True,
+#        #            },
+#        #        "strategy": {
+#        #            "type": "string",
+#        #            "default": "merge",
+#        #            "optional": True,
+#        #            "enum": ["first", "last", "merge"],
+#        #            },
+#        #        "schema": {
+#        #            "type": "object",
+#        #            "default": self.matcher_merge_schema,
+#        #            #"default": {},
+#        #            "optional": True,
+#        #            },
+#        #        }
+#        #    }
+#
+#
+#
+#    def exec(self, key=None, scope=None, policy=None, trace=False, explain=False):
+#
+#        bm = BackendsManager(app=self.app)
+#        mm = RulesManager(app=self.app)
+#
+#        log.debug(f"New query created")
+#        candidates = bm.query(key, scope, trace=trace)
+#        result = mm.get_result(candidates, key=key, trace=trace, explain=explain)
+#        return result
+#
+#    def dump(self):
+#
+#        ret = {}
+#        for i in dir(self):
+#            if not i.startswith('_'):
+#                ret[i] = getattr(self, i)
+#
+#        pprint (ret)
+#
 
 
 class App():
@@ -175,7 +168,6 @@ class App():
             log.error (f"Can't find namespace '{namespace}' in config '{config}'")
             sys.exit(1)
 
-
         # Init
         if not conf2['config']['app']['root']:
             conf2['config']['app']['root'] = Path(config).parent
@@ -195,28 +187,3 @@ class App():
         print ("=== Query Result ===")
 
 
-if __name__ == "__main__":
-    CONFIG_FILE='/home/jez/prj/bell/training/tiger-ansible/tree.yml'
-    app = App(CONFIG_FILE)
-
-    policy = None
-
-    #app.lookup(
-    #    "my_key",
-    #    policy=None,
-    #    hostname="myhost-lab.it.ms.bell.ca",
-    #    hostgroups=["Tiger", "Tiger/Test", "Tiger/Test/LastLvl"],
-    #    hostgroup="Tiger/Test/LastLvl"
-    #        )
-
-
-#    app.lookup(
-#        None,
-#        hostname="myhost-lab.it.ms.bell.ca",
-#        hostgroups=["Tiger", "Tiger/Test", "Tiger/Test/LastLvl"],
-#        hostgroup="Tiger/Test/LastLvl"
-#            )
-#
-
-
-    print ("OKKKKK")
