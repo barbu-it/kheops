@@ -1,30 +1,30 @@
 from pathlib import Path
 from albero.utils import render_template
-from albero.plugin.common import PluginEngineClass, PluginFileGlob, Candidate
+from albero.plugin.common import PluginEngineClass, PluginFileGlob #, Candidate
 from pprint import pprint
 
 import logging
 import anyconfig
-import textwrap
 
 log = logging.getLogger(__name__)
 
 
-class FileCandidate(Candidate):
-    path = None
-
-    def _report_data(self):
-        data = {
-            # "rule": self.config,
-            "value": self.engine._plugin_value,
-            "data": self.data,
-            "path": str(self.path.relative_to(Path.cwd())),
-        }
-        data = dict(self.config)
-        return super()._report_data(data)
+#class FileCandidate(Candidate):
+#    path = None
+#
+#    def _report_data(self):
+#        data = {
+#            # "rule": self.config,
+#            "value": self.engine._plugin_value,
+#            "data": self.data,
+#            "path": str(self.path.relative_to(Path.cwd())),
+#        }
+#        data = dict(self.config)
+#        return super()._report_data(data)
 
 
 class Plugin(PluginEngineClass, PluginFileGlob):
+    """Generic Plugin Class"""
 
     _plugin_name = "jerakia"
 
@@ -69,25 +69,25 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
         # Manage var substr
         ret = []
-        for p in paths:
-            p = render_template(p, scope)
-            ret.append(p)
+        for path in paths:
+            path = render_template(path, scope)
+            ret.append(path)
 
-        log.debug(f"Render pattern: {ret}")
+        log.debug("Render pattern: %s", ret)
 
         return ret
 
     def _show_paths(self, scope):
 
         parsed = self._preprocess(scope)
-        log.debug(f"Expanded paths to: {parsed}")
+        log.debug("Expanded paths to: %s", parsed)
 
         # Look for files (NOT BE HERE !!!)
         ret3 = []
         for p in parsed:
             globbed = self._glob(p)
             ret3.extend(globbed)
-        log.debug(f"Matched globs: {ret3}")
+        log.debug(f"Matched globs: %s", ret3)
 
         return ret3
 
