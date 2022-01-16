@@ -1,11 +1,10 @@
-
-
 import copy
+
 # from pathlib import Path
 # from albero.utils import render_template
 # from albero.plugin.common import PluginBackendClass
 # from pprint import pprint
-# 
+#
 # import logging
 # import anyconfig
 # import textwrap
@@ -13,55 +12,55 @@ import copy
 from albero.plugin.common import PluginBackendClass
 from pprint import pprint
 import logging
+
 log = logging.getLogger(__name__)
+
 
 class Plugin(PluginBackendClass):
 
     _plugin_name = "hier"
     _schema_props_new = {
-            "hier": {
-                "default": None,
-                "optional": True,
-                "oneOf": [
-                    {
-                        "type": "null",
-                    },
-                    {
-                        "type": "string",
-                    },
-                    {
-                        "additionalProperties": True,
-                        "properties": {
-                            "data": {
-                                "default": None,
-                                "anyOf": [
-                                    { "type": "null" },
-                                    { "type": "string" },
-                                    { "type": "array" },
-                                    ]
-                                },
-                            "var": {
-                                "type": "string",
-                                "default": "hier_item",
-                                "optional": True,
-                                },
-                            "separator": {
-                                "type": "string",
-                                "default": "/",
-                                "optional": True,
-                                },
-                            "reversed": {
-                                "type": "boolean",
-                                "default": False,
-                                "optional": True,
-                            },
+        "hier": {
+            "default": None,
+            "optional": True,
+            "oneOf": [
+                {
+                    "type": "null",
+                },
+                {
+                    "type": "string",
+                },
+                {
+                    "additionalProperties": True,
+                    "properties": {
+                        "data": {
+                            "default": None,
+                            "anyOf": [
+                                {"type": "null"},
+                                {"type": "string"},
+                                {"type": "array"},
+                            ],
+                        },
+                        "var": {
+                            "type": "string",
+                            "default": "hier_item",
+                            "optional": True,
+                        },
+                        "separator": {
+                            "type": "string",
+                            "default": "/",
+                            "optional": True,
+                        },
+                        "reversed": {
+                            "type": "boolean",
+                            "default": False,
+                            "optional": True,
                         },
                     },
-                ]
-            }
+                },
+            ],
         }
-
-
+    }
 
     def process(self, backends: list, ctx: dict) -> (list, dict):
 
@@ -79,13 +78,13 @@ class Plugin(PluginBackendClass):
             hier_var = plugin_config.get("var", "item")
             hier_sep = plugin_config.get("separator", "/")
             if isinstance(hier_data, str):
-                hier_data = cand['_run']['scope'].get(hier_data, None)
+                hier_data = cand["_run"]["scope"].get(hier_data, None)
 
             # Build a new list
 
             if isinstance(hier_data, str):
                 r = hier_data.split(hier_sep)
-            assert (isinstance(r, list)), f"Got: {r}"
+            assert isinstance(r, list), f"Got: {r}"
 
             ret1 = []
             for index, part in enumerate(r):
@@ -93,7 +92,7 @@ class Plugin(PluginBackendClass):
                 try:
                     prefix = ret1[index - 1]
                 except IndexError:
-                    prefix = f'{hier_sep}'
+                    prefix = f"{hier_sep}"
                     prefix = ""
                 item = f"{prefix}{part}{hier_sep}"
                 ret1.append(item)
@@ -102,15 +101,13 @@ class Plugin(PluginBackendClass):
             for item in ret1:
                 _cand = copy.deepcopy(cand)
                 run = {
-                        "index": index,
-                        "hier_value": item,
-                        "hier_var": hier_var,
-                        }
-                _cand['_run']['hier'] = run
-                _cand['_run']['scope'][hier_var] = item
+                    "index": index,
+                    "hier_value": item,
+                    "hier_var": hier_var,
+                }
+                _cand["_run"]["hier"] = run
+                _cand["_run"]["scope"][hier_var] = item
                 ret2.append(_cand)
 
             new_backends.extend(ret2)
         return new_backends, ctx
-
-

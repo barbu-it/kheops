@@ -1,8 +1,8 @@
-
 import logging
 from albero.plugin.common import PluginStrategyClass
 
 log = logging.getLogger(__name__)
+
 
 class Plugin(PluginStrategyClass):
 
@@ -12,4 +12,3 @@ class Plugin(PluginStrategyClass):
     def process(self, candidates: list, rule=None) -> (list, dict):
 
         return candidates[-1]
-

@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from jinja2 import Template
 import yaml
@@ -10,6 +9,7 @@ import collections
 
 
 import logging
+
 log = logging.getLogger(__name__)
 
 
@@ -62,19 +62,21 @@ log = logging.getLogger(__name__)
 # Utils Methods
 # =====================
 
+
 def render_template(path, params):
     """Render template for a given string"""
-    assert (isinstance(params, dict)), f"Got: {params}"
+    assert isinstance(params, dict), f"Got: {params}"
     t = Template(path)
     return t.render(**params)
 
-#def read_file(file):
+
+# def read_file(file):
 #    with open(file, 'r') as f:
 #        data = f.read().replace('\n', '')
 #    return data
 #
 #
-#def parse_file(file, fmt='auto'):
+# def parse_file(file, fmt='auto'):
 #    print ("DEPRECATED")
 #    raise Exception ("parse_file is deprecated")
 #
@@ -99,6 +101,7 @@ def render_template(path, params):
 # Schema Methods
 # =====================
 
+
 def _extend_with_default(validator_class):
     validate_properties = validator_class.VALIDATORS["properties"]
 
@@ -110,38 +113,43 @@ def _extend_with_default(validator_class):
 
         try:
             for error in validate_properties(
-                validator, properties, instance, schema,
+                validator,
+                properties,
+                instance,
+                schema,
             ):
                 continue
         except Exception as e:
-            print ("CATCHED2222 ", e)
+            print("CATCHED2222 ", e)
 
     return validators.extend(
-        validator_class, {"properties" : set_defaults},
+        validator_class,
+        {"properties": set_defaults},
     )
 
 
 def schema_validate(config, schema):
 
-        # Validate the schema
-        DefaultValidatingDraft7Validator = _extend_with_default(Draft7Validator)
-        try:
-            DefaultValidatingDraft7Validator(schema).validate(config)
-        except Exception as e:
-            print (e)
-            p = list(collections.deque(e.schema_path))
-            p = '/'.join([ str(i) for i in p ])
-            p = f"schema/{p}"
-            raise Exception(
-                    f"Failed validating {p} for resource with content: {config} with !!!!!! schema: {schema}"
-                    )
-        return config
+    # Validate the schema
+    DefaultValidatingDraft7Validator = _extend_with_default(Draft7Validator)
+    try:
+        DefaultValidatingDraft7Validator(schema).validate(config)
+    except Exception as e:
+        print(e)
+        p = list(collections.deque(e.schema_path))
+        p = "/".join([str(i) for i in p])
+        p = f"schema/{p}"
+        raise Exception(
+            f"Failed validating {p} for resource with content: {config} with !!!!!! schema: {schema}"
+        )
+    return config
+
 
 def str_ellipsis(txt, length=120):
     txt = str(txt)
     ret = []
     for string in txt.splitlines():
-        string = (string[:length - 4 ] + ' ...') if len(string) > length else string
+        string = (string[: length - 4] + " ...") if len(string) > length else string
         ret.append(string)
-    ret = '\n'.join(ret)
+    ret = "\n".join(ret)
     return ret

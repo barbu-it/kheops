@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from albero.utils import render_template
 from albero.plugin.common import PluginEngineClass, PluginFileGlob, Candidate
@@ -10,55 +9,55 @@ import textwrap
 
 log = logging.getLogger(__name__)
 
+
 class FileCandidate(Candidate):
     path = None
 
     def _report_data(self):
         data = {
-                #"rule": self.config,
-                "value": self.engine._plugin_value,
-                "data": self.data,
-                "path": str(self.path.relative_to(Path.cwd())),
-                }
+            # "rule": self.config,
+            "value": self.engine._plugin_value,
+            "data": self.data,
+            "path": str(self.path.relative_to(Path.cwd())),
+        }
         data = dict(self.config)
         return super()._report_data(data)
 
 
-
 class Plugin(PluginEngineClass, PluginFileGlob):
 
-    _plugin_name = 'jerakia'
+    _plugin_name = "jerakia"
 
     ### OLD
     _plugin_engine = "jerakia"
     # _schema_props_files = {
     _schema_props_new = {
-            "path": {
-                "anyOf": [
-                    {
+        "path": {
+            "anyOf": [
+                {
+                    "type": "string",
+                },
+                {
+                    "type": "array",
+                    "items": {
                         "type": "string",
                     },
-                    {
-                        "type": "array",
-                        "items": {
-                            "type": "string",
-                            }
-                    },
-                ]
-            }
+                },
+            ]
         }
-
-
+    }
 
     def _init(self):
 
-        paths = self.config.get('path', self.config.get('value'))
+        paths = self.config.get("path", self.config.get("value"))
         if isinstance(paths, str):
             paths = [paths]
         elif isinstance(paths, list):
             pass
         else:
-            raise Exception (f"Unsupported path value, expected str or dict, got: {paths} in {self.config}")
+            raise Exception(
+                f"Unsupported path value, expected str or dict, got: {paths} in {self.config}"
+            )
 
         self.paths = paths
         self.value = paths
@@ -78,7 +77,6 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
         return ret
 
-
     def _show_paths(self, scope):
 
         parsed = self._preprocess(scope)
@@ -93,14 +91,12 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
         return ret3
 
-
     def process(self):
 
-
-        #scope = self.scope
+        # scope = self.scope
         # pprint (self.config)
-        scope = dict(self.config['_run']['scope'])
-        key = self.config['_run']['key']
+        scope = dict(self.config["_run"]["scope"])
+        key = self.config["_run"]["key"]
         assert isinstance(scope, dict), f"Got: {scope}"
         assert isinstance(key, (str, type(None))), f"Got: {key}"
 
@@ -125,13 +121,13 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
             # Build result object
             result = {}
-            result['run'] = {
-                    'path': path,
-                    'rel_path': str(Path(path).relative_to(Path.cwd())),
-                    }
-            result['parent'] = self.config
-            result['data'] = data
-            result['found'] = found
+            result["run"] = {
+                "path": path,
+                "rel_path": str(Path(path).relative_to(Path.cwd())),
+            }
+            result["parent"] = self.config
+            result["data"] = data
+            result["found"] = found
 
             ret.append(result)
 
@@ -141,7 +137,7 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
         #    # Read raw file content
         #    data = anyconfig.load(path, ac_parser="yaml")
-        #    
+        #
         #    ret_obj2 ={
         #            "_run": _run,
 
@@ -183,7 +179,3 @@ class Plugin(PluginEngineClass, PluginFileGlob):
         #    #log.debug(f"Found value: {ret_obj}")
         #    ret_obj.found = found
         #    ret.append(ret_obj)
-
-
-
-

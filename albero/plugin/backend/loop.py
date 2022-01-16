@@ -1,5 +1,3 @@
-
-
 import copy
 from pathlib import Path
 from albero.utils import render_template
@@ -14,56 +12,56 @@ import textwrap
 class Plugin(PluginBackendClass):
 
     _plugin_name = "loop"
-    _plugin_help = """
+    _plugin_help = (
+        """
     This module helps to loop over a backend
     """,
+    )
     _schema_props_new = {
         "loop": {
             "description": _plugin_help,
             "default": None,
             "optional": True,
             "examples": [
-                    {
-                        "value": "site/{{ loop_env }}/config/{{ os }}",
-                        "loop": {
-                                "var": "loop_env",
-                                "data": [
-                                    "dev",
-                                    "preprod",
-                                    "prod",
-                                    ],
-                            },
-                        "comment": "The module will loop three time over the value, and the variable `loop_env` will consecutely have `dev`, `preprod` and `prod` as value",
+                {
+                    "value": "site/{{ loop_env }}/config/{{ os }}",
+                    "loop": {
+                        "var": "loop_env",
+                        "data": [
+                            "dev",
+                            "preprod",
+                            "prod",
+                        ],
                     },
-                    {
-                        "value": "site/{{ loop_env2 }}/config/{{ os }}",
-                        "loop": {
-                                "var": "loop_env2",
-                                "data": "my_scope_var",
-                            },
-                        "comment": "Like the previous example, but it will fetch the list from any scope variables",
+                    "comment": "The module will loop three time over the value, and the variable `loop_env` will consecutely have `dev`, `preprod` and `prod` as value",
+                },
+                {
+                    "value": "site/{{ loop_env2 }}/config/{{ os }}",
+                    "loop": {
+                        "var": "loop_env2",
+                        "data": "my_scope_var",
                     },
-                    {
-                        "loop": None,
-                        "comment": "Disable this module, no loop will operate",
-                    },
-
-
-                    #    "loop": {
-                    #            "var": "my_var",
-                    #        },
-                    #    },
-                    #    "loop": {
-                    #            "var": "my_var",
-                    #        },
-                    #    "example": "",
-                    #    },
-                    #    "loop": {
-                    #            "var": "my_var",
-                    #        },
-                    #    "example": "",
-                    #    },
-                    ],
+                    "comment": "Like the previous example, but it will fetch the list from any scope variables",
+                },
+                {
+                    "loop": None,
+                    "comment": "Disable this module, no loop will operate",
+                },
+                #    "loop": {
+                #            "var": "my_var",
+                #        },
+                #    },
+                #    "loop": {
+                #            "var": "my_var",
+                #        },
+                #    "example": "",
+                #    },
+                #    "loop": {
+                #            "var": "my_var",
+                #        },
+                #    "example": "",
+                #    },
+            ],
             "oneOf": [
                 {
                     "type": "object",
@@ -71,30 +69,29 @@ class Plugin(PluginBackendClass):
                     "default": {},
                     "title": "Complete config",
                     "description": "",
-
                     "properties": {
                         "data": {
                             "default": None,
                             "optional": False,
                             "title": "Module configuration",
                             "description": "Data list used for iterations. It only accept lists as type. It disable the module if set to `null`.",
-                            "anyOf":[
-                                    {
-                                         "type": "null",
-                                         "title": "Disable Module",
-                                         "description": "Disable the module",
-                                    },
-                                    {
-                                        "type": "string",
-                                         "title": "Scope variable",
-                                         "description": "Will look the value of the loop list from the scope. TOFIX: What if variablle does not exists?",
-                                    },
-                                    {
-                                        "type": "array",
-                                         "title": "Hardcoded list",
-                                         "description": "Simply enter the list of value to be iterated to.",
-                                    },
-                                ]
+                            "anyOf": [
+                                {
+                                    "type": "null",
+                                    "title": "Disable Module",
+                                    "description": "Disable the module",
+                                },
+                                {
+                                    "type": "string",
+                                    "title": "Scope variable",
+                                    "description": "Will look the value of the loop list from the scope. TOFIX: What if variablle does not exists?",
+                                },
+                                {
+                                    "type": "array",
+                                    "title": "Hardcoded list",
+                                    "description": "Simply enter the list of value to be iterated to.",
+                                },
+                            ],
                         },
                         "var": {
                             "type": "string",
@@ -115,13 +112,11 @@ class Plugin(PluginBackendClass):
                     "title": "Disable",
                     "description": "If set to null, it disable the module",
                 },
-            ]
+            ],
         }
     }
 
-
     def process(self, backends: list, ctx: dict) -> (list, dict):
-
 
         new_backends = []
         for cand in backends:
@@ -137,26 +132,23 @@ class Plugin(PluginBackendClass):
             # Retrieve config data
             loop_var = loop_config.get("var", "item")
             if isinstance(loop_data, str):
-                loop_data = cand['_run']['scope'].get(loop_data, None)
-            assert (isinstance(loop_data, list)), f"Got: {loop_data}"
+                loop_data = cand["_run"]["scope"].get(loop_data, None)
+            assert isinstance(loop_data, list), f"Got: {loop_data}"
 
             # Build a new list
             ret = []
             for idx, item in enumerate(loop_data):
                 _cand = copy.deepcopy(cand)
                 run = {
-                        "loop_index": idx,
-                        "loop_value": item,
-                        "loop_var": loop_var,
-                        }
-                _cand['_run']['loop'] = run
-                _cand['_run']['scope'][loop_var] = item
-                #_cand.scope[loop_var] = item
+                    "loop_index": idx,
+                    "loop_value": item,
+                    "loop_var": loop_var,
+                }
+                _cand["_run"]["loop"] = run
+                _cand["_run"]["scope"][loop_var] = item
+                # _cand.scope[loop_var] = item
                 ret.append(_cand)
 
             new_backends.extend(ret)
 
         return new_backends, ctx
-
-
-

@@ -12,19 +12,20 @@ from pprint import pprint
 from albero.managers import BackendsManager, RulesManager
 from albero.utils import schema_validate
 import anyconfig
+
 # from box import Box
 from pathlib import Path
 
 import logging
-log = logging.getLogger(__name__)
 
+log = logging.getLogger(__name__)
 
 
 # Query
 ##########################################
 
-class Query():
 
+class Query:
     def __init__(self, app):
 
         self.app = app
@@ -43,9 +44,7 @@ class Query():
 
         ret = {}
         for i in dir(self):
-            if not i.startswith('_'):
+            if not i.startswith("_"):
                 ret[i] = getattr(self, i)
 
-        pprint (ret)
-
-
+        pprint(ret)

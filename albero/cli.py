@@ -18,6 +18,7 @@ sys.path.append("/home/jez/prj/bell/training/tiger-ansible/ext/ansible-tree")
 
 import albero.app as Albero
 
+
 class CmdApp:
     """Main CmdApp"""
 
@@ -99,7 +100,9 @@ class CmdApp:
         """Prepare command line"""
 
         # Manage main parser
-        parser = argparse.ArgumentParser(description="Albero, to lookup hierarchical data")
+        parser = argparse.ArgumentParser(
+            description="Albero, to lookup hierarchical data"
+        )
         parser.add_argument(
             "-v", "--verbose", action="count", default=0, help="Increase verbosity"
         )
@@ -112,13 +115,19 @@ class CmdApp:
 
         # Manage command: demo
         add_p = subparsers.add_parser("lookup")
-        add_p.add_argument("-n", "--namespace", help="Namespace name", default='default')
-        add_p.add_argument("-f", "--file", help="File with params as dict. Can be stdin - .")
-        add_p.add_argument("-e", "--scope", dest="scope_param", action="append", default=[])
+        add_p.add_argument(
+            "-n", "--namespace", help="Namespace name", default="default"
+        )
+        add_p.add_argument(
+            "-f", "--file", help="File with params as dict. Can be stdin - ."
+        )
+        add_p.add_argument(
+            "-e", "--scope", dest="scope_param", action="append", default=[]
+        )
         add_p.add_argument("-p", "--policy")
         add_p.add_argument("-t", "--trace", action="store_true")
         add_p.add_argument("-x", "--explain", action="store_true")
-        add_p.add_argument("key", default=None,  nargs="*")
+        add_p.add_argument("key", default=None, nargs="*")
 
         # Manage command: demo
         add_p = subparsers.add_parser("demo")
@@ -150,9 +159,9 @@ class CmdApp:
     def cli_lookup(self):
         """Display how to use logging"""
 
-        config = '/home/jez/prj/bell/training/tiger-ansible/tree.yml'
+        config = "/home/jez/prj/bell/training/tiger-ansible/tree.yml"
 
-#        self.log.debug(f"Command line vars: {vars(self.args)}")
+        #        self.log.debug(f"Command line vars: {vars(self.args)}")
         keys = self.args.key or [None]
 
         # Parse payload from enf file:
@@ -162,7 +171,7 @@ class CmdApp:
 
         # Parse cli params
         for i in self.args.scope_param:
-            r = i.split('=')
+            r = i.split("=")
             if len(r) != 2:
                 raise Exception("Malformed params")
             new_params[r[0]] = r[1]
@@ -171,18 +180,19 @@ class CmdApp:
 
         app = Albero.App(config=config, namespace=self.args.namespace)
         for key in keys:
-            app.lookup(key=key,
-                    scope=new_params,
-                    trace=self.args.trace,
-                    explain=self.args.explain
-                    )
+            app.lookup(
+                key=key,
+                scope=new_params,
+                trace=self.args.trace,
+                explain=self.args.explain,
+            )
 
     def cli_schema(self):
         """Display configuration schema"""
 
-        config = '/home/jez/prj/bell/training/tiger-ansible/tree.yml'
+        config = "/home/jez/prj/bell/training/tiger-ansible/tree.yml"
 
-        app = Albero.App(config=config) #, namespace=self.args.namespace)
+        app = Albero.App(config=config)  # , namespace=self.args.namespace)
         app.dump_schema()
 
 
