@@ -16,6 +16,10 @@ dpath = "^2.0.5"
 
 [tool.poetry.dev-dependencies]
 json-schema-for-humans = "^0.40"
+pylint = "^2.12.2"
+black = "^21.12b0"
+mkdocs = "^1.2.3"
+mkdocs-ivory = "^0.4.6"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
