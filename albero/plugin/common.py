@@ -98,38 +98,11 @@ class PluginEngineClass(PluginClass):
     _plugin_type = "engine"
 
     _schema_props_default = {
-        "value": {
+        "engine": {
             "default": "UNSET",
         },
-        #### SHOULD NOT BE HERE
-        "hier": {
-            "additionalProperties": True,
-            "optional": True,
-            "properties": {
-                "var": {
-                    "type": "string",
-                    "default": "item",
-                    "optional": True,
-                },
-                "data": {
-                    "default": None,
-                    "anyOf": [
-                        {"type": "null"},
-                        {"type": "string"},
-                        {"type": "array"},
-                    ],
-                },
-                "separator": {
-                    "type": "string",
-                    "default": "/",
-                    "optional": True,
-                },
-                "reversed": {
-                    "type": "boolean",
-                    "default": False,
-                    "optional": True,
-                },
-            },
+        "value": {
+            "default": "UNSET",
         },
     }
 
@@ -201,31 +174,3 @@ class PluginFileGlob:
             },
         }
     }
-
-    def _glob(self, item):
-
-        # DIRECT CALL TO APP< TOFIX
-        app_config = self.app.conf2
-        root = (
-            app_config.get("default", {})
-            .get("config", {})
-            .get("root", f"{Path.cwd()}/tree")
-        )
-        # root = self.app.conf2.config.app.root
-        # TOFIX print ("ITEM! %s" % type(root))
-        # TOFIX print ("ITEM2 %s" % self.app.conf2.config.app.root)
-
-        glob_config = self.config.get("glob", {})
-        glob_file = glob_config["file"]
-        # glob_ext = glob_config['ext']
-
-        item = Path(root) / Path(item) / Path(glob_file)
-        item = f"{item}"
-        # file = f"{glob_file}.{glob_ext}"
-
-        # print ("ITEM %s" % item)
-        files = glob.glob(item)
-
-        log.debug(f"Matched file for glob '{item}': {files}")
-
-        return files

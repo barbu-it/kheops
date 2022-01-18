@@ -1,17 +1,9 @@
-import copy
-
-# from pathlib import Path
-# from albero.utils import render_template
-# from albero.plugin.common import PluginBackendClass
-# from pprint import pprint
-#
-# import logging
-# import anyconfig
-# import textwrap
 
 from albero.plugin.common import PluginBackendClass
+from albero.utils import path_assemble_hier
 from pprint import pprint
 import logging
+import copy
 
 log = logging.getLogger(__name__)
 
