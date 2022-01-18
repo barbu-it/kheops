@@ -134,7 +134,9 @@ class Plugin(PluginBackendClass):
             loop_var = loop_config.get("var", "item")
             if isinstance(loop_data, str):
                 loop_data = cand["_run"]["scope"].get(loop_data, None)
-            assert isinstance(loop_data, list), f"Got: {loop_data}"
+            if not isinstance(loop_data, list):
+                log.debug("Got an empty list for loop for var %s, skipping this entry: %s", cand, loop_data)
+                continue
 
             # Build a new list
             ret = []
