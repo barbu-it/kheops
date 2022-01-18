@@ -76,7 +76,8 @@ class Plugin(PluginBackendClass):
                 hier_data = cand["_run"]["scope"].get(hier_data, None)
 
             # Do the hierarchical replacement
-            hier_data = path_assemble_hier(hier_data, hier_sep)
+            if isinstance(hier_data, (str, list)):
+                hier_data = path_assemble_hier(hier_data, hier_sep)
 
             if not isinstance(hier_data, list):
                 log.warn("Hier module can't loop over non list data, got: {hier_data}")
