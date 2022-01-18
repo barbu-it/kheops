@@ -1,5 +1,5 @@
 from pathlib import Path
-from albero.utils import render_template
+from albero.utils import render_template, glob_files
 from albero.plugin.common import PluginEngineClass, PluginFileGlob #, Candidate
 from pprint import pprint
 
@@ -28,7 +28,6 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
     _plugin_name = "jerakia"
 
-    ### OLD
     _plugin_engine = "jerakia"
     # _schema_props_files = {
     _schema_props_new = {
@@ -43,6 +42,20 @@ class Plugin(PluginEngineClass, PluginFileGlob):
                         "type": "string",
                     },
                 },
+            ]
+        },
+        "glob": {
+            "default": "ansible.yml",
+            "anyOf": [
+                {
+                    "type": "string",
+                },
+#                {
+#                    "type": "array",
+#                    "items": {
+#                        "type": "string",
+#                    },
+#                },
             ]
         }
     }
@@ -62,7 +75,7 @@ class Plugin(PluginEngineClass, PluginFileGlob):
         self.paths = paths
         self.value = paths
 
-    def _preprocess(self, scope):
+    def _paths_template(self, scope):
 
         # Manage loops
         paths = self.paths
@@ -77,15 +90,15 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
         return ret
 
-    def _show_paths(self, scope):
+    def _show_paths(self, path_top, scope):
 
-        parsed = self._preprocess(scope)
+        parsed = self._paths_template(scope)
         log.debug("Expanded paths to: %s", parsed)
 
         # Look for files (NOT BE HERE !!!)
         ret3 = []
         for p in parsed:
-            globbed = self._glob(p)
+            globbed = glob_files(path_top / p, 'ansible.yaml')
             ret3.extend(globbed)
         log.debug(f"Matched globs: %s", ret3)
 
@@ -93,17 +106,32 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
     def process(self):
 
-        # scope = self.scope
-        # pprint (self.config)
-        scope = dict(self.config["_run"]["scope"])
+        # Detect path root and path prefix
+        path_root = self.app.run['path_root']
+        path_prefix = self.app.conf2['config']['tree']['prefix']
+
+        if path_prefix:
+            path_prefix = Path(path_prefix)
+            if path_prefix.is_absolute():
+                path_top = path_prefix
+            else:
+                path_top = Path(path_root) / path_prefix
+        else:
+            path_top = path_root
+
+        path_top = path_top
+        log.debug (f"Path Top: {path_top}")
+
+
+        scope = self.config["_run"]["scope"]
         key = self.config["_run"]["key"]
         assert isinstance(scope, dict), f"Got: {scope}"
         assert isinstance(key, (str, type(None))), f"Got: {key}"
 
-        t = self._show_paths(scope)
+        # t = self._show_paths(path_top, scope)
 
         ret = []
-        for index, path in enumerate(self._show_paths(scope)):
+        for index, path in enumerate(self._show_paths(path_top, scope)):
             log.debug(f"Reading file: {path}")
             # Fetch data
             found = False
@@ -133,49 +161,3 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
         return ret
 
-        ######## OLD
-
-        #    # Read raw file content
-        #    data = anyconfig.load(path, ac_parser="yaml")
-        #
-        #    ret_obj2 ={
-        #            "_run": _run,
-
-        #            }
-
-        #    #### OLD
-
-        #    ret_obj = FileCandidate(self.config)
-        #    ret_obj.engine = self
-        #    ret_obj.data = None
-
-        #    found = False
-        #    if key is None:
-        #        ret_obj.data = data
-        #        found = True
-        #    else:
-        #        try:
-        #            ret_obj.data = data[key]
-        #            found = True
-        #        except Exception:
-        #            pass
-
-        #    # ret_obj.run['path'] = path
-        #    # ret_obj.run['found'] = found
-        #    # ret_obj.run['scope'] = scope
-        #    # ret_obj.run['key'] = key
-        #    be = {
-        #            "index": index,
-        #            "path": path,
-        #            "rel_path": str(Path(path).relative_to(Path.cwd())),
-        #            }
-        #    #qu = {
-        #    #        "scope": scope,
-        #    #        "key": key,
-        #    #        }
-        #    ret_obj.run['backend'] = be
-        #    #ret_obj.run['query'] = qu
-
-        #    #log.debug(f"Found value: {ret_obj}")
-        #    ret_obj.found = found
-        #    ret.append(ret_obj)

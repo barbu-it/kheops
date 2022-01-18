@@ -41,19 +41,24 @@ class LoadPlugin:
 class Manager:
     """Generic manager class"""
 
+    _app_kind = 'core'
     plugins_kind = []
     _schema_props_default = None
     _schema_props_new = None
     _props_position = None
 
     @classmethod
-    def get_schema(cls, plugins_db):
+    def get_schema(cls, plugins_db, mode='full'):
         """Retrieve configuration schema"""
 
         # Properties
+        ret = {
+                "core_schema": {},
+                "plugin": {},
+                }
         ret3 = {}
         for kind in cls.plugins_kind:
-            # ret[kind] = {}
+            ret['plugin'][kind] = {}
             plugin_kind = getattr(plugins_db, kind)
 
             for plugin_name in [i for i in dir(plugin_kind) if not i.startswith("_")]:
@@ -64,7 +69,7 @@ class Manager:
                         plugin_cls, "_schema_props_new", "MISSING ITEM"
                     )
                     if schema_props:
-                        # ret[kind][plugin_name] = schema_props
+                        ret['plugin'][kind][plugin_name + '_schema' ] = schema_props
                         ret3.update(schema_props)
         ret3.update(cls._schema_props_new)
 
@@ -72,13 +77,23 @@ class Manager:
         ret1 = cls._schema_props_default
         position = cls._props_position
         dpath.util.set(ret1, position, ret3)
+        ret['core_schema'] = cls._schema_props_new
 
-        return ret1
+        if mode == 'full':
+            return ret1
+
+        ret4 = {
+                "config_schema": {},
+                "items": ret,
+                }
+
+        return ret4
 
 
 class BackendsManager(Manager):
     """Backend Manager"""
 
+    _app_kind = 'manager'
     plugins_kind = ["engine", "backend"]
 
     _schema_props_new = {
@@ -212,6 +227,7 @@ class BackendsManager(Manager):
 
 class RulesManager(Manager):
 
+    _app_kind = 'rules'
     plugins_kind = ["strategy"]
 
     _schema_props_new = {

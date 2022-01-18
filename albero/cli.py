@@ -106,12 +106,17 @@ class CmdApp:
         parser.add_argument(
             "-v", "--verbose", action="count", default=0, help="Increase verbosity"
         )
+        parser.add_argument(
+            "-c", "--config", help="Albero configuration file",
+            default="albero.yml",
+        )
         parser.add_argument("help", action="count", default=0, help="Show usage")
         subparsers = parser.add_subparsers(
             title="subcommands", description="valid subcommands", dest="command"
         )
         # Manage command: schema
         add_p = subparsers.add_parser("schema")
+        add_p = subparsers.add_parser("gen_doc")
 
         # Manage command: demo
         add_p = subparsers.add_parser("lookup")
@@ -127,6 +132,7 @@ class CmdApp:
         add_p.add_argument("-p", "--policy")
         add_p.add_argument("-t", "--trace", action="store_true")
         add_p.add_argument("-x", "--explain", action="store_true")
+        add_p.add_argument("-o", "--format", help="Output format", choices=['yaml', 'json', 'xml', 'ini', 'toml'], default='yaml')
         add_p.add_argument("key", default=None, nargs="*")
 
         # Manage command: demo
@@ -178,14 +184,15 @@ class CmdApp:
 
         self.log.info(f"CLI: {keys} with env: {new_params}")
 
-        app = Albero.App(config=config, namespace=self.args.namespace)
+        app = Albero.App(config=self.args.config, namespace=self.args.namespace)
         for key in keys:
-            app.lookup(
+            r = app.lookup(
                 key=key,
                 scope=new_params,
                 trace=self.args.trace,
                 explain=self.args.explain,
             )
+            print(anyconfig.dumps(r, ac_parser=self.args.format))
 
     def cli_schema(self):
         """Display configuration schema"""
@@ -194,6 +201,15 @@ class CmdApp:
 
         app = Albero.App(config=config)  # , namespace=self.args.namespace)
         app.dump_schema()
+
+
+    def cli_gen_doc(self):
+        """Generate documentation"""
+
+        config = "/home/jez/prj/bell/training/tiger-ansible/tree.yml"
+        app = Albero.App(config=config)  # , namespace=self.args.namespace)
+        app.gen_docs()
+
 
 
 if __name__ == "__main__":

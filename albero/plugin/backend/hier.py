@@ -57,40 +57,36 @@ class Plugin(PluginBackendClass):
     def process(self, backends: list, ctx: dict) -> (list, dict):
 
         new_backends = []
+
         for cand in backends:
 
-            # Init
+            # Fetch backend data
             plugin_config = cand.get("hier", {})
             hier_data = plugin_config.get("data", None)
             if not hier_data:
                 new_backends.append(cand)
                 continue
 
-            # Retrieve config data
             hier_var = plugin_config.get("var", "item")
             hier_sep = plugin_config.get("separator", "/")
+
+            # Retrieve data to loop over
             if isinstance(hier_data, str):
+                # If it's a string, fetch value from scope
                 hier_data = cand["_run"]["scope"].get(hier_data, None)
 
-            # Build a new list
+            # Do the hierarchical replacement
+            hier_data = path_assemble_hier(hier_data, hier_sep)
 
-            if isinstance(hier_data, str):
-                r = hier_data.split(hier_sep)
-            assert isinstance(r, list), f"Got: {r}"
+            if not isinstance(hier_data, list):
+                log.warn("Hier module can't loop over non list data, got: {hier_data}")
+                continue
 
-            ret1 = []
-            for index, part in enumerate(r):
-
-                try:
-                    prefix = ret1[index - 1]
-                except IndexError:
-                    prefix = f"{hier_sep}"
-                    prefix = ""
-                item = f"{prefix}{part}{hier_sep}"
-                ret1.append(item)
-
+            # Build result list
+            ret1 = hier_data
+            log.debug (f"Hier plugin will loop over: {ret1}")
             ret2 = []
-            for item in ret1:
+            for index, item in enumerate(ret1):
                 _cand = copy.deepcopy(cand)
                 run = {
                     "index": index,

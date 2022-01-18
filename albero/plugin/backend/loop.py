@@ -8,6 +8,7 @@ import logging
 import anyconfig
 import textwrap
 
+log = logging.getLogger(__name__)
 
 class Plugin(PluginBackendClass):
 

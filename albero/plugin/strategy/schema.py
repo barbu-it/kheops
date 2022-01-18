@@ -91,6 +91,7 @@ class Plugin(PluginStrategyClass):
 
         trace = rule["trace"]
         explain = rule["explain"]
+
         schema = rule.get("schema", None) or self.default_merge_schema
         merger = Merger(schema)
         t = PrettyTable()
