@@ -1,22 +1,9 @@
 #!/usr/bin/env python3
-
-# import sys
-# sys.path.append("/home/jez/prj/bell/training/tiger-ansible/ext/ansible-tree")
-
-
-import sys
-import yaml
-import anyconfig
-from pprint import pprint
-
-from kheops.managers import BackendsManager, RulesManager
-from kheops.utils import schema_validate
-import anyconfig
-
-# from box import Box
-from pathlib import Path
+"""Kheops Query Class"""
 
 import logging
+from pprint import pprint
+from kheops.managers import BackendsManager, RulesManager
 
 log = logging.getLogger(__name__)
 
@@ -26,21 +13,25 @@ log = logging.getLogger(__name__)
 
 
 class Query:
+    """Kheops Query Class"""
+
     def __init__(self, app):
 
         self.app = app
 
     def exec(self, key=None, scope=None, policy=None, trace=False, explain=False):
+        """Execute the query"""
 
-        bm = BackendsManager(app=self.app)
-        mm = RulesManager(app=self.app)
+        bmgr = BackendsManager(app=self.app)
+        mmgr = RulesManager(app=self.app)
 
-        log.debug(f"New query created")
-        candidates = bm.query(key, scope, trace=trace)
-        result = mm.get_result(candidates, key=key, trace=trace, explain=explain)
+        log.debug("New query created")
+        candidates = bmgr.query(key, scope, trace=trace)
+        result = mmgr.get_result(candidates, key=key, trace=trace, explain=explain)
         return result
 
     def dump(self):
+        """Dump the query object"""
 
         ret = {}
         for i in dir(self):
