@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
+"""Kheops CLI interface"""
 
 # Run like this:
 #   python3 python_cli.py -vvvv demo
 # Author: mrjk
 
 import os
-import anyconfig
 import sys
 import logging
 import argparse
-from pprint import pprint
-
-import sys
+import anyconfig
+import kheops.app as Kheops
 
 # Devel tmp
 sys.path.append("/home/jez/prj/bell/training/tiger-ansible/ext/ansible-tree")
-
-import kheops.app as Kheops
 
 
 class CmdApp:
@@ -53,30 +50,30 @@ class CmdApp:
 
         # Formatters
         format1 = "%(levelname)8s: %(message)s"
-        format2 = "%(asctime)s.%(msecs)03d|%(name)-16s%(levelname)8s: %(message)s"
-        format3 = (
-            "%(asctime)s.%(msecs)03d"
-            + " (%(process)d/%(thread)d) "
-            + "%(pathname)s:%(lineno)d:%(funcName)s"
-            + ": "
-            + "%(levelname)s: %(message)s"
-        )
+        # format2 = "%(asctime)s.%(msecs)03d|%(name)-16s%(levelname)8s: %(message)s"
+        # format3 = (
+        #    "%(asctime)s.%(msecs)03d"
+        #    + " (%(process)d/%(thread)d) "
+        #    + "%(pathname)s:%(lineno)d:%(funcName)s"
+        #    + ": "
+        #    + "%(levelname)s: %(message)s"
+        # )
         tformat1 = "%H:%M:%S"
-        tformat2 = "%Y-%m-%d %H:%M:%S"
+        # tformat2 = "%Y-%m-%d %H:%M:%S"
         formatter = logging.Formatter(format1, tformat1)
 
         # Create console handler for logger.
-        ch = logging.StreamHandler()
-        ch.setLevel(level=logging.DEBUG)
-        ch.setFormatter(formatter)
-        log.addHandler(ch)
+        stream = logging.StreamHandler()
+        stream.setLevel(level=logging.DEBUG)
+        stream.setFormatter(formatter)
+        log.addHandler(stream)
 
         # Create file handler for logger.
         if isinstance(create_file, str):
-            fh = logging.FileHandler(create_file)
-            fh.setLevel(level=logging.DEBUG)
-            fh.setFormatter(formatter)
-            log.addHandler(fh)
+            handler = logging.FileHandler(create_file)
+            handler.setLevel(level=logging.DEBUG)
+            handler.setFormatter(formatter)
+            log.addHandler(handler)
 
         # Return objects
         self.log = log
@@ -91,7 +88,7 @@ class CmdApp:
             if hasattr(self, method):
                 getattr(self, method)()
             else:
-                self.log.error(f"Subcommand {self.args.command} does not exists.")
+                self.log.error("Subcommand %s does not exists.", self.args.command)
         else:
             self.log.error("Missing sub command")
             self.parser.print_help()
@@ -105,16 +102,19 @@ class CmdApp:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         )
         parser.add_argument(
-            "-v", "--verbose", action="count",
+            "-v",
+            "--verbose",
+            action="count",
             default=int(os.environ.get("KHEOPS_VERBOSE", "0")),
-            help="Increase verbosity"
+            help="Increase verbosity",
         )
         parser.add_argument(
-            "-c", "--config",
+            "-c",
+            "--config",
             default=os.environ.get("KHEOPS_CONFIG", "kheops.yml"),
             help="Kheops configuration file",
         )
-        parser.add_argument("help", help="Show usage")
+        # parser.add_argument("help", help="Show usage")
         subparsers = parser.add_subparsers(
             title="subcommands", description="valid subcommands", dest="command"
         )
@@ -136,7 +136,13 @@ class CmdApp:
         add_p.add_argument("-p", "--policy")
         add_p.add_argument("-t", "--trace", action="store_true")
         add_p.add_argument("-x", "--explain", action="store_true")
-        add_p.add_argument("-o", "--format", help="Output format", choices=['yaml', 'json', 'xml', 'ini', 'toml'], default='yaml')
+        add_p.add_argument(
+            "-o",
+            "--format",
+            choices=["yaml", "json", "xml", "ini", "toml"],
+            default="yaml",
+            help="Output format",
+        )
         add_p.add_argument("key", default=None, nargs="*")
 
         # Manage command: demo
@@ -164,11 +170,10 @@ class CmdApp:
         self.log.error("Test Critical message")
         self.log.warning("Test Warning message")
         self.log.info("Test Info message")
-        self.log.debug(f"Command line vars: {vars(self.args)}")
+        self.log.debug("Command line vars: %s", vars(self.args))
 
     def cli_lookup(self):
         """Display how to use logging"""
-
 
         #        self.log.debug(f"Command line vars: {vars(self.args)}")
         keys = self.args.key or [None]
@@ -180,30 +185,28 @@ class CmdApp:
 
         # Parse cli params
         for i in self.args.scope_param:
-            r = i.split("=")
-            if len(r) != 2:
+            ret = i.split("=")
+            if len(ret) != 2:
                 raise Exception("Malformed params")
-            new_params[r[0]] = r[1]
+            new_params[ret[0]] = ret[1]
 
-        self.log.info(f"CLI: {keys} with env: {new_params}")
+        self.log.info("CLI: %s with env: %s", keys, new_params)
 
         app = Kheops.App(config=self.args.config, namespace=self.args.namespace)
         for key in keys:
-            r = app.lookup(
+            ret = app.lookup(
                 key=key,
                 scope=new_params,
                 trace=self.args.trace,
                 explain=self.args.explain,
             )
-            print(anyconfig.dumps(r, ac_parser=self.args.format))
+            print(anyconfig.dumps(ret, ac_parser=self.args.format))
 
     def cli_schema(self):
         """Display configuration schema"""
 
-
         app = Kheops.App(config=self.args.config)  # , namespace=self.args.namespace)
         app.dump_schema()
-
 
     def cli_gen_doc(self):
         """Generate documentation"""
@@ -212,6 +215,5 @@ class CmdApp:
         app.gen_docs()
 
 
-
 if __name__ == "__main__":
-    app = CmdApp()
+    CmdApp()
