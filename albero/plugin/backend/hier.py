@@ -80,7 +80,7 @@ class Plugin(PluginBackendClass):
                 hier_data = path_assemble_hier(hier_data, hier_sep)
 
             if not isinstance(hier_data, list):
-                log.warn("Hier module can't loop over non list data, got: {hier_data}")
+                log.debug(f"Hier module can't loop over non list data, got: {hier_data} for {cand}")
                 continue
 
             # Build result list
