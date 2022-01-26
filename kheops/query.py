@@ -9,8 +9,8 @@ import yaml
 import anyconfig
 from pprint import pprint
 
-from albero.managers import BackendsManager, RulesManager
-from albero.utils import schema_validate
+from kheops.managers import BackendsManager, RulesManager
+from kheops.utils import schema_validate
 import anyconfig
 
 # from box import Box

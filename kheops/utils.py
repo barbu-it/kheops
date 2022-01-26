@@ -55,6 +55,7 @@ def render_template(path, params):
     t = Template(path)
     return t.render(**params)
 
+
 # Schema Methods
 # =====================
 

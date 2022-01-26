@@ -1,4 +1,4 @@
-from albero.plugin.common import PluginBackendClass
+from kheops.plugin.common import PluginBackendClass
 from pprint import pprint
 import logging
 

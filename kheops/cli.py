@@ -16,7 +16,7 @@ import sys
 # Devel tmp
 sys.path.append("/home/jez/prj/bell/training/tiger-ansible/ext/ansible-tree")
 
-import albero.app as Albero
+import kheops.app as Kheops
 
 
 class CmdApp:
@@ -26,7 +26,7 @@ class CmdApp:
         """Start new App"""
 
         self.get_args()
-        self.get_logger(verbose=self.args.verbose, logger_name="albero")
+        self.get_logger(verbose=self.args.verbose, logger_name="kheops")
         self.cli()
 
     def get_logger(self, logger_name=None, create_file=False, verbose=0):
@@ -101,16 +101,20 @@ class CmdApp:
 
         # Manage main parser
         parser = argparse.ArgumentParser(
-            description="Albero, to lookup hierarchical data"
+            description="Kheops, hierarchical data lookup tool",
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         )
         parser.add_argument(
-            "-v", "--verbose", action="count", default=0, help="Increase verbosity"
+            "-v", "--verbose", action="count",
+            default=int(os.environ.get("KHEOPS_VERBOSE", "0")),
+            help="Increase verbosity"
         )
         parser.add_argument(
-            "-c", "--config", help="Albero configuration file",
-            default="albero.yml",
+            "-c", "--config",
+            default=os.environ.get("KHEOPS_CONFIG", "kheops.yml"),
+            help="Kheops configuration file",
         )
-        parser.add_argument("help", action="count", default=0, help="Show usage")
+        parser.add_argument("help", help="Show usage")
         subparsers = parser.add_subparsers(
             title="subcommands", description="valid subcommands", dest="command"
         )
@@ -165,7 +169,6 @@ class CmdApp:
     def cli_lookup(self):
         """Display how to use logging"""
 
-        config = "/home/jez/prj/bell/training/tiger-ansible/tree.yml"
 
         #        self.log.debug(f"Command line vars: {vars(self.args)}")
         keys = self.args.key or [None]
@@ -184,7 +187,7 @@ class CmdApp:
 
         self.log.info(f"CLI: {keys} with env: {new_params}")
 
-        app = Albero.App(config=self.args.config, namespace=self.args.namespace)
+        app = Kheops.App(config=self.args.config, namespace=self.args.namespace)
         for key in keys:
             r = app.lookup(
                 key=key,
@@ -197,17 +200,15 @@ class CmdApp:
     def cli_schema(self):
         """Display configuration schema"""
 
-        config = "/home/jez/prj/bell/training/tiger-ansible/tree.yml"
 
-        app = Albero.App(config=config)  # , namespace=self.args.namespace)
+        app = Kheops.App(config=self.args.config)  # , namespace=self.args.namespace)
         app.dump_schema()
 
 
     def cli_gen_doc(self):
         """Generate documentation"""
 
-        config = "/home/jez/prj/bell/training/tiger-ansible/tree.yml"
-        app = Albero.App(config=config)  # , namespace=self.args.namespace)
+        app = Kheops.App(config=self.args.config)  # , namespace=self.args.namespace)
         app.gen_docs()
 
 

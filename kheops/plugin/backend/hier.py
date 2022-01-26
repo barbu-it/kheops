@@ -1,6 +1,6 @@
 
-from albero.plugin.common import PluginBackendClass
-from albero.utils import path_assemble_hier
+from kheops.plugin.common import PluginBackendClass
+from kheops.utils import path_assemble_hier
 from pprint import pprint
 import logging
 import copy

@@ -1,5 +1,5 @@
 import logging
-from albero.plugin.common import PluginStrategyClass
+from kheops.plugin.common import PluginStrategyClass
 
 log = logging.getLogger(__name__)
 

@@ -11,7 +11,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
-from albero.utils import schema_validate
+from kheops.utils import schema_validate
 import copy
 
 # Candidate Classes

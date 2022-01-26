@@ -4,8 +4,8 @@ import logging
 from pprint import pprint
 
 
-from albero.utils import schema_validate
-import albero.plugin as AlberoPlugins
+from kheops.utils import schema_validate
+import kheops.plugin as KheopsPlugins
 
 log = logging.getLogger(__name__)
 
@@ -151,7 +151,7 @@ class BackendsManager(Manager):
         self.config_app = app.conf2["config"]["app"]
         self.config_main = app.conf2["config"]["tree"]
         self.config_items = list(app.conf2["tree"])
-        # THIS MAKE A BUG !!!! self.plugin_loader = LoadPlugin(AlberoPlugins)
+        # THIS MAKE A BUG !!!! self.plugin_loader = LoadPlugin(KheopsPlugins)
 
         self.plugins = [
             "init",
@@ -171,7 +171,7 @@ class BackendsManager(Manager):
         log.debug(f"Look for candidates for key '{key}' in backend: {self.backends}")
 
         # Prepare plugins
-        plugin_loader = LoadPlugin(AlberoPlugins)
+        plugin_loader = LoadPlugin(KheopsPlugins)
         _run = {
             "key": key,
             "scope": scope,
@@ -201,7 +201,7 @@ class BackendsManager(Manager):
     def get_results(self, backends, trace=False):
 
         # Prepare plugins
-        plugin_loader = LoadPlugin(AlberoPlugins)
+        plugin_loader = LoadPlugin(KheopsPlugins)
 
         new_results = []
         for backend in backends:
@@ -349,7 +349,7 @@ class RulesManager(Manager):
 
         # Load plugin
         log.debug(f"Run strategy: {strategy}")
-        plugin_loader = LoadPlugin(AlberoPlugins)
+        plugin_loader = LoadPlugin(KheopsPlugins)
         strategy = plugin_loader.load(
             "strategy",
             strategy,

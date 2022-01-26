@@ -1,6 +1,6 @@
 import logging
-from albero.plugin.common import PluginStrategyClass
-from albero.utils import schema_validate, str_ellipsis
+from kheops.plugin.common import PluginStrategyClass
+from kheops.utils import schema_validate, str_ellipsis
 
 log = logging.getLogger(__name__)
 

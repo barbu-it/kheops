@@ -9,8 +9,8 @@ import yaml
 import anyconfig
 from pprint import pprint
 
-from albero.query import Query
-from albero.utils import schema_validate
+from kheops.query import Query
+from kheops.utils import schema_validate
 import anyconfig
 
 # from box import Box
@@ -55,11 +55,11 @@ class App:
                                         "oneOf": [
                                             {
                                             "type": "null",
-                                            "description": "Application current working directory is the `albero.yml` directory",
+                                            "description": "Application current working directory is the `kheops.yml` directory",
                                             },
                                             {
                                             "type": "string",
-                                            "description": "Application working directory. If a relative path is used, it will be depending on `albero.yml` directory",
+                                            "description": "Application working directory. If a relative path is used, it will be depending on `kheops.yml` directory",
                                             },
                                         ]
                                     },
@@ -109,7 +109,7 @@ class App:
         },
     }
 
-    def __init__(self, config="albero.yml", namespace="default"):
+    def __init__(self, config="kheops.yml", namespace="default"):
         conf2 = anyconfig.load(config)
         self.run = {}
 
@@ -177,11 +177,11 @@ class App:
     def dump_schema(self):
 
         import json
-        import albero.plugin as AlberoPlugins
-        from albero.managers import BackendsManager, RulesManager
+        import kheops.plugin as KheopsPlugins
+        from kheops.managers import BackendsManager, RulesManager
 
-        r1 = BackendsManager.get_schema(AlberoPlugins, mode='parts')
-        r2 = RulesManager.get_schema(AlberoPlugins)
+        r1 = BackendsManager.get_schema(KheopsPlugins, mode='parts')
+        r2 = RulesManager.get_schema(KheopsPlugins)
         #pprint (r1)
         print(json.dumps(r1, indent=2))
         return
@@ -196,8 +196,8 @@ class App:
     def gen_docs(self):
 
         import json
-        import albero.plugin as AlberoPlugins
-        from albero.managers import BackendsManager, RulesManager
+        import kheops.plugin as KheopsPlugins
+        from kheops.managers import BackendsManager, RulesManager
         print ("WIP")
 
         #src = {
@@ -209,7 +209,7 @@ class App:
         #                }
         #            }
         #        
-        #r1 = BackendsManager.get_schema(AlberoPlugins, mode='parts')
+        #r1 = BackendsManager.get_schema(KheopsPlugins, mode='parts')
 
 
         #print (json.dumps(r1, indent=2))

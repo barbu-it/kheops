@@ -1,6 +1,6 @@
 from pathlib import Path
-from albero.utils import render_template, glob_files
-from albero.plugin.common import PluginEngineClass, PluginFileGlob #, Candidate
+from kheops.utils import render_template, glob_files
+from kheops.plugin.common import PluginEngineClass, PluginFileGlob #, Candidate
 from pprint import pprint
 
 import logging
@@ -147,11 +147,17 @@ class Plugin(PluginEngineClass, PluginFileGlob):
                 except Exception:
                     pass
 
+            # Assemble relative path
+            try:
+                rel_path = Path(path).resolve().relative_to(Path.cwd())
+            except ValueError:
+                rel_path = Path(path).resolve()
+
             # Build result object
             result = {}
             result["run"] = {
                 "path": path,
-                "rel_path": str(Path(path).relative_to(Path.cwd())),
+                "rel_path": str(rel_path),
             }
             result["parent"] = self.config
             result["data"] = data

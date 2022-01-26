@@ -1,7 +1,7 @@
 import copy
 from pathlib import Path
-from albero.utils import render_template
-from albero.plugin.common import PluginBackendClass
+from kheops.utils import render_template
+from kheops.plugin.common import PluginBackendClass
 from pprint import pprint
 
 import logging
