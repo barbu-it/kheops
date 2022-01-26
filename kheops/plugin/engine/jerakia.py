@@ -1,15 +1,18 @@
-from pathlib import Path
-from kheops.utils import render_template, glob_files
-from kheops.plugin.common import PluginEngineClass, PluginFileGlob #, Candidate
-from pprint import pprint
+"""Jerakia Engine Code"""
 
 import logging
+from pathlib import Path
+
 import anyconfig
+
+from kheops.utils import render_template, glob_files
+from kheops.plugin.common import PluginEngineClass, PluginFileGlob  # , Candidate
+
 
 log = logging.getLogger(__name__)
 
 
-#class FileCandidate(Candidate):
+# class FileCandidate(Candidate):
 #    path = None
 #
 #    def _report_data(self):
@@ -50,14 +53,14 @@ class Plugin(PluginEngineClass, PluginFileGlob):
                 {
                     "type": "string",
                 },
-#                {
-#                    "type": "array",
-#                    "items": {
-#                        "type": "string",
-#                    },
-#                },
-            ]
-        }
+                #                {
+                #                    "type": "array",
+                #                    "items": {
+                #                        "type": "string",
+                #                    },
+                #                },
+            ],
+        },
     }
 
     def _init(self):
@@ -97,18 +100,19 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
         # Look for files (NOT BE HERE !!!)
         ret3 = []
-        for p in parsed:
-            globbed = glob_files(path_top / p, 'ansible.yaml')
+        for item in parsed:
+            globbed = glob_files(path_top / item, "ansible.yaml")
             ret3.extend(globbed)
-        log.debug(f"Matched globs: %s", ret3)
+        log.debug("Matched globs: %s", ret3)
 
         return ret3
 
     def process(self):
+        """return results"""
 
         # Detect path root and path prefix
-        path_root = self.app.run['path_root']
-        path_prefix = self.app.conf2['config']['tree']['prefix']
+        path_root = self.app.run["path_root"]
+        path_prefix = self.app.conf2["config"]["tree"]["prefix"]
 
         if path_prefix:
             path_prefix = Path(path_prefix)
@@ -119,9 +123,7 @@ class Plugin(PluginEngineClass, PluginFileGlob):
         else:
             path_top = path_root
 
-        path_top = path_top
-        log.debug (f"Path Top: {path_top}")
-
+        log.debug("Path Top: %s", path_top)
 
         scope = self.config["_run"]["scope"]
         key = self.config["_run"]["key"]
@@ -132,7 +134,7 @@ class Plugin(PluginEngineClass, PluginFileGlob):
 
         ret = []
         for index, path in enumerate(self._show_paths(path_top, scope)):
-            log.debug(f"Reading file: {path}")
+            log.debug("Reading file: %s", path)
             # Fetch data
             found = False
             raw_data = anyconfig.load(path, ac_parser="yaml")
@@ -156,6 +158,7 @@ class Plugin(PluginEngineClass, PluginFileGlob):
             # Build result object
             result = {}
             result["run"] = {
+                "index": index,
                 "path": path,
                 "rel_path": str(rel_path),
             }
@@ -166,4 +169,3 @@ class Plugin(PluginEngineClass, PluginFileGlob):
             ret.append(result)
 
         return ret
-

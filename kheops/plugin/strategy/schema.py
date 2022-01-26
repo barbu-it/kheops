@@ -1,16 +1,21 @@
-import logging
-from kheops.plugin.common import PluginStrategyClass
-from kheops.utils import schema_validate, str_ellipsis
-
-log = logging.getLogger(__name__)
+"""Schema strategy"""
 
 import json
+import logging
 from pprint import pprint
+
 from jsonmerge import Merger
 from prettytable import PrettyTable
 
+from kheops.plugin.common import PluginStrategyClass
+from kheops.utils import str_ellipsis
+
+
+log = logging.getLogger(__name__)
+
 
 class Plugin(PluginStrategyClass):
+    """Schema strategy plugin"""
 
     _plugin_name = "schema"
     _schema_props_new = {
@@ -88,6 +93,7 @@ class Plugin(PluginStrategyClass):
     }
 
     def process(self, candidates: list, rule=None) -> (list, dict):
+        """Return results"""
 
         trace = rule["trace"]
         explain = rule["explain"]

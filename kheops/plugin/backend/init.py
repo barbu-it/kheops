@@ -1,13 +1,14 @@
-from kheops.plugin.common import PluginBackendClass
-from pprint import pprint
+"""Init backend plugin"""
+
+import copy
 import logging
+from kheops.plugin.common import PluginBackendClass
 
 log = logging.getLogger(__name__)
 
-import copy
-
 
 class Plugin(PluginBackendClass):
+    """Init backend plugin"""
 
     _plugin_name = "init"
     _schema_props_new = None
@@ -15,6 +16,7 @@ class Plugin(PluginBackendClass):
     default_engine = "jerakia"
 
     def process(self, backends: list, ctx: dict) -> (list, dict):
+        """Return the new backend list"""
 
         new_backends = []
         for index, item in enumerate(backends):

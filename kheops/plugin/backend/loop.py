@@ -1,16 +1,14 @@
-import copy
-from pathlib import Path
-from kheops.utils import render_template
-from kheops.plugin.common import PluginBackendClass
-from pprint import pprint
+"""Loop backend plugin"""
 
+import copy
 import logging
-import anyconfig
-import textwrap
+
+from kheops.plugin.common import PluginBackendClass
 
 log = logging.getLogger(__name__)
 
 class Plugin(PluginBackendClass):
+    """Loop backend plugin"""
 
     _plugin_name = "loop"
     _plugin_help = (
@@ -118,6 +116,7 @@ class Plugin(PluginBackendClass):
     }
 
     def process(self, backends: list, ctx: dict) -> (list, dict):
+        """Return results"""
 
         new_backends = []
         for cand in backends:
@@ -135,7 +134,11 @@ class Plugin(PluginBackendClass):
             if isinstance(loop_data, str):
                 loop_data = cand["_run"]["scope"].get(loop_data, None)
             if not isinstance(loop_data, list):
-                log.debug("Got an empty list for loop for var %s, skipping this entry: %s", cand, loop_data)
+                log.debug(
+                    "Got an empty list for loop for var %s, skipping this entry: %s",
+                    cand,
+                    loop_data,
+                )
                 continue
 
             # Build a new list

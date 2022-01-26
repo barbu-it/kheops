@@ -1,14 +1,16 @@
+"""Hierarchy backend plugin"""
+
+import copy
+import logging
 
 from kheops.plugin.common import PluginBackendClass
 from kheops.utils import path_assemble_hier
-from pprint import pprint
-import logging
-import copy
 
 log = logging.getLogger(__name__)
 
 
 class Plugin(PluginBackendClass):
+    """Hierarchy plugin"""
 
     _plugin_name = "hier"
     _schema_props_new = {
@@ -55,6 +57,7 @@ class Plugin(PluginBackendClass):
     }
 
     def process(self, backends: list, ctx: dict) -> (list, dict):
+        """Return results"""
 
         new_backends = []
 
@@ -80,12 +83,16 @@ class Plugin(PluginBackendClass):
                 hier_data = path_assemble_hier(hier_data, hier_sep)
 
             if not isinstance(hier_data, list):
-                log.debug(f"Hier module can't loop over non list data, got: {hier_data} for {cand}")
+                log.debug(
+                    "Hier module can't loop over non list data, got: %s for %s",
+                    hier_data,
+                    cand,
+                )
                 continue
 
             # Build result list
             ret1 = hier_data
-            log.debug (f"Hier plugin will loop over: {ret1}")
+            log.debug("Hier plugin will loop over: %s", ret1)
             ret2 = []
             for index, item in enumerate(ret1):
                 _cand = copy.deepcopy(cand)
