@@ -1,12 +1,12 @@
 # Kheops
 
 
-![Kheops Logo!](logo/kheops_brand.png "Kheops Logo")
+![Kheops Logo](logo/kheops_brand.png "Kheops Logo")
 
 
 ## Introduction
 
-> [~~Jerakia~~](https://web.archive.org/web/20180829194211/http://jerakia.io/documentation/)Kheops is a tool that performs key value lookups against a variety of pluggable data stores. It does this using a top-down hierarchical set of queries that allow you to define global values and override them at different levels of a configurable hierarchy.
+> [~~Jerakia~~](https://web.archive.org/web/20180829194211/http://jerakia.io/documentation/) Kheops is a tool that performs key value lookups against a variety of pluggable data stores. It does this using a top-down hierarchical set of queries that allow you to define global values and override them at different levels of a configurable hierarchy.
 
 > This has many use cases, including infrastructure management where you often have configuration values defined at a global level but wish to override these values based on certain factors such as the environment or location of the request.
 
@@ -20,8 +20,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-Install Kheops
-
+Install Kheops with pip:
 ```
 pip install kheops
 ```
@@ -32,19 +31,15 @@ kheops --help
 ```
 
 Now you can test the examples, and learn how to use it [here](/lost).
-
 ```
 kheops --config examples/01_simple/ hello   
-kheops --config examples/01_simple/ hello -e site=
-kheops --config examples/01_simple/ hello -e site=
+kheops --config examples/01_simple/ hello -e site=Montreal
+kheops --config examples/01_simple/ hello -e site=Paris
 ```
 
 ## Learning Kheops
 
-
-
-
-
+Please check online documentation.
 
 
 
@@ -74,9 +69,9 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [jsonmerge](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [jsonschema](https://maven.apache.org/) - Dependency Management
+* [poetry](https://rometools.github.io/rome/) - Used to generate RSS Feeds
 
 ## Contributing
 
