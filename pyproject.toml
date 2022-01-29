@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "albero"
+name = "kheops"
 version = "0.1.0"
 description = "Data trees for Ansible"
 authors = ["Robin Cordier"]
@@ -13,6 +13,7 @@ anyconfig = "^0.12.0"
 python-box = "^5.4.1"
 prettytable = "^3.0.0"
 dpath = "^2.0.5"
+diskcache = "^5.4.0"
 
 [tool.poetry.dev-dependencies]
 json-schema-for-humans = "^0.40"
@@ -20,10 +21,12 @@ pylint = "^2.12.2"
 black = "^21.12b0"
 mkdocs = "^1.2.3"
 mkdocs-ivory = "^0.4.6"
+Sphinx = "^4.4.0"
+myst-parser = "^0.16.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-albero = "albero.cli:CmdApp"
+kheops = "kheops.cli:CmdApp"
