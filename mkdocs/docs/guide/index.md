@@ -1,6 +1,0 @@
-* 105: Integrations
-  - Integration in Ansible
-  - Integration as a web server (future) [webserver](webserver.md)
-  - Integration with Puppet
-  - Integration with Foreman
-
