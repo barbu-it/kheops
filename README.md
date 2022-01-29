@@ -1,7 +1,10 @@
 # Kheops
 
 
-Introduction:
+![Kheops Logo!](logo/kheops_brand.png "Kheops Logo")
+
+
+## Introduction
 
 > [~~Jerakia~~](https://web.archive.org/web/20180829194211/http://jerakia.io/documentation/)Kheops is a tool that performs key value lookups against a variety of pluggable data stores. It does this using a top-down hierarchical set of queries that allow you to define global values and override them at different levels of a configurable hierarchy.
 
