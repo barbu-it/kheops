@@ -3,7 +3,7 @@
 import logging
 from mergedeep import merge, Strategy
 
-from kheops.plugin2.common import StrategyPlugin
+from kheops.plugin.common import StrategyPlugin
 
 from pprint import pprint
 

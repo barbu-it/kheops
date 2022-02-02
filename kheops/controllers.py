@@ -6,7 +6,7 @@ import logging
 from pathlib import Path
 from prettytable import PrettyTable
 
-import kheops.plugin2 as KheopsPlugins
+import kheops.plugin as KheopsPlugins
 from kheops.utils import render_template, render_template_python, str_ellipsis
 
 log = logging.getLogger(__name__)

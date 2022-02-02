@@ -7,7 +7,7 @@ from pathlib import Path
 import anyconfig
 
 from kheops.utils import render_template, glob_files, render_template_python
-from kheops.plugin2.common import BackendPlugin, BackendCandidate
+from kheops.plugin.common import BackendPlugin, BackendCandidate
 
 from pprint import pprint
 log = logging.getLogger(__name__)

@@ -3,7 +3,7 @@
 
 import logging
 
-from kheops.plugin2.common import ScopePlugin, ScopeExtLoop
+from kheops.plugin.common import ScopePlugin, ScopeExtLoop
 from kheops.utils import path_assemble_hier
 
 log = logging.getLogger(__name__)
