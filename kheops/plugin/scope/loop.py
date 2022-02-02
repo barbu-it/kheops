@@ -9,7 +9,7 @@ from kheops.utils import path_assemble_hier
 log = logging.getLogger(__name__)
 
 
-class Plugin(ScopePlugin,ScopeExtLoop):
+class Plugin(ScopePlugin, ScopeExtLoop):
     """Hierarchy plugin"""
 
     _plugin_name = "hier"
@@ -56,16 +56,15 @@ class Plugin(ScopePlugin,ScopeExtLoop):
         }
     }
 
-
     def process_items(self, lookups, conf):
 
-        item_name = conf.get('var', "item_loop")
-        item_data = conf.get('data', None)
+        item_name = conf.get("var", "item_loop")
+        item_data = conf.get("data", None)
 
         lookups = self.loop_over(
             lookups,
             conf=conf,
-            var_name='item_loop',
-            )
+            var_name="item_loop",
+        )
 
         return lookups

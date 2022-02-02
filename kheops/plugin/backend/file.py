@@ -10,6 +10,7 @@ from kheops.utils import render_template, glob_files, render_template_python
 from kheops.plugin.common import BackendPlugin, BackendCandidate
 
 from pprint import pprint
+
 log = logging.getLogger(__name__)
 
 
@@ -27,7 +28,7 @@ log = logging.getLogger(__name__)
 #        return super()._report_data(data)
 
 
-#class Plugin(PluginEngineClass, PluginFileGlob):
+# class Plugin(PluginEngineClass, PluginFileGlob):
 class Plugin(BackendPlugin):
     """Generic Plugin Class"""
 
@@ -65,45 +66,40 @@ class Plugin(BackendPlugin):
         },
     }
 
-    extensions = {
-                '.yml': 'yaml', 
-                '.yaml': 'yaml'
-                }
+    extensions = {".yml": "yaml", ".yaml": "yaml"}
 
     def _init(self):
 
-
         # Guess top path
-        top_path = self.ns.run['path_config']
-        path_prefix = self.ns.config['config'].get('file_path_prefix', None)
+        top_path = self.ns.run["path_config"]
+        path_prefix = self.ns.config["config"].get("file_path_prefix", None)
         if path_prefix:
             top_path = os.path.join(top_path, path_prefix)
         self.top_path = top_path
 
         # Fetch module config
-        path_suffix = self.ns.config['config'].get('file_path_suffix', "auto")
-        if path_suffix == 'auto':
+        path_suffix = self.ns.config["config"].get("file_path_suffix", "auto")
+        if path_suffix == "auto":
             path_suffix = f"/{self.ns.name}"
         self.path_suffix = path_suffix
 
     def fetch_data(self, config) -> list:
 
-        path = config.get('path')
+        path = config.get("path")
         if self.path_suffix:
             path = f"{path}{self.path_suffix}"
 
-
         raw_data = None
-        status = 'not_found'
+        status = "not_found"
         for ext, parser in self.extensions.items():
-            new_path = os.path.join(self.top_path, path + ext )
+            new_path = os.path.join(self.top_path, path + ext)
 
             if os.path.isfile(new_path):
-                status = 'found'
+                status = "found"
                 try:
                     raw_data = anyconfig.load(new_path, ac_parser=parser)
                 except Exception:
-                    status = 'broken'
+                    status = "broken"
                     raw_data = None
                 break
 
@@ -111,8 +107,7 @@ class Plugin(BackendPlugin):
             path=new_path,
             status=status,
             run=config,
-            data= raw_data,
-            )
+            data=raw_data,
+        )
 
         return [ret]
-

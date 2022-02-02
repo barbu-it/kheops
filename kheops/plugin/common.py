@@ -8,16 +8,15 @@ from pprint import pprint
 log = logging.getLogger(__name__)
 
 
-
 # Vocabulary:
-    # Key Rules
-        # ConfPlugin[1]
-        # StrategyPlugin[1]
-        # OutPlugin[N]
-    # Lookup Hierarchy
-        # ConfPlugin[1]
-        # ScopePlugin[N]
-        # BackendPlugin[1]
+# Key Rules
+# ConfPlugin[1]
+# StrategyPlugin[1]
+# OutPlugin[N]
+# Lookup Hierarchy
+# ConfPlugin[1]
+# ScopePlugin[N]
+# BackendPlugin[1]
 
 
 # Generic classes
@@ -25,7 +24,6 @@ class KheopsPlugin:
     plugin_name = None
     plugin_type = None
     plugin_kind = None
-
 
     def __init__(self):
         self._init()
@@ -36,20 +34,21 @@ class KheopsPlugin:
 
 
 class KheopsListPlugin(KheopsPlugin):
-    plugin_type = 'list'
+    plugin_type = "list"
 
     def process_list(self, item_list) -> list:
         pass
 
+
 class KheopsItemPlugin(KheopsPlugin):
-    plugin_type = 'item'
+    plugin_type = "item"
 
     def process_item(self, item) -> list:
         pass
 
 
 # Other classes
-class BackendCandidate():
+class BackendCandidate:
     def __init__(self, path=None, data=None, run=None, status=None):
         assert isinstance(run, dict)
         self.path = path
@@ -60,24 +59,27 @@ class BackendCandidate():
     def __repr__(self):
         return f"Status: {self.status}, Path: {self.path} => {self.data}"
 
+
 # Specific classes
 class ConfPlugin(KheopsListPlugin):
     plugin_kind = "conf"
     schema_prop = {
-            "include": {}, # Direct config, DICT
-            }
+        "include": {},  # Direct config, DICT
+    }
+
     def process_list(self, item_list) -> list:
         pass
+
 
 class ScopePlugin(KheopsListPlugin):
     plugin_kind = "scope"
 
     schema_prop = {
-            "_scope": [], # List of scope modification to apply
-            "init": {},
-            "loop_N": {},
-            "hier_N": {},
-            }
+        "_scope": [],  # List of scope modification to apply
+        "init": {},
+        "loop_N": {},
+        "hier_N": {},
+    }
 
     def process_item(self, item_list) -> list:
 
@@ -88,9 +90,8 @@ class ScopePlugin(KheopsListPlugin):
         super().__init__()
 
 
-
-class ScopeExtLoop():
-    '''This Scope Extension allow to loop over a lookup'''
+class ScopeExtLoop:
+    """This Scope Extension allow to loop over a lookup"""
 
     schema_props = {
         "properties": {
@@ -110,11 +111,12 @@ class ScopeExtLoop():
         },
     }
 
+    def loop_over(
+        self, lookups, conf, var_name="item", callback_context=None, callback=None
+    ):
 
-    def loop_over(self, lookups, conf, var_name='item', callback_context=None, callback=None):
-
-        var_name = conf.get('var', var_name)
-        var_data_ref = conf.get('data', None)
+        var_name = conf.get("var", var_name)
+        var_data_ref = conf.get("data", None)
 
         if not var_data_ref:
             log.debug("No data to loop over for: %s", var_data_ref)
@@ -126,76 +128,73 @@ class ScopeExtLoop():
             var_data = var_data_ref
             if isinstance(var_data_ref, str):
                 try:
-                    var_data = lookup['_run']['scope'][var_data]
+                    var_data = lookup["_run"]["scope"][var_data]
                 except KeyError:
-                    log.debug ("Ignoring missing '%s' from scope", var_data)
+                    log.debug("Ignoring missing '%s' from scope", var_data)
                     pass
 
             # Run callback
             if callback:
                 var_data = callback(var_data, callback_context)
 
-            # Validate generated 
+            # Validate generated
             if not isinstance(var_data, list):
                 log.warning("Hier data must be a list, got: %s", var_data)
                 pass
 
             # Create new object
             for index, var_value in enumerate(var_data):
-                
-                if not 'hier' in lookup['_run']:
-                    lookup['_run']['hier'] = []
+
+                if not "hier" in lookup["_run"]:
+                    lookup["_run"]["hier"] = []
 
                 ctx = {
-                    'data_ref': var_data_ref,
-                    'index': index,
-                    'value': var_value,
-                    'variable': var_name,
+                    "data_ref": var_data_ref,
+                    "index": index,
+                    "value": var_value,
+                    "variable": var_name,
                 }
 
                 new_item = copy.deepcopy(lookup)
-                new_item['_run']['scope'][var_name] = var_value
-                new_item['_run']['hier'].append(ctx)
-
+                new_item["_run"]["scope"][var_name] = var_value
+                new_item["_run"]["hier"].append(ctx)
 
                 ret.append(new_item)
-            
 
         return ret
-
 
 
 class BackendPlugin(KheopsItemPlugin):
     plugin_kind = "backend"
 
     schema_prop = {
-            "backend": {}, # GENERIC, String
-            "file": {},
-            "glob": {},
-            "http": {},
-            "consul": {},
-            "vault": {},
-            }
+        "backend": {},  # GENERIC, String
+        "file": {},
+        "glob": {},
+        "http": {},
+        "consul": {},
+        "vault": {},
+    }
+
     def fetch_data(self, lookups) -> list:
-        raise Exception('Not implemented')
-        
+        raise Exception("Not implemented")
 
     def __init__(self, namespace):
         self.ns = namespace
         super().__init__()
 
 
-
 class StrategyPlugin(KheopsItemPlugin):
     plugin_kind = "strategy"
     schema_prop = {
-            "_strategy": {}, # GENERIC, String
-            "merge": {},
-            "first": {},
-            "last": {},
-            "smart": {},
-            "schema": {},
-            }
+        "_strategy": {},  # GENERIC, String
+        "merge": {},
+        "first": {},
+        "last": {},
+        "smart": {},
+        "schema": {},
+    }
+
     def merge_results(self, candidates, rule) -> list:
         pass
 
@@ -207,62 +206,13 @@ class StrategyPlugin(KheopsItemPlugin):
 class OutPlugin(KheopsItemPlugin):
     plugin_kind = "out"
     schema_prop = {
-            "_out": {}, # GENERIC, List of dict
-            "toml": {},
-            "validate": {},
-            }
+        "_out": {},  # GENERIC, List of dict
+        "toml": {},
+        "validate": {},
+    }
+
     def process_item(self, item) -> list:
         pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # # Candidate Classes

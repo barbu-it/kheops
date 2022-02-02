@@ -5,7 +5,8 @@ from kheops.plugin.common import StrategyPlugin
 
 log = logging.getLogger(__name__)
 
-#class Plugin(PluginStrategyClass):
+# class Plugin(PluginStrategyClass):
+
 
 class Plugin(StrategyPlugin):
     """Last strategy plugin"""
@@ -13,7 +14,7 @@ class Plugin(StrategyPlugin):
     _plugin_name = "last"
     _schema_props_new = None
 
-    selector = 'last'
+    selector = "last"
 
     def merge_results(self, candidates: list, rule: dict, query) -> (list, dict):
         """Return results"""
@@ -22,9 +23,9 @@ class Plugin(StrategyPlugin):
         result = None
 
         for cand in reversed(candidates):
-            #try:
+            # try:
             data = cand.data
-            
+
             if key is None:
                 result = data
             else:
@@ -34,9 +35,8 @@ class Plugin(StrategyPlugin):
                         break
                     except KeyError:
                         pass
-                    
-            #else:
+
+            # else:
             #    raise Exception(f"Data must be a dict, not something else ... {data}")
-                
 
         return result

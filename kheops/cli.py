@@ -122,11 +122,13 @@ class CmdApp:
         add_p = subparsers.add_parser("schema")
         add_p = subparsers.add_parser("gen_doc")
 
-
         # Manage command: lookup2
         add_p = subparsers.add_parser("lookup")
         add_p.add_argument(
-            "-n", "--namespace", help="Namespace name (KHEOPS_NAMESPACE)", default=os.environ.get("KHEOPS_NAMESPACE", "default")
+            "-n",
+            "--namespace",
+            help="Namespace name (KHEOPS_NAMESPACE)",
+            default=os.environ.get("KHEOPS_NAMESPACE", "default"),
         )
         add_p.add_argument(
             "-f", "--file", help="File with params as dict. Can be stdin - ."
@@ -178,7 +180,6 @@ class CmdApp:
 
         keys = self.args.keys or [None]
 
-
         new_params = {}
         if self.args.file:
             new_params = anyconfig.load(self.args.file, ac_parser="yaml")
@@ -192,24 +193,16 @@ class CmdApp:
 
         self.log.info("CLI: %s with env: %s", keys, new_params)
 
-
         app = Kheops.Kheops(config=self.args.config, namespace=self.args.namespace)
         ret = app.lookup2(
             namespace=self.args.namespace,
             keys=keys,
             scope=new_params,
-
             trace=self.args.trace,
             explain=self.args.explain,
             validate_schema=True,
         )
         print(anyconfig.dumps(ret, ac_parser=self.args.format))
-
-
-
-
-
-
 
     def cli_lookup_OLD(self):
         """Display how to use logging"""
@@ -232,7 +225,7 @@ class CmdApp:
         self.log.info("CLI: %s with env: %s", keys, new_params)
 
         app = Kheops.App(config=self.args.config, namespace=self.args.namespace)
-        #for key in keys:
+        # for key in keys:
         ret = app.lookup(
             keys=keys,
             scope=new_params,

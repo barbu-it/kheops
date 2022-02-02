@@ -18,166 +18,154 @@ from kheops.utils import schema_validate
 log = logging.getLogger(__name__)
 
 
-
-
 CONF_SCHEMA = {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "type": "object",
-        "additionalProperties": False,
-        "default": {},
-        "$def": {
-            "backends_items": {},
-            "backends_config": {},
-            "rules_items": {},
-            "rules_config": {},
-        },
-        #"patternProperties": {
-        #    ".*": {
-        #        "type": "object",
-        #        "optional": True,
-        #        "additionalProperties": False,
-                "properties": {
-                    "config": {
-                        "type": "object",
-                        "default": {},
-                        "additionalProperties": True,
-                        "properties": {
-                            "app": {
-                                "type": "object",
-                                "default": {},
-                                "additionalProperties": False,
-                                "properties": {
-                                    "root": {
-                                        "default": None,
-                                        "oneOf": [
-                                            {
-                                                "type": "null",
-                                                "description": "Application current working directory is the `kheops.yml` directory",
-                                            },
-                                            {
-                                                "type": "string",
-                                                "description": "Application working directory. If a relative path is used, it will be depending on `kheops.yml` directory",
-                                            },
-                                        ],
-                                    },
-                                    "cache": {
-                                        "default": "kheops_cache",
-                                        "oneOf": [
-                                            {
-                                                "type": "null",
-                                                "description": "Disable cache",
-                                            },
-                                            {
-                                                "type": "string",
-                                                "description": "Path of the cache directory",
-                                            },
-                                        ],
-                                    },
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "additionalProperties": False,
+    "default": {},
+    "$def": {
+        "backends_items": {},
+        "backends_config": {},
+        "rules_items": {},
+        "rules_config": {},
+    },
+    # "patternProperties": {
+    #    ".*": {
+    #        "type": "object",
+    #        "optional": True,
+    #        "additionalProperties": False,
+    "properties": {
+        "config": {
+            "type": "object",
+            "default": {},
+            "additionalProperties": True,
+            "properties": {
+                "app": {
+                    "type": "object",
+                    "default": {},
+                    "additionalProperties": False,
+                    "properties": {
+                        "root": {
+                            "default": None,
+                            "oneOf": [
+                                {
+                                    "type": "null",
+                                    "description": "Application current working directory is the `kheops.yml` directory",
                                 },
-                            },
-
-                            # OLD
-                            "tree": {
-                                # "additionalProperties": False,
-                                "type": "object",
-                                "default": {},
-                                "deprecated": True,
-                                "properties": {
-                                    "prefix": {
-                                        "default": None,
-                                        "oneOf": [
-                                            {
-                                                "type": "null",
-                                                "description": "Disable prefix, all files are lookup up from the app root dir.",
-                                            },
-                                            {
-                                                "type": "string",
-                                                "description": "Add a path prefix before all paths. This is quite useful to store your YAML data in a dedicated tree.",
-                                            },
-                                        ],
-                                    },
+                                {
+                                    "type": "string",
+                                    "description": "Application working directory. If a relative path is used, it will be depending on `kheops.yml` directory",
                                 },
-                            },
-                            "lookups": {
-                                # "additionalProperties": False,
-                                "type": "object",
-                                "default": {},
-                                "properties": {
-                                    "prefix": {
-                                        "default": None,
-                                        "oneOf": [
-                                            {
-                                                "type": "null",
-                                                "description": "Disable prefix, all files are lookup up from the app root dir.",
-                                            },
-                                            {
-                                                "type": "string",
-                                                "description": "Add a path prefix before all paths. This is quite useful to store your YAML data in a dedicated tree.",
-                                            },
-                                        ],
-                                    },
+                            ],
+                        },
+                        "cache": {
+                            "default": "kheops_cache",
+                            "oneOf": [
+                                {
+                                    "type": "null",
+                                    "description": "Disable cache",
                                 },
-                            },
-                            "rules": {
-                                "type": "object",
-                                "default": {},
-                            },
+                                {
+                                    "type": "string",
+                                    "description": "Path of the cache directory",
+                                },
+                            ],
                         },
-                    },
-                    "tree": {
-                        "type": "array",
-                        "default": [],
-                        "items": {
-                            "type": "object",
-                            "properties": {"$ref": "#/$defs/backends_items"},
-                        },
-                    },
-                    "lookups": {
-                        "type": "array",
-                        "default": [],
-                        "items": {
-                            "type": "object",
-                            "properties": {"$ref": "#/$defs/backends_items"},
-                        },
-                    },
-                    "rules": {
-                        "type": "array",
-                        "default": [],
-                        # "arrayItem":  { "$ref": "#/$defs/rules_items" },
                     },
                 },
-     #       },
-     #   },
-    }
+                # OLD
+                "tree": {
+                    # "additionalProperties": False,
+                    "type": "object",
+                    "default": {},
+                    "deprecated": True,
+                    "properties": {
+                        "prefix": {
+                            "default": None,
+                            "oneOf": [
+                                {
+                                    "type": "null",
+                                    "description": "Disable prefix, all files are lookup up from the app root dir.",
+                                },
+                                {
+                                    "type": "string",
+                                    "description": "Add a path prefix before all paths. This is quite useful to store your YAML data in a dedicated tree.",
+                                },
+                            ],
+                        },
+                    },
+                },
+                "lookups": {
+                    # "additionalProperties": False,
+                    "type": "object",
+                    "default": {},
+                    "properties": {
+                        "prefix": {
+                            "default": None,
+                            "oneOf": [
+                                {
+                                    "type": "null",
+                                    "description": "Disable prefix, all files are lookup up from the app root dir.",
+                                },
+                                {
+                                    "type": "string",
+                                    "description": "Add a path prefix before all paths. This is quite useful to store your YAML data in a dedicated tree.",
+                                },
+                            ],
+                        },
+                    },
+                },
+                "rules": {
+                    "type": "object",
+                    "default": {},
+                },
+            },
+        },
+        "tree": {
+            "type": "array",
+            "default": [],
+            "items": {
+                "type": "object",
+                "properties": {"$ref": "#/$defs/backends_items"},
+            },
+        },
+        "lookups": {
+            "type": "array",
+            "default": [],
+            "items": {
+                "type": "object",
+                "properties": {"$ref": "#/$defs/backends_items"},
+            },
+        },
+        "rules": {
+            "type": "array",
+            "default": [],
+            # "arrayItem":  { "$ref": "#/$defs/rules_items" },
+        },
+    },
+    #       },
+    #   },
+}
 
 
-
-
-class GenericInstance():
+class GenericInstance:
 
     name = None
     run = {}
 
 
-
-
 class KheopsNamespace(GenericInstance, QueryProcessor):
-
     def __init__(self, app, name, config=None):
 
         self.name = name
         self.config = config or {}
         self.app = app
         self.run = dict(app.run)
-        
 
         # Validate configuration
         self.config = schema_validate(self.config, CONF_SCHEMA)
 
-        self.run["path_ns"] = str(Path(app.run['config_src']).parent.resolve())
-
-
-      
+        self.run["path_ns"] = str(Path(app.run["config_src"]).parent.resolve())
 
 
 #    def load_namespace(self, namespace="default"):
@@ -243,19 +231,15 @@ class KheopsNamespace(GenericInstance, QueryProcessor):
 #        return config
 
 
-
-    #def query(self, key=None, scope=None):
-    #    processor = QueryProcessor(app=self.app)
-    #    result = processor.exec(key, scope)
+# def query(self, key=None, scope=None):
+#    processor = QueryProcessor(app=self.app)
+#    result = processor.exec(key, scope)
 #
 #        return result
 
 
-
 class Kheops(GenericInstance):
-    """Main Kheops Application Instance
-
-    """
+    """Main Kheops Application Instance"""
 
     def __init__(self, config="kheops.yml", namespace="default"):
         """
@@ -277,19 +261,16 @@ class Kheops(GenericInstance):
 
         self.run["config_src"] = config
         if isinstance(config, str):
-            self.run["config_type"] = 'file'
+            self.run["config_type"] = "file"
             self.run["path_config"] = str(Path(config).parent.resolve())
         elif isinstance(config, dict):
-            self.run["config_type"] = 'dict'
+            self.run["config_type"] = "dict"
             self.run["path_config"] = str(path_cwd)
         else:
             raise Exception("Need a valid config")
 
-        
         self.ns_name = namespace
         self.raw_config = self.parse_conf(config)
-
-
 
     def parse_conf(self, config="kheops.yml"):
         """
@@ -307,31 +288,32 @@ class Kheops(GenericInstance):
         # Load config
         if isinstance(config, str):
             dict_conf = anyconfig.load(config)
-            source = f'file:{config}'
+            source = f"file:{config}"
         elif isinstance(config, dict):
             dict_conf = config
-            source = 'dict'
+            source = "dict"
         return dict_conf
 
-
-
-
-
-    def lookup2(self, keys=None, policy=None, scope=None, 
-        trace=False, explain=False, validate_schema=False, 
-        namespace='default' ,
-        ):
+    def lookup2(
+        self,
+        keys=None,
+        policy=None,
+        scope=None,
+        trace=False,
+        explain=False,
+        validate_schema=False,
+        namespace="default",
+    ):
         """Lookup a key in hierarchy"""
-
 
         ret = {}
         # Loop over keys
         for key_def in keys:
 
-            key_def = key_def or ''
+            key_def = key_def or ""
 
             # Identify namespace and key
-            parts = key_def.split(':')
+            parts = key_def.split(":")
             ns_name = self.ns_name
             if len(parts) > 1:
                 ns_name = parts[0]
@@ -357,29 +339,15 @@ class Kheops(GenericInstance):
 
         return ret
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def lookup(self, keys=None, policy=None, scope=None, trace=False, explain=False, validate_schema=False):
+    def lookup(
+        self,
+        keys=None,
+        policy=None,
+        scope=None,
+        trace=False,
+        explain=False,
+        validate_schema=False,
+    ):
         """Lookup a key in hierarchy"""
         log.debug("Lookup key %s with scope: %s", keys, scope)
         assert isinstance(keys, list), f"Got {keys}"
@@ -387,7 +355,14 @@ class Kheops(GenericInstance):
         query = Query(app=self)
         ret = {}
         for key in keys:
-            ret[key] = query.exec(key=key, scope=scope, policy=policy, trace=trace, explain=explain, validate_schema=validate_schema)
+            ret[key] = query.exec(
+                key=key,
+                scope=scope,
+                policy=policy,
+                trace=trace,
+                explain=explain,
+                validate_schema=validate_schema,
+            )
         return ret
 
     def dump_schema(self):
@@ -405,8 +380,7 @@ class Kheops(GenericInstance):
         # print(json.dumps(ret, indent=2))
 
     def gen_docs(self):
-        """ Generate documentation"""
-
+        """Generate documentation"""
 
         print("WIP")
         return None

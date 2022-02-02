@@ -14,9 +14,6 @@ log = logging.getLogger(__name__)
 # =====================
 
 
-
-
-
 def glob_files(path, pattern):
     """Return a list of path that match a glob"""
     log.debug("Search glob '%s' in '%s'", pattern, path)
@@ -35,11 +32,8 @@ def path_assemble_hier(path, sep="/", reverse=False, start_index=0):
     else:
         raise Exception(f"This function only accepts string or lists, got: {path}")
 
-
-
     if reverse:
         list_data = list_data[::-1]
-
 
     if start_index > 0:
         fixed_part = list_data[:start_index]
@@ -48,16 +42,15 @@ def path_assemble_hier(path, sep="/", reverse=False, start_index=0):
         fixed_part = sep.join(fixed_part)
 
         hier_part = list_data[start_index:]
-        
+
         new_data = [fixed_part]
         new_data.extend(hier_part)
         list_data = new_data
 
-
     assert isinstance(list_data, list), f"Got: {list_data}"
     ret = []
     for index, part in enumerate(list_data):
-        prefix =''
+        prefix = ""
         try:
             prefix = ret[index - 1]
             prefix = f"{prefix}/"
@@ -74,9 +67,10 @@ def render_template(text, params):
     tpl = Template(text)
     return tpl.render(**params)
 
+
 class Default(dict):
     def __missing__(self, key):
-        return ''
+        return ""
 
 
 def render_template_python(text, params, ignore_missing=True):
@@ -90,8 +84,6 @@ def render_template_python(text, params, ignore_missing=True):
         return text.format_map(params)
     except Exception:
         return None
-
-    
 
 
 # Schema Methods
@@ -136,9 +128,7 @@ def schema_validate(config, schema):
         path = list(collections.deque(err.schema_path))
         path = "/".join([str(i) for i in path])
         path = f"schema/{path}"
-        raise Exception(
-            f"Failed validating {path} for resource with content: {config}"
-        )
+        raise Exception(f"Failed validating {path} for resource with content: {config}")
     return config
 
 

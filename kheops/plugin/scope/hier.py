@@ -10,6 +10,7 @@ log = logging.getLogger(__name__)
 
 from pprint import pprint
 
+
 class Plugin(ScopePlugin, ScopeExtLoop):
     """Hierarchy plugin"""
 
@@ -25,7 +26,6 @@ class Plugin(ScopePlugin, ScopeExtLoop):
                 {
                     "type": "string",
                 },
-
                 {
                     "type": "object",
                     "additionalProperties": True,
@@ -59,31 +59,29 @@ class Plugin(ScopePlugin, ScopeExtLoop):
         }
     }
 
-
     def _process_item(self, data, ctx):
 
-        return path_assemble_hier(data, 
-            sep=ctx['var_split'],
-            reverse=ctx['var_reversed'],
-            start_index=ctx['var_start'],
-            )
+        return path_assemble_hier(
+            data,
+            sep=ctx["var_split"],
+            reverse=ctx["var_reversed"],
+            start_index=ctx["var_start"],
+        )
 
     def process_items(self, lookups, conf):
 
         ctx = {
-            "var_split": conf.get('split', '/'),
-            "var_reversed": conf.get('reversed', False),
-            "var_start": conf.get('start', 0),
+            "var_split": conf.get("split", "/"),
+            "var_reversed": conf.get("reversed", False),
+            "var_start": conf.get("start", 0),
         }
 
         lookups = self.loop_over(
             lookups,
             conf=conf,
-            var_name='item_hier',
+            var_name="item_hier",
             callback=self._process_item,
-            callback_context=ctx, 
-            )
+            callback_context=ctx,
+        )
 
         return lookups
-
-
