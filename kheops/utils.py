@@ -14,6 +14,9 @@ log = logging.getLogger(__name__)
 # =====================
 
 
+
+
+
 def glob_files(path, pattern):
     """Return a list of path that match a glob"""
     log.debug("Search glob '%s' in '%s'", pattern, path)
@@ -22,7 +25,7 @@ def glob_files(path, pattern):
     return [str(i) for i in ret]
 
 
-def path_assemble_hier(path, sep="/"):
+def path_assemble_hier(path, sep="/", reverse=False, start_index=0):
     """Append the previous"""
 
     if isinstance(path, str):
@@ -32,24 +35,63 @@ def path_assemble_hier(path, sep="/"):
     else:
         raise Exception(f"This function only accepts string or lists, got: {path}")
 
+
+
+    if reverse:
+        list_data = list_data[::-1]
+
+
+    if start_index > 0:
+        fixed_part = list_data[:start_index]
+        if reverse:
+            fixed_part = fixed_part[::-1]
+        fixed_part = sep.join(fixed_part)
+
+        hier_part = list_data[start_index:]
+        
+        new_data = [fixed_part]
+        new_data.extend(hier_part)
+        list_data = new_data
+
+
     assert isinstance(list_data, list), f"Got: {list_data}"
     ret = []
     for index, part in enumerate(list_data):
+        prefix =''
         try:
             prefix = ret[index - 1]
+            prefix = f"{prefix}/"
         except IndexError:
-            prefix = f"{sep}"
-            prefix = ""
-        item = f"{prefix}{part}{sep}"
+            pass
+        item = f"{prefix}{part}"
         ret.append(item)
     return ret
 
 
-def render_template(path, params):
+def render_template(text, params):
     """Render template for a given string"""
     assert isinstance(params, dict), f"Got: {params}"
-    tpl = Template(path)
+    tpl = Template(text)
     return tpl.render(**params)
+
+class Default(dict):
+    def __missing__(self, key):
+        return ''
+
+
+def render_template_python(text, params, ignore_missing=True):
+    """Render template for a given string"""
+    assert isinstance(params, dict), f"Got: {params}"
+
+    if ignore_missing:
+        return text.format_map(Default(params))
+
+    try:
+        return text.format_map(params)
+    except Exception:
+        return None
+
+    
 
 
 # Schema Methods
@@ -100,7 +142,7 @@ def schema_validate(config, schema):
     return config
 
 
-def str_ellipsis(txt, length=120):
+def str_ellipsis(txt, length=60):
     """Truncate with ellipsis too wide texts"""
     txt = str(txt)
     ret = []

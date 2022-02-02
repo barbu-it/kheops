@@ -1,4 +1,4 @@
 """Strategy plugins"""
 
 from . import last
-from . import schema
+from . import merge_deep
