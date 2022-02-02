@@ -6,6 +6,7 @@ from pathlib import Path
 
 from jinja2 import Template
 from jsonschema import Draft7Validator, validators
+from pprint import pprint
 
 
 log = logging.getLogger(__name__)
@@ -108,7 +109,7 @@ def _extend_with_default(validator_class):
             ):
                 continue
         except Exception as err:
-            print("CATCHED2222 ", err)
+            log.debug("Jsonschema validation error: %s", err)
 
     return validators.extend(
         validator_class,
@@ -124,7 +125,7 @@ def schema_validate(config, schema):
     try:
         DefaultValidatingDraft7Validator(schema).validate(config)
     except Exception as err:
-        print(err)
+        log.error(err)
         path = list(collections.deque(err.schema_path))
         path = "/".join([str(i) for i in path])
         path = f"schema/{path}"

@@ -89,7 +89,7 @@ CONF_SCHEMA = {
                                 },
                                 {
                                     "type": "string",
-                                    "description": "Add a path prefix before all paths. This is quite useful to store your YAML data in a dedicated tree.",
+                                    "description": """Add a path prefix before all paths. This is quite useful to store your YAML data in a dedicated tree.""",
                                 },
                             ],
                         },
@@ -149,13 +149,40 @@ CONF_SCHEMA = {
 
 
 class GenericInstance:
+    """
+    GenericInstance class
+
+    :var name: Name of the instace.
+    :vartype name: str or None
+
+    :var run: Json compatible dict for instance runtime data.
+    :vartype run: dict
+
+
+    """
 
     name = None
     run = {}
 
 
 class KheopsNamespace(GenericInstance, QueryProcessor):
+    """
+    Kheops Namespace Class
+
+    """
     def __init__(self, app, name, config=None):
+        """
+        Kheops Namespace Instance
+
+        :param app: Parent Kheops Application. 
+        :type app: Kheops
+
+        :param name: Namespace name. 
+        :type config: str
+
+        :param config: Namespace configuration. 
+        :type config: Any
+        """
 
         self.name = name
         self.config = config or {}
@@ -168,88 +195,19 @@ class KheopsNamespace(GenericInstance, QueryProcessor):
         self.run["path_ns"] = str(Path(app.run["config_src"]).parent.resolve())
 
 
-#    def load_namespace(self, namespace="default"):
-#        # Validate configuration
-#
-#        config = dict(self.raw_config)
-#        try:
-#            config = config[namespace]
-#        except KeyError:
-#            log.error("Can't find namespace '%s' in config '%s'", namespace, config)
-#            sys.exit(1)
-#        config = schema_validate(config, self.schema)
-#
-#        pprint (config)
-#
-#        self.run["path_cwd"]
-#
-#        print ("OKKKKK")
-#
-#
-#        conf2 = config
-#        # Get application paths
-#        path_root = conf2["config"].get("app", {}).get("root", None)
-#        if path_root is None:
-#            path_root = Path(config).parent
-#            log.debug("Root path guessed from conf file location.")
-#        else:
-#            path_root = Path(conf2["config"]["app"]["root"])
-#            log.debug("Root path is steup in config")
-#
-#
-#
-#        path_root = str(path_root.resolve())
-#        self.run["path_root"] = path_root
-#
-#
-#        # path_prefix = conf2["config"]["app"]["prefix"]
-#        # if not path_prefix:
-#        #    path_prefix = ''
-#        # p = Path(path_prefix)
-#        # if not p.is_absolute():
-#        #    p = path_root / p
-#        #    try:
-#        #        p = p.resolve().relative_to(Path.cwd().resolve())
-#        #    except ValueError:
-#        #        pass
-#
-#
-#        # Cache paths
-#        path_cache = Path(conf2["config"]["app"]["cache"])
-#        if not path_cache.is_absolute():
-#            path_cache = Path(path_root) / path_cache
-#        path_cache = str(path_cache)
-#        self.run["path_cache"] = path_cache
-#        self.cache = {
-#                'files': Cache(path_cache),
-#                'queries': Cache(path_cache),
-#                }
-#
-#        # self.run['path_prefix'] = str(p.resolve())
-#        log.debug("Working directory is %s, cwd is: %s", path_root, path_cwd)
-#
-#        return config
-
-
-# def query(self, key=None, scope=None):
-#    processor = QueryProcessor(app=self.app)
-#    result = processor.exec(key, scope)
-#
-#        return result
-
 
 class Kheops(GenericInstance):
-    """Main Kheops Application Instance"""
+    """
+    Kheops Application Class
+
+    """
 
     def __init__(self, config="kheops.yml", namespace="default"):
         """
-        init function
+        Kheops Application Instance
 
-        :param kind: Optional "kind" of ingredients.
-        :type kind: list[str] or None
-        :raise lumache.InvalidKindError: If the kind is invalid.
-        :return: The ingredients list.
-        :rtype: list[str]
+        :param config: Kheops configuration. If it's a string, it loads the config from file path. 
+        :type config: str or dict
         """
 
         # Init
@@ -278,8 +236,7 @@ class Kheops(GenericInstance):
 
         :param config: Kheops configuration, can either be a file path or a dict.
         :type config: dict or str or None
-        :param namespace: Configuration namespace to use.
-        :type namespace: str
+        
         :return: The parsed configuration.
         :rtype: dict
 
@@ -294,7 +251,7 @@ class Kheops(GenericInstance):
             source = "dict"
         return dict_conf
 
-    def lookup2(
+    def lookup(
         self,
         keys=None,
         policy=None,
@@ -302,9 +259,17 @@ class Kheops(GenericInstance):
         trace=False,
         explain=False,
         validate_schema=False,
-        namespace="default",
+        namespace=None,
     ):
-        """Lookup a key in hierarchy"""
+        """
+        Lookup a key in hierarchy
+
+        :param keys: List of keys to query.
+        :type keys: list[str]
+
+        :param scope: Scope key.
+        :type scope: dict
+        """
 
         ret = {}
         # Loop over keys
@@ -314,7 +279,7 @@ class Kheops(GenericInstance):
 
             # Identify namespace and key
             parts = key_def.split(":")
-            ns_name = self.ns_name
+            ns_name = namespace or self.ns_name
             if len(parts) > 1:
                 ns_name = parts[0]
                 key_name = parts[1]
@@ -330,83 +295,92 @@ class Kheops(GenericInstance):
 
             # TODO: This may lead to inconsistant output format :/
             # Return result
-            if len(keys) > 1:
-                log.debug("Append '%s' to results", key_name)
-                ret[key_name] = result
-            else:
-                log.debug("Return '%s' result", key_name)
-                return result
+            #if len(keys) > 1:
+            #    log.debug("Append '%s' to results", key_name)
+            ret[key_name] = result
+            #else:
+            #    log.debug("Return '%s' result", key_name)
+            #    return result
 
         return ret
 
-    def lookup(
-        self,
-        keys=None,
-        policy=None,
-        scope=None,
-        trace=False,
-        explain=False,
-        validate_schema=False,
-    ):
-        """Lookup a key in hierarchy"""
-        log.debug("Lookup key %s with scope: %s", keys, scope)
-        assert isinstance(keys, list), f"Got {keys}"
 
-        query = Query(app=self)
-        ret = {}
-        for key in keys:
-            ret[key] = query.exec(
-                key=key,
-                scope=scope,
-                policy=policy,
-                trace=trace,
-                explain=explain,
-                validate_schema=validate_schema,
-            )
-        return ret
 
-    def dump_schema(self):
-        """Dump configuration schema"""
 
-        ret1 = BackendsManager.get_schema(KheopsPlugins, mode="parts")
-        ret2 = RulesManager.get_schema(KheopsPlugins)
-        print(json.dumps(ret1, indent=2))
-        return
 
-        # ret = self.schema
-        # ret["patternProperties"][".*"]["properties"]["tree"]["items"]["properties"] = ret1
-        # ret["patternProperties"][".*"]["properties"]["tree"]["items"] = ret2
 
-        # print(json.dumps(ret, indent=2))
 
-    def gen_docs(self):
-        """Generate documentation"""
 
-        print("WIP")
-        return None
 
-        # src = {
-        #        "app": {
-        #            "config_schema": None,
-        #            "plugin_managers": {
-        #                    'tree': None,
-        #                    'rules': None,
-        #                }
-        #            }
-        #
-        # r1 = BackendsManager.get_schema(KheopsPlugins, mode='parts')
 
-        # print (json.dumps(r1, indent=2))
+    # def DEPRECATED_lookup(
+    #     self,
+    #     keys=None,
+    #     policy=None,
+    #     scope=None,
+    #     trace=False,
+    #     explain=False,
+    #     validate_schema=False,
+    # ):
+    #     """Lookup a key in hierarchy"""
+    #     log.debug("Lookup key %s with scope: %s", keys, scope)
+    #     assert isinstance(keys, list), f"Got {keys}"
 
-        # ret = {
-        #
-        #    }
+    #     query = Query(app=self)
+    #     ret = {}
+    #     for key in keys:
+    #         ret[key] = query.exec(
+    #             key=key,
+    #             scope=scope,
+    #             policy=policy,
+    #             trace=trace,
+    #             explain=explain,
+    #             validate_schema=validate_schema,
+    #         )
+    #     return ret
 
-        # part_config = r1.get('config_schema', None)
-        # part_item = r1['items']['core_schema']
-        # part_item_plugins = r1['items']['plugin']
+    # def DEPRECATED_dump_schema(self):
+    #     """Dump configuration schema"""
 
-        # for kind, plugins in part_item_plugins.items():
+    #     ret1 = BackendsManager.get_schema(KheopsPlugins, mode="parts")
+    #     ret2 = RulesManager.get_schema(KheopsPlugins)
+    #     print(json.dumps(ret1, indent=2))
+    #     return
 
-        #    for plugin_name, schema in plugins.items():
-        #        part_item_
+    #     # ret = self.schema
+    #     # ret["patternProperties"][".*"]["properties"]["tree"]["items"]["properties"] = ret1
+    #     # ret["patternProperties"][".*"]["properties"]["tree"]["items"] = ret2
+
+    #     # print(json.dumps(ret, indent=2))
+
+    # def DEPRECATED_gen_docs(self):
+    #     """Generate documentation"""
+
+    #     print("WIP")
+    #     return None
+
+    #     # src = {
+    #     #        "app": {
+    #     #            "config_schema": None,
+    #     #            "plugin_managers": {
+    #     #                    'tree': None,
+    #     #                    'rules': None,
+    #     #                }
+    #     #            }
+    #     #
+    #     # r1 = BackendsManager.get_schema(KheopsPlugins, mode='parts')
+
+    #     # print (json.dumps(r1, indent=2))
+
+    #     # ret = {
+    #     #
+    #     #    }
+
+    #     # part_config = r1.get('config_schema', None)
+    #     # part_item = r1['items']['core_schema']
+    #     # part_item_plugins = r1['items']['plugin']
+
+    #     # for kind, plugins in part_item_plugins.items():
+
+    #     #    for plugin_name, schema in plugins.items():
+    #     #        part_item_

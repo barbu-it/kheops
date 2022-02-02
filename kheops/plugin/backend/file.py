@@ -93,7 +93,7 @@ class Plugin(BackendPlugin):
         status = "not_found"
         for ext, parser in self.extensions.items():
             new_path = os.path.join(self.top_path, path + ext)
-
+            log.debug("Looking into %s", new_path)
             if os.path.isfile(new_path):
                 status = "found"
                 try:

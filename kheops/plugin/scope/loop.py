@@ -63,6 +63,7 @@ class Plugin(ScopePlugin, ScopeExtLoop):
 
         lookups = self.loop_over(
             lookups,
+            module_name='loop',
             conf=conf,
             var_name="item_loop",
         )

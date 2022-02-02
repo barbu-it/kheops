@@ -9,6 +9,8 @@ from prettytable import PrettyTable
 import kheops.plugin as KheopsPlugins
 from kheops.utils import render_template, render_template_python, str_ellipsis
 
+from pprint import pprint
+
 log = logging.getLogger(__name__)
 tracer = logging.getLogger(f"{__name__}.explain")
 
@@ -73,7 +75,7 @@ class QueryProcessor:
     default_match_rule = {
         "key": None,
         "continue": False,
-        "strategy": "merge_deep",
+        "strategy": "merge_schema",
     }
 
     default_lookup_item = {
@@ -100,6 +102,7 @@ class QueryProcessor:
             tracer.setLevel(logging.DEBUG)
 
         query = Query(key, scope)
+        log.info("Creating new query: %s", query.__dict__)
 
         # Match the KeyRule in keys (RULE CACHE)
         # Get the matching keys
@@ -199,11 +202,11 @@ class QueryProcessor:
                 [
                     "\nStatus:" + str_ellipsis(col1, 80),
                     "\nRuntime:" + str_ellipsis(col2, 60),
-                    "\nData:" + str_ellipsis(col3, 60),
+                    "\nKey:" + str_ellipsis(col3, 60),
                 ]
             )
 
-        table.field_names = ["Status", "Runtime", "Data"]
+        table.field_names = ["Status", "Runtime", "Key Value"]
         table.align = "l"
         tracer.info("Explain candidates:\n" + str(table))
 

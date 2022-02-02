@@ -1,4 +1,4 @@
-"""Last strategy Plugin"""
+"""Merge Deep strategy Plugin"""
 
 import logging
 from mergedeep import merge, Strategy

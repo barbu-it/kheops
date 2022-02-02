@@ -61,6 +61,11 @@ class Plugin(ScopePlugin, ScopeExtLoop):
 
     def _process_item(self, data, ctx):
 
+        # Validate data
+        if not isinstance(data, str):
+            log.debug("Hier data must be a list, got: %s", data)
+            return []
+
         return path_assemble_hier(
             data,
             sep=ctx["var_split"],
@@ -78,6 +83,7 @@ class Plugin(ScopePlugin, ScopeExtLoop):
 
         lookups = self.loop_over(
             lookups,
+            module_name='hier',
             conf=conf,
             var_name="item_hier",
             callback=self._process_item,

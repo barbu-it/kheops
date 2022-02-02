@@ -112,8 +112,9 @@ class ScopeExtLoop:
     }
 
     def loop_over(
-        self, lookups, conf, var_name="item", callback_context=None, callback=None
+        self, lookups, conf, module_name, var_name="item", callback_context=None, callback=None
     ):
+
 
         var_name = conf.get("var", var_name)
         var_data_ref = conf.get("data", None)
@@ -131,7 +132,7 @@ class ScopeExtLoop:
                     var_data = lookup["_run"]["scope"][var_data]
                 except KeyError:
                     log.debug("Ignoring missing '%s' from scope", var_data)
-                    pass
+                    continue
 
             # Run callback
             if callback:
@@ -139,14 +140,14 @@ class ScopeExtLoop:
 
             # Validate generated
             if not isinstance(var_data, list):
-                log.warning("Hier data must be a list, got: %s", var_data)
-                pass
+                log.warning("Loop data must be a list, got: %s", var_data)
+                continue
 
             # Create new object
             for index, var_value in enumerate(var_data):
 
-                if not "hier" in lookup["_run"]:
-                    lookup["_run"]["hier"] = []
+                if not module_name in lookup["_run"]:
+                    lookup["_run"][module_name] = []
 
                 ctx = {
                     "data_ref": var_data_ref,
@@ -157,7 +158,7 @@ class ScopeExtLoop:
 
                 new_item = copy.deepcopy(lookup)
                 new_item["_run"]["scope"][var_name] = var_value
-                new_item["_run"]["hier"].append(ctx)
+                new_item["_run"][module_name].append(ctx)
 
                 ret.append(new_item)
 
