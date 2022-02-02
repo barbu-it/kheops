@@ -34,7 +34,6 @@ Content
    Python API <api/modules.rst>
 
 
-
 Indices and tables
 ==================
 * :ref:`genindex`
