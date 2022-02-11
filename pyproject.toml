@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "kheops"
 version = "0.1.0"
-description = "Data trees for Ansible"
+description = "Hierarchical key/value store"
 authors = ["Robin Cordier"]
-license = "GNU"
+license = "Apache License"
 
 [tool.poetry.dependencies]
 python = "^3.8"
