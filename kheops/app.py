@@ -228,6 +228,7 @@ class Kheops(GenericInstance):
             raise Exception("Need a valid config")
 
         self.ns_name = namespace
+        self.namespaces = {}
         self.raw_config = self.parse_conf(config)
 
     def parse_conf(self, config="kheops.yml"):
@@ -267,12 +268,17 @@ class Kheops(GenericInstance):
         """
         Lookup a key in hierarchy
 
+        For a given lookup:
+        * keys= [<namespace>:<key>]
+
         :param keys: List of keys to query.
         :type keys: list[str]
 
         :param scope: Scope key.
         :type scope: dict
         """
+
+
 
         ret = {}
         # Loop over keys
@@ -281,7 +287,7 @@ class Kheops(GenericInstance):
             key_def = key_def or ""
 
             # Identify namespace and key
-            parts = key_def.split(":")
+            parts = key_def.split("/")
             ns_name = namespace or self.ns_name
             if len(parts) > 1:
                 ns_name = parts[0]
@@ -290,7 +296,15 @@ class Kheops(GenericInstance):
                 key_name = parts[0]
 
             # Load namespace
-            ns_config = self.raw_config[ns_name]
+            if ns_name in self.namespaces:
+                ns_config = self.namespaces[ns_name]
+            else:
+                try:
+                    ns_config = self.raw_config[ns_name]
+                except KeyError as err:
+                    raise Exception(f"Unknown kheops namespace: {ns_name}")
+
+            print ("CREATE", ns_name, ns_config)
             ns = KheopsNamespace(self, ns_name, ns_config)
 
             # Get result
