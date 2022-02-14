@@ -1,0 +1,6 @@
+---
+profile:  
+  mysql_database: "app_domain_org"
+  mysql_users:
+    - "app_domain_org@10.0.51%"
+  

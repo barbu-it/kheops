@@ -1,0 +1,281 @@
+
+
+# Kheops can act as ENC
+# This is a basic tree that demonstrate how to use Kheops as ENC:
+# Examples:
+#   kheops -vvv  -c examples/kheops.yml  lookup2 -n ex1_enc  -f examples/q_011.yml  profile
+#
+ex1_enc:
+  
+  #Query keys:
+  #  profile,role,class:
+  #  profiles,roles,classes:
+  config:
+    file_path_prefix: "ex1_enc/"
+    #file_path_suffix: "/ansible"
+    file_path_suffix: null
+    merge_deep_algo: additive
+
+  lookups:
+
+    - path: default # Simplest form, just a path
+    - path: "roles/{role}" # If list, it's auto expanded like in bash
+    - path: "env_{env}" # If list, it's auto expanded like in bash
+    - path: "nodes/{node}"
+
+      #loop:
+      #  totot: loop2
+      #loop_1:
+      #  tutu: blaaaa
+
+
+
+      ### ADDD NEW EXAMPLES:
+      # Add a way to remove entries, so we need to talk about mergers... Not yet
+
+exN_scope_plugins:
+  
+  #Query keys:
+  #  profile,role,class:
+  #  profiles,roles,classes:
+  config:
+    file_path_prefix: "01_hello/"
+    #file_path_suffix: "/ansible"
+    file_path_suffix: null
+    merge_deep_algo: additive
+
+  lookups:
+
+    - path: "tree/{item_hier1}" # If list, it's auto expanded like in bash
+      scope:
+        - module: loop
+          data:
+            - toto1
+            - toto2
+            - toto3
+
+    - path: "tree/{item_loop}/{item_hier}" # If list, it's auto expanded like in bash
+      scope:
+        - module: loop
+          data:
+            - prod
+            - dev
+        - module: hier
+          data: node_fqdn
+
+          split: '.'
+          reversed: True
+          start: 2
+
+
+    - path: "tree/{item_hier1}" # If list, it's auto expanded like in bash
+      scope:
+        - module: hier
+          data: test_hg
+          split: '/'
+          reversed: False
+
+
+# Kheops can store your configuration/data
+# This is a basic tree that demonstrate how to use Kheops as ENC:
+ex2_config:
+  
+  #Query keys:
+  #  profile,role,class:
+  #  profiles,roles,classes:
+
+  lookups:
+
+    # Default config
+    - common/default
+
+    # Per distribution config
+    - "common/dist_{ansible_dist_name}"
+    - "common/dist_{ansible_dist_name}{ansible_dist_version}"
+
+    # Nested dir support
+    - path: site/{node_env}/{node_role}
+      engine: jerakia
+
+    # Per node and group config
+    - groups/{node_group}
+    - nodes/{node_fqdn}
+
+    # Override config
+    - common/override
+      #
+
+
+# Kheops support many backends: file, http, consul, even script !!!
+ex3_backends:
+  lookups:
+    - backend: file,glob,consul,http,script,vault,none
+      
+    - path: node/{node_fqdn}
+      backend: file
+      file:
+        sufix: /ansible.yml
+
+    - path: node/{node_fqdn}
+      backend: glob
+      glob:
+        sufix: /ansible_*.yml
+
+    - backend: http
+      path: https://foreman.corp/host/{node_fqdn}/facts?fmt=json
+      http:
+        format: json
+        http_auth: SECRET_FILE.pass
+        headers:
+
+# Keops support operations on scope variable
+ex3_loops_profiles:
+  
+  lookups:
+
+    # Group management, axpanded list
+    - path: groups/{item}
+      loop: 
+        data: groups
+
+    # A more advanced example, hierarchical exampansion
+    - path: site/{foreman_hostgroups}/{ansible_fqdn} # If list, it's auto expanded like in bash
+      engine: jerakia
+      hier: 
+        data: foreman_hostgroup
+        var: foreman_hostgroups
+        reversed: False
+
+    # DO an example of multiple loops
+
+    - nodes/{ansible_fqdn}
+    - common/override
+
+
+# Kheops support nested hierarchy like in Foreman/Sattelite
+# Example to use Kheops with Foreman
+ex4_foreman_hostgroups:
+  
+  #Query keys:
+  #  profile,role,class:
+  #  profiles,roles,classes:
+
+  lookups:
+    - path: site/loc_{foreman_location} # If list, it's auto expanded like in bash
+      engine: jerakia
+    - path: site/org_{foreman_organization} # If list, it's auto expanded like in bash
+      engine: jerakia
+
+    - path: site/{foreman_hostgroups}/{ansible_fqdn} # If list, it's auto expanded like in bash
+      engine: jerakia
+      hier: 
+        data: foreman_hostgroup
+        var: foreman_hostgroups
+        reversed: False
+
+    - nodes/{ansible_fqdn}
+
+
+# Kheops support namespace (For performance reasons) and include to make your code DRY
+ex5_ns_include:
+  ns1:
+    lookups:
+      - include: common.yml
+      - path: ns1_only/{node_fqdn}
+  ns2:
+    lookups:
+      - include: common.yml
+      - include: ns2_only.yml
+
+
+# Kheops allow to customize which and how keys are merged together
+# Explain how to merge the keys
+ex6_rules:
+  lookups:
+    ...
+  rules:
+  - key: "my_key"
+  - key: ".*"
+  - key: ".*_db"
+  - key: "prefix_.*"
+    continue: True
+    merge: 
+      last: No merge
+      basic: basic python merge, assemble list and combine dict 1 level.
+      schema: jsonmerge, heavy in resources
+      first: Why ?
+      smart_lists: support +-!~ key identifiers ...
+      smart_dict: support +-!~ key identifiers ...
+
+
+
+
+
+# REal and complete example
+ex7_data:
+  config:
+    app: {}
+      # prefix: ./ext/ansible-tree/tree
+      #totot: titi
+
+    lookups:
+      #prefix: ./ext/ansible-tree/tree
+      prefix: ext/tiger-jerakia/data/data
+      engine: file.auto
+      sufix: ansible.yaml
+      default_engine: jerakia
+      default_item:
+        engine: jerakia
+
+  # File lookup
+  lookups:
+    - common/deprecated
+    - common/all
+    - "common/dist_{ansible_dist_name}"
+    - "common/dist_{ansible_dist_name}{ansible_dist_version}"
+    # Default structure
+
+    # Profile management
+    - path: profiles/{item}
+      loop: 
+        data: tiger_profiles
+
+    # THis is not dry, use include to make code DRY
+
+
+    - path: site/loc_{foreman_location} # If list, it's auto expanded like in bash
+      engine: jerakia
+    - path: site/org_{foreman_organization} # If list, it's auto expanded like in bash
+      engine: jerakia
+
+    - path: site/{foreman_hostgroups}/{ansible_fqdn} # If list, it's auto expanded like in bash
+      engine: jerakia
+      hier: 
+        data: foreman_hostgroup
+        var: foreman_hostgroups
+        reversed: False
+#      loop: 
+#        var: aa_env
+#        data:
+#          - prod
+#          - preprod
+#          - devel
+
+#    - path: site/{foreman_hostgroup}/{ansible_fqdn}
+#      engine: jerakia
+
+    - nodes/{ansible_fqdn}
+    - common/override
+
+  rules:
+
+    - rule: 'profilesss'
+      strategy: first
+      schema: 
+        "$schema": http://json-schema.org/draft-04/schema#
+        type: array
+        mergeStrategy: append
+
+    - rule: '(.*)_item'
+      schema: generic item schema
+

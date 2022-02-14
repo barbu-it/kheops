@@ -1,0 +1,10 @@
+---
+profile:
+  product: "mysql_server"
+
+  mysql_database: "NO_DATABASE"
+  mysql_users:
+    - "sysadmin@10.0.42%"
+  mysql_port: 3306
+  mysql_cluster: False
+  

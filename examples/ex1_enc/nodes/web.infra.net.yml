@@ -1,0 +1,7 @@
+---
+profile:
+  web_app: 'myapp'
+  web_user_list:
+    - domain_org
+    - domain_org_external
+  

@@ -1,0 +1,10 @@
+---
+profile:
+  product: "httpd_server"
+
+  web_top_domain: ""
+  web_app: "NO_APP"
+  web_port: 80
+  web_user_list:
+    - sysadmins
+  

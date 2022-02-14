@@ -1,0 +1,8 @@
+---
+profile:
+  env: prod
+  
+  # On production environment, we always want to use public faced domain and 12 hour cache.
+  web_top_domain: infra.com
+  web_cache: 12h
+  
