@@ -246,8 +246,8 @@ class Kheops(GenericInstance):
         if isinstance(config, str):
             try:
                 dict_conf = anyconfig.load(config)
-            except FileNotFoundError as err:
-                log.error("Can't find keops configuration file: %s", config)
+            except Exception as err:
+                log.error("Can't load kheops configuration, got: %s", err)
                 sys.exit(1)
             source = f"file:{config}"
         elif isinstance(config, dict):
