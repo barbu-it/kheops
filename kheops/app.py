@@ -247,8 +247,7 @@ class Kheops(GenericInstance):
             try:
                 dict_conf = anyconfig.load(config)
             except Exception as err:
-                log.error("Can't load kheops configuration, got: %s", err)
-                sys.exit(1)
+                raise Exception ("Can't load kheops configuration, got: %s", err)
             source = f"file:{config}"
         elif isinstance(config, dict):
             dict_conf = config
