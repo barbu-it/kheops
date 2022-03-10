@@ -19,13 +19,23 @@ log = logging.getLogger(__name__)
 # BackendPlugin[1]
 
 
-# Generic classes
+# Generic Plugin classes
+# -------------------------
+
 class KheopsPlugin:
     plugin_name = None
     plugin_type = None
     plugin_kind = None
 
     def __init__(self):
+        assert isinstance(self.plugin_name, str), f"Missing name attribute in plugin: {self.__class__}"
+        assert isinstance(self.plugin_kind, str)
+
+        config_key = f"{self.plugin_kind}_{self.plugin_name}"
+        self.config = self.ns.config["config"].get(config_key, {})
+        self.config_key = config_key
+
+        log.debug("Looking for plugin configuration in config with key '%s', got: %s", config_key, self.config)
         self._init()
 
     def _init(self):
@@ -47,20 +57,60 @@ class KheopsItemPlugin(KheopsPlugin):
         pass
 
 
-# Other classes
-class BackendCandidate:
-    def __init__(self, path=None, data=None, run=None, status=None):
-        assert isinstance(run, dict)
-        self.path = path
-        self.status = status or "unparsed"
-        self.run = run or {}
-        self.data = data or None
+# Plugin classes
+# -------------------------
 
-    def __repr__(self):
-        return f"Status: {self.status}, Path: {self.path} => {self.data}"
+class BackendPlugin(KheopsItemPlugin):
+    plugin_kind = "backend"
+
+    schema_prop = {
+        "backend": {},  # GENERIC, String
+        "file": {},
+        "glob": {},
+        "http": {},
+        "consul": {},
+        "vault": {},
+    }
+
+    def fetch_data(self, config) -> list:
+        raise Exception("Not implemented")
+
+    def __init__(self, namespace):
+        self.ns = namespace
+        super().__init__()
 
 
-# Specific classes
+class StrategyPlugin(KheopsItemPlugin):
+    plugin_kind = "strategy"
+    schema_prop = {
+        "_strategy": {},  # GENERIC, String
+        "merge": {},
+        "first": {},
+        "last": {},
+        "smart": {},
+        "schema": {},
+    }
+
+    def merge_results(self, candidates, rule) -> list:
+        pass
+
+    def __init__(self, namespace):
+        self.ns = namespace
+        super().__init__()
+
+
+class OutPlugin(KheopsItemPlugin):
+    plugin_kind = "out"
+    schema_prop = {
+        "_out": {},  # GENERIC, List of dict
+        "toml": {},
+        "validate": {},
+    }
+
+    def process_item(self, item) -> list:
+        pass
+
+
 class ConfPlugin(KheopsListPlugin):
     plugin_kind = "conf"
     schema_prop = {
@@ -88,6 +138,22 @@ class ScopePlugin(KheopsListPlugin):
     def __init__(self, namespace):
         self.ns = namespace
         super().__init__()
+
+# Helper classes
+# -------------------------
+
+class BackendCandidate():
+    """Represent a backend candidate"""
+    def __init__(self, path=None, data=None, run=None, status=None):
+        assert isinstance(run, dict)
+        self.path = path
+        self.status = status or "unparsed"
+        self.run = run or {}
+        self.data = data or None
+
+    def __repr__(self):
+        return f"Status: {self.status}, Path: {self.path} => {self.data}"
+
 
 
 class ScopeExtLoop:
@@ -165,55 +231,9 @@ class ScopeExtLoop:
         return ret
 
 
-class BackendPlugin(KheopsItemPlugin):
-    plugin_kind = "backend"
-
-    schema_prop = {
-        "backend": {},  # GENERIC, String
-        "file": {},
-        "glob": {},
-        "http": {},
-        "consul": {},
-        "vault": {},
-    }
-
-    def fetch_data(self, lookups) -> list:
-        raise Exception("Not implemented")
-
-    def __init__(self, namespace):
-        self.ns = namespace
-        super().__init__()
 
 
-class StrategyPlugin(KheopsItemPlugin):
-    plugin_kind = "strategy"
-    schema_prop = {
-        "_strategy": {},  # GENERIC, String
-        "merge": {},
-        "first": {},
-        "last": {},
-        "smart": {},
-        "schema": {},
-    }
-
-    def merge_results(self, candidates, rule) -> list:
-        pass
-
-    def __init__(self, namespace):
-        self.ns = namespace
-        super().__init__()
-
-
-class OutPlugin(KheopsItemPlugin):
-    plugin_kind = "out"
-    schema_prop = {
-        "_out": {},  # GENERIC, List of dict
-        "toml": {},
-        "validate": {},
-    }
-
-    def process_item(self, item) -> list:
-        pass
+# To clean/implement
 
 
 # # Candidate Classes
