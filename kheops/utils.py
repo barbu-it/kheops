@@ -90,30 +90,21 @@ def render_template_python(text, params, ignore_missing=True):
 # Schema Methods
 # =====================
 
-
 def _extend_with_default(validator_class):
     validate_properties = validator_class.VALIDATORS["properties"]
 
     def set_defaults(validator, properties, instance, schema):
-
-        for prop, subschema in properties.items():
+        for property, subschema in properties.items():
             if "default" in subschema:
-                instance.setdefault(prop, subschema["default"])
+                instance.setdefault(property, subschema["default"])
 
-        try:
-            for error in validate_properties(
-                validator,
-                properties,
-                instance,
-                schema,
-            ):
-                continue
-        except Exception as err:
-            log.debug("Jsonschema validation error: %s", err)
+        for error in validate_properties(
+            validator, properties, instance, schema,
+        ):
+            yield error
 
     return validators.extend(
-        validator_class,
-        {"properties": set_defaults},
+        validator_class, {"properties" : set_defaults},
     )
 
 
