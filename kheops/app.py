@@ -11,89 +11,50 @@ from pathlib import Path
 import anyconfig
 from diskcache import Cache
 
+import kheops.plugin as KheopsPlugins
 from kheops.controllers import QueryProcessor
 from kheops.utils import schema_validate
 
 
 log = logging.getLogger(__name__)
 
-
 CONF_SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "additionalProperties": False,
     "default": {},
-    "$def": {
-        "backends_items": {},
-        "backends_config": {},
-        "rules_items": {},
-        "rules_config": {},
-    },
-    # "patternProperties": {
-    #    ".*": {
-    #        "type": "object",
-    #        "optional": True,
-    #        "additionalProperties": False,
+    "required": ["config"],
+    #"$def": {
+    #    "backends_items": {},
+    #    "backends_config": {},
+    #    "rules_items": {},
+    #    "rules_config": {},
+    #},
     "properties": {
+        "lookups": {
+            "type": "array",
+            "default": [],
+            "items": {
+                "type": "object",
+                #"properties": {"$ref": "#/$defs/backends_items"},
+            },
+        },
+        "rules": {
+            "type": "array",
+            "default": [],
+            # "arrayItem":  { "$ref": "#/$defs/rules_items" },
+        },
+
         "config": {
             "type": "object",
             "default": {},
             "additionalProperties": True,
+            #"required": ["app"],
             "properties": {
                 "app": {
                     "type": "object",
                     "default": {},
                     "additionalProperties": False,
-                    "properties": {
-                        "root": {
-                            "default": None,
-                            "oneOf": [
-                                {
-                                    "type": "null",
-                                    "description": "Application current working directory is the `kheops.yml` directory",
-                                },
-                                {
-                                    "type": "string",
-                                    "description": "Application working directory. If a relative path is used, it will be depending on `kheops.yml` directory",
-                                },
-                            ],
-                        },
-                        "cache": {
-                            "default": "kheops_cache",
-                            "oneOf": [
-                                {
-                                    "type": "null",
-                                    "description": "Disable cache",
-                                },
-                                {
-                                    "type": "string",
-                                    "description": "Path of the cache directory",
-                                },
-                            ],
-                        },
-                    },
-                },
-                # OLD
-                "tree": {
-                    # "additionalProperties": False,
-                    "type": "object",
-                    "default": {},
-                    "deprecated": True,
-                    "properties": {
-                        "prefix": {
-                            "default": None,
-                            "oneOf": [
-                                {
-                                    "type": "null",
-                                    "description": "Disable prefix, all files are lookup up from the app root dir.",
-                                },
-                                {
-                                    "type": "string",
-                                    "description": """Add a path prefix before all paths. This is quite useful to store your YAML data in a dedicated tree.""",
-                                },
-                            ],
-                        },
-                    },
                 },
                 "lookups": {
                     # "additionalProperties": False,
@@ -121,30 +82,7 @@ CONF_SCHEMA = {
                 },
             },
         },
-        "tree": {
-            "type": "array",
-            "default": [],
-            "items": {
-                "type": "object",
-                "properties": {"$ref": "#/$defs/backends_items"},
-            },
-        },
-        "lookups": {
-            "type": "array",
-            "default": [],
-            "items": {
-                "type": "object",
-                "properties": {"$ref": "#/$defs/backends_items"},
-            },
-        },
-        "rules": {
-            "type": "array",
-            "default": [],
-            # "arrayItem":  { "$ref": "#/$defs/rules_items" },
-        },
     },
-    #       },
-    #   },
 }
 
 
@@ -184,16 +122,15 @@ class KheopsNamespace(GenericInstance, QueryProcessor):
         :type config: Any
         """
 
+        config = schema_validate(config, CONF_SCHEMA)
+        super().__init__(config)
+
         self.name = name
-        self.config = config or {}
         self.app = app
         self.run = dict(app.run)
 
         # Validate configuration
-        self.config = schema_validate(self.config, CONF_SCHEMA)
-
         self.run["path_ns"] = str(Path(app.run["config_src"]).parent.resolve())
-
 
 
 class Kheops(GenericInstance):
@@ -278,8 +215,6 @@ class Kheops(GenericInstance):
         :type scope: dict
         """
 
-
-
         ret = {}
         # Loop over keys
         for key_def in keys:
@@ -304,7 +239,6 @@ class Kheops(GenericInstance):
                 except KeyError as err:
                     raise Exception(f"Unknown kheops namespace: {ns_name}")
 
-            print ("CREATE", ns_name, ns_config)
             ns = KheopsNamespace(self, ns_name, ns_config)
 
             # Get result
@@ -328,33 +262,7 @@ class Kheops(GenericInstance):
 
 
 
-
-
-    # def DEPRECATED_lookup(
-    #     self,
-    #     keys=None,
-    #     policy=None,
-    #     scope=None,
-    #     trace=False,
-    #     explain=False,
-    #     validate_schema=False,
-    # ):
-    #     """Lookup a key in hierarchy"""
-    #     log.debug("Lookup key %s with scope: %s", keys, scope)
-    #     assert isinstance(keys, list), f"Got {keys}"
-
-    #     query = Query(app=self)
-    #     ret = {}
-    #     for key in keys:
-    #         ret[key] = query.exec(
-    #             key=key,
-    #             scope=scope,
-    #             policy=policy,
-    #             trace=trace,
-    #             explain=explain,
-    #             validate_schema=validate_schema,
-    #         )
-    #     return ret
+# To clean/implement
 
     # def DEPRECATED_dump_schema(self):
     #     """Dump configuration schema"""
