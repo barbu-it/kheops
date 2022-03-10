@@ -201,6 +201,7 @@ class Kheops(GenericInstance):
         explain=False,
         validate_schema=False,
         namespace=None,
+        namespace_prefix=False,
     ):
         """
         Lookup a key in hierarchy
@@ -244,11 +245,16 @@ class Kheops(GenericInstance):
             # Get result
             result = ns.query(key=key_name, scope=scope, explain=explain)
 
+            # Prepare output
+            _key = key_name
+            if namespace_prefix == True:
+                _key = key_def
+            ret[_key] = result
+
             # TODO: This may lead to inconsistant output format :/
             # Return result
             #if len(keys) > 1:
             #    log.debug("Append '%s' to results", key_name)
-            ret[key_name] = result
             #else:
             #    log.debug("Return '%s' result", key_name)
             #    return result
