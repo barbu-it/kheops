@@ -1,20 +1,18 @@
 """Hierarchy backend plugin"""
 
-
 import logging
+#from pprint import pprint
 
 from kheops.plugin.common import ScopePlugin, ScopeExtLoop
 from kheops.utils import path_assemble_hier
 
 log = logging.getLogger(__name__)
 
-from pprint import pprint
-
 
 class Plugin(ScopePlugin, ScopeExtLoop):
     """Hierarchy plugin"""
 
-    _plugin_name = "hier"
+    plugin_name = "hier"
     _schema_props_new = {
         "hier": {
             "default": None,

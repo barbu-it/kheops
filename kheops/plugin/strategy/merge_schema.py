@@ -15,7 +15,7 @@ class Plugin(StrategyPlugin):
     """Last strategy plugin"""
 
 
-    _plugin_name = "merge_schema"
+    plugin_name = "merge_schema"
     _schema_props_new = None
 
     selector = "matched"
