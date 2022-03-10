@@ -2,40 +2,75 @@
 
 import os
 import logging
-from pathlib import Path
+# from pprint import pprint
 
 import anyconfig
-
-from kheops.utils import render_template, glob_files, render_template_python
+from anyconfig.common.errors import BaseError as AnyConfigBaseError
 from kheops.plugin.common import BackendPlugin, BackendCandidate
-
-from pprint import pprint
 
 log = logging.getLogger(__name__)
 
-
-# class FileCandidate(Candidate):
-#    path = None
-#
-#    def _report_data(self):
-#        data = {
-#            # "rule": self.config,
-#            "value": self.engine._plugin_value,
-#            "data": self.data,
-#            "path": str(self.path.relative_to(Path.cwd())),
-#        }
-#        data = dict(self.config)
-#        return super()._report_data(data)
-
-
-# class Plugin(PluginEngineClass, PluginFileGlob):
 class Plugin(BackendPlugin):
-    """Generic Plugin Class"""
+    """File Backend Plugin
 
-    _plugin_name = "file"
+    This backend allows to lookup data into a file hierarchy. All files can be one of the
+    cupported by the anyconfig python library.
+    """
 
-    _plugin_engine = "file"
-    # _schema_props_files = {
+    plugin_name = "file"
+    extensions = {
+            ".yml": "yaml",
+            ".yaml": "yaml",
+            #".toml": "toml",
+            #".ini": "ini",
+            #".json": "json",
+            }
+
+    _schema_config = {
+        "backend_file": {
+            "title": "File Backend",
+            "description": "This backend will look for data inside a file hierarchy.",
+            "type": "object",
+            "properties": {
+                "format": {
+                        "title": "File formats",
+                        "description": """
+                        This object describe which parser is assigned to which extension. 
+                        Adding more format will have a performance impact because it will try 
+                        to find all of the specified format. It is better to keep this list as small
+                        as possible.
+                        """,
+
+                        "type": "object",
+                        "default": extensions,
+                        "additionalProperties": {
+                                "title": "Name of the extension with parser",
+                                "type": "string"
+                            }
+                    },
+                "path_prefix": {
+                        "title": "Prefix string to append to final path",
+                        "description": """
+                        String to be added at the end of the resolved path. This is useful to change
+                        the place of the root hierarchy.
+                        """,
+                        "type": "string"
+                    },
+                "path_suffix": {
+                        "title": "Suffix string to prepend to final path",
+                        "description": """
+                        String to be added at the end of the resolved path. This is useful to 
+                        provide Hiera or Jerakia support.""",
+                        "type": "string",
+                        "examples": [
+                            { "path_suffix": "/ansible" },
+                            ]
+                    },
+                }
+            }
+        }
+
+
     _schema_props_new = {
         "path": {
             "anyOf": [
@@ -66,19 +101,17 @@ class Plugin(BackendPlugin):
         },
     }
 
-    extensions = {".yml": "yaml", ".yaml": "yaml"}
-
     def _init(self):
 
-        # Guess top path
+        # Build file prefix
         top_path = self.ns.run["path_config"]
-        path_prefix = self.ns.config["config"].get("file_path_prefix", None)
+        path_prefix = self.config.get("path_prefix", None)
         if path_prefix:
             top_path = os.path.join(top_path, path_prefix)
         self.top_path = top_path
 
-        # Fetch module config
-        path_suffix = self.ns.config["config"].get("file_path_suffix", "auto")
+        # Build file sufix
+        path_suffix = self.config.get("path_suffix", "")
         if path_suffix == "auto":
             path_suffix = f"/{self.ns.name}"
         self.path_suffix = path_suffix
@@ -98,9 +131,10 @@ class Plugin(BackendPlugin):
                 status = "found"
                 try:
                     raw_data = anyconfig.load(new_path, ac_parser=parser)
-                except Exception:
+                except AnyConfigBaseError as err:
                     status = "broken"
                     raw_data = None
+                    log.warning("Could not parse file %s: %s", new_path, err)
                 break
 
         ret = BackendCandidate(
