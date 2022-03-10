@@ -1,2 +1,6 @@
+kheops.egg-info/*
+dist/*
+setup.py
+poetry.lock
 **/__pycache__/**
 **/.ipynb_checkpoints/**
