@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 class Plugin(ScopePlugin, ScopeExtLoop):
     """Hierarchy plugin"""
 
-    _plugin_name = "hier"
+    plugin_name = "hier"
     _schema_props_new = {
         "hier": {
             "default": None,

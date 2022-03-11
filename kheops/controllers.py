@@ -266,7 +266,7 @@ class QueryProcessor:
                 lookup["path"] = new_path
                 new_lookups3.append(lookup)
             else:
-                log.info("Ignore because of missing scope vars: '%s'", path)
+                log.warning("Ignore lookup item because of missing scope vars: '%s'", path)
 
         return new_lookups3
 

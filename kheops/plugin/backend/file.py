@@ -32,7 +32,7 @@ class Plugin(BackendPlugin):
             "description": "This backend will look for data inside a file hierarchy.",
             "type": "object",
             "properties": {
-                "format": {
+                "extensions": {
                         "title": "File formats",
                         "description": """
                         This object describe which parser is assigned to which extension. 
@@ -124,18 +124,23 @@ class Plugin(BackendPlugin):
 
         raw_data = None
         status = "not_found"
-        for ext, parser in self.extensions.items():
+        extensions = self.config.get("extensions", self.extensions)
+        for ext, parser in extensions.items():
             new_path = os.path.join(self.top_path, path + ext)
-            log.debug("Looking into %s", new_path)
             if os.path.isfile(new_path):
                 status = "found"
                 try:
+                    log.info("Found file: %s", new_path)
                     raw_data = anyconfig.load(new_path, ac_parser=parser)
                 except AnyConfigBaseError as err:
                     status = "broken"
                     raw_data = None
                     log.warning("Could not parse file %s: %s", new_path, err)
+
+                # Stop the loop extension if we found a result.
                 break
+
+            log.debug("Skip absent file: %s", new_path)
 
         ret = BackendCandidate(
             path=new_path,

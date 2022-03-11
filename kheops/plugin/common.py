@@ -35,7 +35,8 @@ class KheopsPlugin:
         self.config = self.ns.config["config"].get(config_key, {})
         self.config_key = config_key
 
-        log.debug("Looking for plugin configuration in config with key '%s', got: %s", config_key, self.config)
+        #if self.config:
+        #    log.debug("Load plugin configuration in config with key '%s', got: %s", config_key, self.config)
         self._init()
 
     def _init(self):
