@@ -10,9 +10,9 @@ log = logging.getLogger(__name__)
 
 
 class Plugin(ScopePlugin, ScopeExtLoop):
-    """Hierarchy plugin"""
+    """Loop plugin"""
 
-    plugin_name = "hier"
+    plugin_name = "loop"
     _schema_props_new = {
         "hier": {
             "default": None,
