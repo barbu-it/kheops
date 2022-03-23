@@ -2,8 +2,8 @@
 
 make clean
 
-#sphinx-apidoc -f -M -o ./api ../kheops/
-sphinx-apidoc -M -o ./api ../kheops/
+sphinx-apidoc -f -M -o ./api ../kheops/
+#sphinx-apidoc -M -o ./api ../kheops/
 
 mkdir -p learn
 jupyter nbconvert --to markdown --output=../learn/learn101.md jupyter/learn101.ipynb

@@ -33,18 +33,10 @@ kheops.cli module
    :undoc-members:
    :show-inheritance:
 
-kheops.managers module
-----------------------
+kheops.controllers module
+-------------------------
 
-.. automodule:: kheops.managers
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-kheops.query module
--------------------
-
-.. automodule:: kheops.query
+.. automodule:: kheops.controllers
    :members:
    :undoc-members:
    :show-inheritance:

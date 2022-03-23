@@ -9,26 +9,10 @@ kheops.plugin.backend package
 Submodules
 ----------
 
-kheops.plugin.backend.hier module
+kheops.plugin.backend.file module
 ---------------------------------
 
-.. automodule:: kheops.plugin.backend.hier
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-kheops.plugin.backend.init module
----------------------------------
-
-.. automodule:: kheops.plugin.backend.init
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-kheops.plugin.backend.loop module
----------------------------------
-
-.. automodule:: kheops.plugin.backend.loop
+.. automodule:: kheops.plugin.backend.file
    :members:
    :undoc-members:
    :show-inheritance:

@@ -17,10 +17,18 @@ kheops.plugin.strategy.last module
    :undoc-members:
    :show-inheritance:
 
-kheops.plugin.strategy.schema module
-------------------------------------
+kheops.plugin.strategy.merge\_deep module
+-----------------------------------------
 
-.. automodule:: kheops.plugin.strategy.schema
+.. automodule:: kheops.plugin.strategy.merge_deep
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+kheops.plugin.strategy.merge\_schema module
+-------------------------------------------
+
+.. automodule:: kheops.plugin.strategy.merge_schema
    :members:
    :undoc-members:
    :show-inheritance:

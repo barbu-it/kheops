@@ -13,7 +13,7 @@ Subpackages
    :maxdepth: 4
 
    kheops.plugin.backend
-   kheops.plugin.engine
+   kheops.plugin.scope
    kheops.plugin.strategy
 
 Submodules
