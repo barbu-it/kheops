@@ -24,6 +24,7 @@ CACHE_QUERY_EXPIRE = 10
 # Helper classes
 # ------------------------
 
+
 class LoadPlugin:
     """Kheops plugins loader
 
@@ -60,7 +61,8 @@ class LoadPlugin:
         # Return plugin Classe
         return plugin_cls.Plugin
 
-class BackendCandidate():
+
+class BackendCandidate:
     """Backend Candidate
 
     This object represents a backend candidate. It holds the value of the
@@ -96,6 +98,7 @@ class Query:
 
 # Query Processor class
 # ------------------------
+
 
 class QueryProcessor:
     """QueryProcessor
@@ -134,9 +137,7 @@ class QueryProcessor:
     # ------------------------
 
     def query(self, key=None, scope=None, explain=False):
-        """Query key with scope
-
-        """
+        """Query key with scope"""
 
         # Look into cache
         query_hash = dict_hash([self.name, key, scope])
@@ -195,7 +196,6 @@ class QueryProcessor:
         self.cache.set(query_hash, result, expire=CACHE_QUERY_EXPIRE)
         return result
 
-
     # Query parts methods
     # ------------------------
 
@@ -218,7 +218,6 @@ class QueryProcessor:
 
         return rule
 
-
     def _exec_assemble_lookups(self, lookups, query):
 
         assert isinstance(lookups, list)
@@ -227,10 +226,10 @@ class QueryProcessor:
         # Init the scope list
         new_lookups1 = []
         for index, lookup_def in enumerate(lookups):
-            #shortform = False
+            # shortform = False
 
             if isinstance(lookup_def, str):
-                #shortform = True
+                # shortform = True
                 lookup_def = {
                     "path": lookup_def,
                 }
@@ -258,7 +257,9 @@ class QueryProcessor:
                 plugin_name = plugin_def.get("module", None)
 
                 if plugin_name:
-                    plugin = self.plugin_loader.load("scope", plugin_name)(namespace=self)
+                    plugin = self.plugin_loader.load("scope", plugin_name)(
+                        namespace=self
+                    )
                     ret = plugin.process_items(ret, plugin_def)
 
             new_lookups2.extend(ret)
@@ -274,10 +275,11 @@ class QueryProcessor:
                 lookup["path"] = new_path
                 new_lookups3.append(lookup)
             else:
-                log.warning("Ignore lookup item because of missing scope vars: '%s'", path)
+                log.warning(
+                    "Ignore lookup item because of missing scope vars: '%s'", path
+                )
 
         return new_lookups3
-
 
     def _exec_backend_plugins(self, lookups, selector="matched"):
         selector = "matched"

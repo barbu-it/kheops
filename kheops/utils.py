@@ -77,6 +77,7 @@ class Default(dict):
     def __missing__(self, key):
         return ""
 
+
 # Source: https://www.doc.ic.ac.uk/~nuric/coding/how-to-hash-a-dictionary-in-python.html
 def dict_hash(dictionary: Dict[str, Any]) -> str:
     """MD5 hash of a dictionary."""
@@ -104,6 +105,7 @@ def render_template_python(text, params, ignore_missing=True):
 # Schema Methods
 # =====================
 
+
 def _extend_with_default(validator_class):
     validate_properties = validator_class.VALIDATORS["properties"]
 
@@ -113,12 +115,16 @@ def _extend_with_default(validator_class):
                 instance.setdefault(property, subschema["default"])
 
         for error in validate_properties(
-            validator, properties, instance, schema,
+            validator,
+            properties,
+            instance,
+            schema,
         ):
             yield error
 
     return validators.extend(
-        validator_class, {"properties" : set_defaults},
+        validator_class,
+        {"properties": set_defaults},
     )
 
 

@@ -2,6 +2,7 @@
 
 import os
 import logging
+
 # from pprint import pprint
 
 import anyconfig
@@ -9,7 +10,8 @@ from anyconfig.common.errors import BaseError as AnyConfigBaseError
 from kheops.plugin.common import BackendPlugin, BackendCandidate
 
 log = logging.getLogger(__name__)
-CACHE_FILE_EXPIRE=5
+CACHE_FILE_EXPIRE = 5
+
 
 class Plugin(BackendPlugin):
     """File Backend Plugin
@@ -20,12 +22,12 @@ class Plugin(BackendPlugin):
 
     plugin_name = "file"
     extensions = {
-            ".yml": "yaml",
-            ".yaml": "yaml",
-            #".toml": "toml",
-            #".ini": "ini",
-            #".json": "json",
-            }
+        ".yml": "yaml",
+        ".yaml": "yaml",
+        # ".toml": "toml",
+        # ".ini": "ini",
+        # ".json": "json",
+    }
 
     _schema_config = {
         "backend_file": {
@@ -34,43 +36,41 @@ class Plugin(BackendPlugin):
             "type": "object",
             "properties": {
                 "extensions": {
-                        "title": "File formats",
-                        "description": """
+                    "title": "File formats",
+                    "description": """
                         This object describe which parser is assigned to which extension. 
                         Adding more format will have a performance impact because it will try 
                         to find all of the specified format. It is better to keep this list as small
                         as possible.
                         """,
-
-                        "type": "object",
-                        "default": extensions,
-                        "additionalProperties": {
-                                "title": "Name of the extension with parser",
-                                "type": "string"
-                            }
+                    "type": "object",
+                    "default": extensions,
+                    "additionalProperties": {
+                        "title": "Name of the extension with parser",
+                        "type": "string",
                     },
+                },
                 "path_prefix": {
-                        "title": "Prefix string to append to final path",
-                        "description": """
+                    "title": "Prefix string to append to final path",
+                    "description": """
                         String to be added at the end of the resolved path. This is useful to change
                         the place of the root hierarchy.
                         """,
-                        "type": "string"
-                    },
+                    "type": "string",
+                },
                 "path_suffix": {
-                        "title": "Suffix string to prepend to final path",
-                        "description": """
+                    "title": "Suffix string to prepend to final path",
+                    "description": """
                         String to be added at the end of the resolved path. This is useful to 
                         provide Hiera or Jerakia support.""",
-                        "type": "string",
-                        "examples": [
-                            { "path_suffix": "/ansible" },
-                            ]
-                    },
-                }
-            }
+                    "type": "string",
+                    "examples": [
+                        {"path_suffix": "/ansible"},
+                    ],
+                },
+            },
         }
-
+    }
 
     _schema_props_new = {
         "path": {
@@ -136,7 +136,7 @@ class Plugin(BackendPlugin):
             try:
                 raw_data = cache[cache_key]
                 status = "found"
-                #log.info("Found cached: %s with %s", new_path, raw_data)
+                # log.info("Found cached: %s with %s", new_path, raw_data)
                 break
             except KeyError:
                 if os.path.isfile(new_path):

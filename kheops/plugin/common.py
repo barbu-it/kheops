@@ -22,20 +22,23 @@ NoneType = type(None)
 # Generic Plugin classes
 # -------------------------
 
+
 class KheopsPlugin:
     plugin_name = None
     plugin_type = None
     plugin_kind = None
 
     def __init__(self):
-        assert isinstance(self.plugin_name, str), f"Missing name attribute in plugin: {self.__class__}"
+        assert isinstance(
+            self.plugin_name, str
+        ), f"Missing name attribute in plugin: {self.__class__}"
         assert isinstance(self.plugin_kind, str)
 
         config_key = f"{self.plugin_kind}_{self.plugin_name}"
         self.config = self.ns.config["config"].get(config_key, {})
         self.config_key = config_key
 
-        #if self.config:
+        # if self.config:
         #    log.debug("Load plugin configuration in config with key '%s', got: %s", config_key, self.config)
         self._init()
 
@@ -60,6 +63,7 @@ class KheopsItemPlugin(KheopsPlugin):
 
 # Plugin classes
 # -------------------------
+
 
 class BackendPlugin(KheopsItemPlugin):
     plugin_kind = "backend"
@@ -140,11 +144,14 @@ class ScopePlugin(KheopsListPlugin):
         self.ns = namespace
         super().__init__()
 
+
 # Helper classes
 # -------------------------
 
-class BackendCandidate():
+
+class BackendCandidate:
     """Represent a backend candidate"""
+
     def __init__(self, path=None, data=None, run=None, status=None):
         assert isinstance(run, dict)
         self.path = path
@@ -154,7 +161,6 @@ class BackendCandidate():
 
     def __repr__(self):
         return f"Status: {self.status}, Path: {self.path} => {self.data}"
-
 
 
 class ScopeExtLoop:
@@ -179,9 +185,14 @@ class ScopeExtLoop:
     }
 
     def loop_over(
-        self, lookups, conf, module_name, var_name="item", callback_context=None, callback=None
+        self,
+        lookups,
+        conf,
+        module_name,
+        var_name="item",
+        callback_context=None,
+        callback=None,
     ):
-
 
         var_name = conf.get("var", var_name)
         var_data_ref = conf.get("data", None)
@@ -233,8 +244,6 @@ class ScopeExtLoop:
                 ret.append(new_item)
 
         return ret
-
-
 
 
 # To clean/implement
