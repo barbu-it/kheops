@@ -142,7 +142,7 @@ class QueryProcessor:
             tracer.setLevel(logging.DEBUG)
 
         query = Query(key, scope)
-        log.info("Creating new query: %s", query.__dict__)
+        log.info("Creating new query for namespace '%s': %s", self.name, query.__dict__)
 
         # Match the KeyRule in keys (RULE CACHE)
         # Get the matching keys
@@ -160,7 +160,7 @@ class QueryProcessor:
 
         # Generate explain report
         if explain:
-            self._explain_lookups(parsed_lookups)
+            self._explain_lookups(parsed_lookups, query)
 
         # Fetch the module
         # Retrieve the module instance
@@ -304,7 +304,7 @@ class QueryProcessor:
     # Explain methods
     # ------------------------
 
-    def _explain_lookups(self, parsed_lookups):
+    def _explain_lookups(self, parsed_lookups, query):
         """Explain list of lookups"""
 
         table = PrettyTable()
@@ -325,7 +325,7 @@ class QueryProcessor:
             )
         table.field_names = ["Config", "Runtime"]
         table.align = "l"
-        tracer.info("Explain lookups:\n%s", str(table))
+        tracer.info("Explain lookups: %s/%s\n%s", self.name, query.key, str(table))
 
     def _explain_candidates(self, candidates, query):
         """Explain list of candidates"""
@@ -361,4 +361,4 @@ class QueryProcessor:
 
         table.field_names = ["Status", "Runtime", "Key Value"]
         table.align = "l"
-        tracer.info("Explain candidates:\n%s", str(table))
+        tracer.info("Explain candidates: %s/%s\n%s", self.name, query.key, str(table))
