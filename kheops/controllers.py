@@ -13,12 +13,12 @@ from pathlib import Path
 from prettytable import PrettyTable
 
 import kheops.plugin as KheopsPlugins
-from kheops.utils import render_template_python, str_ellipsis
+from kheops.utils import render_template_python, str_ellipsis, dict_hash
 
 
 log = logging.getLogger(__name__)
 tracer = logging.getLogger(f"{__name__}.explain")
-
+CACHE_QUERY_EXPIRE = 10
 
 
 # Helper classes
@@ -138,6 +138,13 @@ class QueryProcessor:
 
         """
 
+        # Look into cache
+        query_hash = dict_hash([self.name, key, scope])
+        if query_hash in self.cache:
+            log.debug("Result fetched from cache")
+            self.cache.touch(query_hash, expire=CACHE_QUERY_EXPIRE)
+            return self.cache[query_hash]
+
         if explain:
             tracer.setLevel(logging.DEBUG)
 
@@ -185,6 +192,7 @@ class QueryProcessor:
         # TODO: Apply output plugins
         # result = self._exec_output_plugins(result)
 
+        self.cache.set(query_hash, result, expire=CACHE_QUERY_EXPIRE)
         return result
 
 

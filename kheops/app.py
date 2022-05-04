@@ -13,11 +13,12 @@ from diskcache import Cache
 
 import kheops.plugin as KheopsPlugins
 from kheops.controllers import QueryProcessor
-from kheops.utils import schema_validate
+from kheops.utils import schema_validate, dict_hash
 
 
 log = logging.getLogger(__name__)
 
+CACHE_CONFIG_EXPIRE=15
 CONF_SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
@@ -122,14 +123,22 @@ class KheopsNamespace(GenericInstance, QueryProcessor):
         :type config: Any
         """
 
-        config = schema_validate(config, CONF_SCHEMA)
-        super().__init__(config)
-
+        # Init object
         self.name = name
         self.app = app
         self.run = dict(app.run)
+        self.cache = app.cache
 
-        # Validate configuration
+        # Init config (from cache)
+        config_hash = 'conf_ns_' + dict_hash(config)
+        try:
+            config = self.cache[config_hash]
+            log.debug("Loading namespace '%s' configuration from cache", self.name)
+        except KeyError as err:
+            config = schema_validate(config, CONF_SCHEMA)
+            self.cache.set(config_hash, config, expire=CACHE_CONFIG_EXPIRE)
+        super().__init__(config)
+
         self.run["path_ns"] = str(Path(app.run["config_src"]).parent.resolve())
 
 
@@ -139,7 +148,7 @@ class Kheops(GenericInstance):
 
     """
 
-    def __init__(self, config="kheops.yml", namespace="default"):
+    def __init__(self, config="kheops.yml", namespace="default", cache=None):
         """
         Kheops Application Instance
 
@@ -166,7 +175,17 @@ class Kheops(GenericInstance):
 
         self.ns_name = namespace
         self.namespaces = {}
+
+        self.cache = cache or Cache("/tmp/kheops_cache/")
         self.raw_config = self.parse_conf(config)
+
+        #needle = 'conf_app_' + dict_hash(config)
+        #try:
+        #    self.raw_config = self.cache[needle]
+        #except KeyError:
+        #    self.raw_config = self.parse_conf(config)
+        #    self.cache.set(needle, config, expire=CACHE_CONFIG_EXPIRE)
+
 
     def parse_conf(self, config="kheops.yml"):
         """
@@ -216,11 +235,12 @@ class Kheops(GenericInstance):
         :type scope: dict
         """
 
-        ret = {}
         # Loop over keys
+        ret = {}
         for key_def in keys:
 
             key_def = key_def or ""
+            assert isinstance(key_def, str), f"Expected string as key, got {type(key_def)}: {key_def}"
 
             # Identify namespace and key
             parts = key_def.split("/")
@@ -259,6 +279,9 @@ class Kheops(GenericInstance):
             #    log.debug("Return '%s' result", key_name)
             #    return result
 
+        if explain:
+            # This is never a really good idea to show direct data ...
+            log.debug("Returned result: %s", ret)
         return ret
 
 

@@ -9,6 +9,7 @@ from anyconfig.common.errors import BaseError as AnyConfigBaseError
 from kheops.plugin.common import BackendPlugin, BackendCandidate
 
 log = logging.getLogger(__name__)
+CACHE_FILE_EXPIRE=5
 
 class Plugin(BackendPlugin):
     """File Backend Plugin
@@ -118,6 +119,8 @@ class Plugin(BackendPlugin):
 
     def fetch_data(self, config) -> list:
 
+        cache = self.ns.cache
+
         path = config.get("path")
         if self.path_suffix:
             path = f"{path}{self.path_suffix}"
@@ -127,18 +130,28 @@ class Plugin(BackendPlugin):
         extensions = self.config.get("extensions", self.extensions)
         for ext, parser in extensions.items():
             new_path = os.path.join(self.top_path, path + ext)
-            if os.path.isfile(new_path):
-                status = "found"
-                try:
-                    log.info("Found file: %s", new_path)
-                    raw_data = anyconfig.load(new_path, ac_parser=parser)
-                except AnyConfigBaseError as err:
-                    status = "broken"
-                    raw_data = None
-                    log.warning("Could not parse file %s: %s", new_path, err)
+            cache_key = "file_content_" + new_path
 
-                # Stop the loop extension if we found a result.
+            # Check first if content exists in cache
+            try:
+                raw_data = cache[cache_key]
+                status = "found"
+                #log.info("Found cached: %s with %s", new_path, raw_data)
                 break
+            except KeyError:
+                if os.path.isfile(new_path):
+                    status = "found"
+                    try:
+                        log.info("Found file: %s", new_path)
+                        raw_data = anyconfig.load(new_path, ac_parser=parser)
+                        cache.set(cache_key, raw_data, expire=CACHE_FILE_EXPIRE)
+                    except AnyConfigBaseError as err:
+                        status = "broken"
+                        raw_data = None
+                        log.warning("Could not parse file %s: %s", new_path, err)
+
+                    # Stop the loop extension if we found a result.
+                    break
 
             log.debug("Skip absent file: %s", new_path)
 
