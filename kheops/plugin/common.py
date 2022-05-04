@@ -6,7 +6,7 @@ from kheops.utils import schema_validate
 from pprint import pprint
 
 log = logging.getLogger(__name__)
-
+NoneType = type(None)
 
 # Vocabulary:
 # Key Rules
@@ -207,7 +207,8 @@ class ScopeExtLoop:
 
             # Validate generated
             if not isinstance(var_data, list):
-                log.warning("Loop data must be a list, got: %s", var_data)
+                if not isinstance(var_data, NoneType):
+                    log.warning("Loop data must be a list, got: '%s'", var_data)
                 continue
 
             # Create new object
@@ -223,6 +224,8 @@ class ScopeExtLoop:
                     "variable": var_name,
                 }
 
+                # Note: This implie a performance penalty to do so, but
+                # we really need a full copy of the dict. copy.copy or dict() are not enough
                 new_item = copy.deepcopy(lookup)
                 new_item["_run"]["scope"][var_name] = var_value
                 new_item["_run"][module_name].append(ctx)
