@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kheops package &mdash; Khéops 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kheops.plugin package" href="kheops.plugin.html" />
+    <link rel="prev" title="kheops" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Khéops
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../docs/app/index.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/learn/index.html">Learn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/guide/index.html">Guides</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Python API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kheops package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.html">kheops.plugin package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-kheops.app">kheops.app module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-kheops.cli">kheops.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-kheops.controllers">kheops.controllers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-kheops.utils">kheops.utils module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Khéops</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">kheops</a> &raquo;</li>
+      <li>kheops package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/kheops.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-kheops">
+<span id="kheops-package"></span><h1>kheops package<a class="headerlink" href="#module-kheops" title="Permalink to this headline"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kheops.plugin.html">kheops.plugin package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="kheops.plugin.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="kheops.plugin.backend.html">kheops.plugin.backend package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.backend.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.backend.html#module-kheops.plugin.backend.file">kheops.plugin.backend.file module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="kheops.plugin.scope.html">kheops.plugin.scope package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.scope.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.scope.html#module-kheops.plugin.scope.hier">kheops.plugin.scope.hier module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.scope.html#module-kheops.plugin.scope.loop">kheops.plugin.scope.loop module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="kheops.plugin.strategy.html">kheops.plugin.strategy package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.strategy.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.strategy.html#module-kheops.plugin.strategy.last">kheops.plugin.strategy.last module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.strategy.html#module-kheops.plugin.strategy.merge_deep">kheops.plugin.strategy.merge_deep module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="kheops.plugin.strategy.html#module-kheops.plugin.strategy.merge_schema">kheops.plugin.strategy.merge_schema module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="kheops.plugin.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kheops.plugin.html#module-kheops.plugin.common">kheops.plugin.common module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-kheops.app">
+<span id="kheops-app-module"></span><h2>kheops.app module<a class="headerlink" href="#module-kheops.app" title="Permalink to this headline"></a></h2>
+<p>Kheops App interface</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.app.GenericInstance">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.app.</span></span><span class="sig-name descname"><span class="pre">GenericInstance</span></span><a class="headerlink" href="#kheops.app.GenericInstance" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>GenericInstance class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em><em> or </em><em>None</em>) – Name of the instace.</p></li>
+<li><p><strong>run</strong> (<em>dict</em>) – Json compatible dict for instance runtime data.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.app.GenericInstance.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#kheops.app.GenericInstance.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.app.GenericInstance.run">
+<span class="sig-name descname"><span class="pre">run</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#kheops.app.GenericInstance.run" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.app.Kheops">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.app.</span></span><span class="sig-name descname"><span class="pre">Kheops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kheops.yml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.app.Kheops" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kheops.app.GenericInstance" title="kheops.app.GenericInstance"><code class="xref py py-class docutils literal notranslate"><span class="pre">kheops.app.GenericInstance</span></code></a></p>
+<p>Kheops Application Class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kheops.app.Kheops.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_schema</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.app.Kheops.lookup" title="Permalink to this definition"></a></dt>
+<dd><p>Lookup a key in hierarchy</p>
+<p>For a given lookup:
+* keys= [&lt;namespace&gt;:&lt;key&gt;]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>keys</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of keys to query.</p></li>
+<li><p><strong>scope</strong> (<em>dict</em>) – Scope key.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kheops.app.Kheops.parse_conf">
+<span class="sig-name descname"><span class="pre">parse_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'kheops.yml'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.app.Kheops.parse_conf" title="Permalink to this definition"></a></dt>
+<dd><p>Parse Kheops configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em><em> or </em><em>str</em><em> or </em><em>None</em>) – Kheops configuration, can either be a file path or a dict.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The parsed configuration.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.app.KheopsNamespace">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.app.</span></span><span class="sig-name descname"><span class="pre">KheopsNamespace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.app.KheopsNamespace" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#kheops.app.GenericInstance" title="kheops.app.GenericInstance"><code class="xref py py-class docutils literal notranslate"><span class="pre">kheops.app.GenericInstance</span></code></a>, <a class="reference internal" href="#kheops.controllers.QueryProcessor" title="kheops.controllers.QueryProcessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">kheops.controllers.QueryProcessor</span></code></a></p>
+<p>Kheops Namespace Class</p>
+</dd></dl>
+
+</section>
+<section id="module-kheops.cli">
+<span id="kheops-cli-module"></span><h2>kheops.cli module<a class="headerlink" href="#module-kheops.cli" title="Permalink to this headline"></a></h2>
+<p>Kheops CLI interface</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.cli.OutputFormat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.cli.</span></span><span class="sig-name descname"><span class="pre">OutputFormat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.cli.OutputFormat" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.cli.OutputFormat.json">
+<span class="sig-name descname"><span class="pre">json</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'json'</span></em><a class="headerlink" href="#kheops.cli.OutputFormat.json" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.cli.OutputFormat.toml">
+<span class="sig-name descname"><span class="pre">toml</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'toml'</span></em><a class="headerlink" href="#kheops.cli.OutputFormat.toml" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.cli.OutputFormat.yaml">
+<span class="sig-name descname"><span class="pre">yaml</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'yaml'</span></em><a class="headerlink" href="#kheops.cli.OutputFormat.yaml" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.cli.config">
+<span class="sig-prename descclassname"><span class="pre">kheops.cli.</span></span><span class="sig-name descname"><span class="pre">config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#kheops.cli.config" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.cli.get_logger">
+<span class="sig-prename descclassname"><span class="pre">kheops.cli.</span></span><span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.cli.get_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Create CmdApp logger</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.cli.lookup">
+<span class="sig-prename descclassname"><span class="pre">kheops.cli.</span></span><span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx:</span> <span class="pre">typer.models.Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">namespace:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys:</span> <span class="pre">typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.ArgumentInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope_param:</span> <span class="pre">typing.Optional[typing.List[str]]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file:</span> <span class="pre">pathlib.Path</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format:</span> <span class="pre">kheops.cli.OutputFormat</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trace:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explain:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.cli.lookup" title="Permalink to this definition"></a></dt>
+<dd><p>Lookup database</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.cli.main">
+<span class="sig-prename descclassname"><span class="pre">kheops.cli.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ctx:</span> <span class="pre">typer.models.Context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config:</span> <span class="pre">pathlib.Path</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.cli.main" title="Permalink to this definition"></a></dt>
+<dd><p>Manage users in the awesome CLI app.</p>
+</dd></dl>
+
+</section>
+<section id="module-kheops.controllers">
+<span id="kheops-controllers-module"></span><h2>kheops.controllers module<a class="headerlink" href="#module-kheops.controllers" title="Permalink to this headline"></a></h2>
+<p>Kheops controller</p>
+<p>Main Kheops model classes</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.controllers.BackendCandidate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.controllers.</span></span><span class="sig-name descname"><span class="pre">BackendCandidate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.controllers.BackendCandidate" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Backend Candidate</p>
+<p>This object represents a backend candidate. It holds the value of the
+requested key, but also so source path, the status and some other metadata.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.controllers.LoadPlugin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.controllers.</span></span><span class="sig-name descname"><span class="pre">LoadPlugin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugins</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.controllers.LoadPlugin" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Kheops plugins loader</p>
+<p>This plugin loader is a helper to load a python module (Kheops Plugin) from
+a plugin kind and name.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kheops.controllers.LoadPlugin.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.controllers.LoadPlugin.load" title="Permalink to this definition"></a></dt>
+<dd><p>Load a plugin</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.controllers.Query">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.controllers.</span></span><span class="sig-name descname"><span class="pre">Query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.controllers.Query" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Query object</p>
+<p>Object that hold key and scope.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.controllers.Query.key">
+<span class="sig-name descname"><span class="pre">key</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#kheops.controllers.Query.key" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.controllers.Query.scope">
+<span class="sig-name descname"><span class="pre">scope</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#kheops.controllers.Query.scope" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.controllers.QueryProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.controllers.</span></span><span class="sig-name descname"><span class="pre">QueryProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.controllers.QueryProcessor" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class helps to do queries for a given key and scope. It provides a single
+public method. It also implement an explain mechanism to help to troubleshoot query
+lookup issues.</p>
+<p>The query process consists in:
+* Create a new query with the key and th scope
+* Fetch and expand the lookup list (_exec_assemble_lookups)
+* Fetch the rule that match the key (_exec_get_rule)
+* Fetch the strategy that match the key
+* Query all backends with lookup list (_exec_backend_plugins)
+* Return result</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.controllers.QueryProcessor.default_lookup_item">
+<span class="sig-name descname"><span class="pre">default_lookup_item</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'backend':</span> <span class="pre">'file',</span> <span class="pre">'continue':</span> <span class="pre">True,</span> <span class="pre">'path':</span> <span class="pre">None}</span></em><a class="headerlink" href="#kheops.controllers.QueryProcessor.default_lookup_item" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kheops.controllers.QueryProcessor.default_match_rule">
+<span class="sig-name descname"><span class="pre">default_match_rule</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'continue':</span> <span class="pre">False,</span> <span class="pre">'key':</span> <span class="pre">None,</span> <span class="pre">'strategy':</span> <span class="pre">'merge_schema'}</span></em><a class="headerlink" href="#kheops.controllers.QueryProcessor.default_match_rule" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kheops.controllers.QueryProcessor.query">
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scope</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">explain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.controllers.QueryProcessor.query" title="Permalink to this definition"></a></dt>
+<dd><p>Query key with scope</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-kheops.utils">
+<span id="kheops-utils-module"></span><h2>kheops.utils module<a class="headerlink" href="#module-kheops.utils" title="Permalink to this headline"></a></h2>
+<p>Utils class</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kheops.utils.Default">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kheops.utils.</span></span><span class="sig-name descname"><span class="pre">Default</span></span><a class="headerlink" href="#kheops.utils.Default" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.utils.dict_hash">
+<span class="sig-prename descclassname"><span class="pre">kheops.utils.</span></span><span class="sig-name descname"><span class="pre">dict_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictionary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#kheops.utils.dict_hash" title="Permalink to this definition"></a></dt>
+<dd><p>MD5 hash of a dictionary.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.utils.glob_files">
+<span class="sig-prename descclassname"><span class="pre">kheops.utils.</span></span><span class="sig-name descname"><span class="pre">glob_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.utils.glob_files" title="Permalink to this definition"></a></dt>
+<dd><p>Return a list of path that match a glob</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.utils.path_assemble_hier">
+<span class="sig-prename descclassname"><span class="pre">kheops.utils.</span></span><span class="sig-name descname"><span class="pre">path_assemble_hier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reverse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.utils.path_assemble_hier" title="Permalink to this definition"></a></dt>
+<dd><p>Append the previous</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.utils.render_template">
+<span class="sig-prename descclassname"><span class="pre">kheops.utils.</span></span><span class="sig-name descname"><span class="pre">render_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.utils.render_template" title="Permalink to this definition"></a></dt>
+<dd><p>Render template for a given string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.utils.render_template_python">
+<span class="sig-prename descclassname"><span class="pre">kheops.utils.</span></span><span class="sig-name descname"><span class="pre">render_template_python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_missing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.utils.render_template_python" title="Permalink to this definition"></a></dt>
+<dd><p>Render template for a given string</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.utils.schema_validate">
+<span class="sig-prename descclassname"><span class="pre">kheops.utils.</span></span><span class="sig-name descname"><span class="pre">schema_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.utils.schema_validate" title="Permalink to this definition"></a></dt>
+<dd><p>Validate a config against a jsonschema</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kheops.utils.str_ellipsis">
+<span class="sig-prename descclassname"><span class="pre">kheops.utils.</span></span><span class="sig-name descname"><span class="pre">str_ellipsis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#kheops.utils.str_ellipsis" title="Permalink to this definition"></a></dt>
+<dd><p>Truncate with ellipsis too wide texts</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="kheops" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kheops.plugin.html" class="btn btn-neutral float-right" title="kheops.plugin package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Barbu IT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

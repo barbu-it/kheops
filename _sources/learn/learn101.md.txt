@@ -1,0 +1,819 @@
+# Khéops 101
+
+
+```bash
+cd ${KHEOPS_EXAMPLES_DIR:-/dev/null}
+echo $PWD
+export KHEOPS_NAMESPACE=ex1_enc 
+export KHEOPS_CONFIG=examples/kheops.yml
+rm -rf "examples/$KHEOPS_NAMESPACE"
+```
+
+    /home/jez/prj/bell/dev/kheops
+
+
+## Command line
+
+Let's check first that kheops works correclty, and start to read the manual.
+
+
+```bash
+kheops --help
+```
+
+    Usage: kheops [OPTIONS] COMMAND [ARGS]...
+    
+      Khéops, hierarchical key/value store
+    
+    Options:
+      -v, --verbose                   [default: 0]
+      -c PATH                         Last name of person to greet.  [env var:
+                                      KHEOPS_CONFIG; default: kheops.yml]
+      --install-completion [bash|zsh|fish|powershell|pwsh]
+                                      Install completion for the specified shell.
+      --show-completion [bash|zsh|fish|powershell|pwsh]
+                                      Show completion for the specified shell, to
+                                      copy it or customize the installation.
+      --help                          Show this message and exit.
+    
+    Commands:
+      config
+      lookup  Lookup database
+
+
+So we have a working `kheops` command, and we will focus on the `lookup` command. On it's simplest form, a lookup consists in querying a `key` for a given `scope`. The output of the `key` will change depending the `scope` value. A `key` is in simple word.
+
+## Defining a hierarchy
+
+To illustrate how Khéops works, let's start with a simple example, we will try to lookup the `profile` key of the following two (fictive) servers:
+
+* web.domain.org: which act as a webserver role
+* mysql.domain.org: which act as mysql role
+
+But first we need to create our hierarchy. It's as simple as creating directories and put some json or yaml data into different files. Let's create our hierarchy. We will first create the default profile:
+
+
+From our use case, we will build a lookup tree. We want to be able to organise data depending the 3 criterias:
+
+* node: name of the node
+* role: assigned role to the node
+* environment: it can either be dev or prod
+
+Let's create our lookup hierarchy:
+
+default:
+  lookups:
+    - path: default # Simplest form, just a path
+    - path: "roles/{role}" # If list, it's auto expanded like in bash
+    - path: "env_{env}" # If list, it's auto expanded like in bash
+    - path: "nodes/{node}"
+
+
+So for a given key, Khéops will iterate all over those paths to find the requested `key` , and then it will merge all results. Some paths are variabilized, and those variable comes from the scope. The scope come along the `key`, it's can be any metadata. For complex metadata you may want to store those in a file and load your scope with the `-f <yaml_scope_file>` option:
+
+```
+kheops lookup -e <var1=val1> -e <var2=val2> <key>
+```
+
+A scope is completely optional while keys are required.
+
+## Basic hierarchy
+
+Let's create a firest hierachy, we will define a first basic hierarchy. In `kheops.yml`, we can find:
+
+```
+ex1_enc:
+  
+  config:
+    file_path_prefix: "ex1_enc/"
+    file_path_suffix: "/ansible"
+
+  lookups:
+
+    - path: default           # Simplest form, just a path
+    - path: "roles/{role}"    # If list, it's auto expanded like in bash
+    - path: "env_{env}"       # If list, it's auto expanded like in bash
+    - path: "nodes/{node}"
+
+```
+
+Now we have our hierachy, let's create our files:
+
+
+```bash
+# We create a fresh hierachy
+mkdir -p examples/$KHEOPS_NAMESPACE
+
+# We create a profile key, which is a dict
+cat > examples/$KHEOPS_NAMESPACE/default.yml <<EOF
+---
+profile:
+  env: "NO_ENV"
+  product: "NO_PRODUCT"
+  
+EOF
+
+# Let's inspect our hierarchy
+tree examples/$KHEOPS_NAMESPACE
+cat examples/$KHEOPS_NAMESPACE/default.yml
+```
+
+    [01;34mexamples/ex1_enc[0m
+    └── default.yml
+    
+    0 directories, 1 file
+    ---
+    profile:
+      env: "NO_ENV"
+      product: "NO_PRODUCT"
+      
+
+
+From this point, we defined our profile with two attribute, `team` and `product`. As it's the default case, we set them both unconfigured. 
+
+You are now already able to query your hierarchy:
+
+
+```bash
+kheops lookup profile
+```
+
+    profile:
+      env: NO_ENV
+      product: NO_PRODUCT
+    
+
+
+Good, no surprise. But, we mentionned we wanted to get the profile of two instances, this how would do that:
+
+
+```bash
+kheops lookup -e node=web.infra.net profile
+```
+
+    profile:
+      env: NO_ENV
+      product: NO_PRODUCT
+    
+
+
+Same result, let's check how we can change this behavior.
+
+## Roles
+
+However, same result as before, which is expected as we did not finished to configure our hierarchy. Among our instances, we identified 2 roles: web and mysql. Let's create those two roles:
+
+
+```bash
+mkdir -p examples/$KHEOPS_NAMESPACE/roles
+
+# We create a new web role
+cat > examples/$KHEOPS_NAMESPACE/roles/web.yml <<EOF
+---
+profile:
+  product: "httpd_server"
+
+  web_top_domain: ""
+  web_app: "NO_APP"
+  web_port: 80
+  web_user_list:
+    - sysadmins
+  
+EOF
+
+# We create a new mysql role
+cat > examples/$KHEOPS_NAMESPACE/roles/mysql.yml <<EOF
+---
+profile:
+  product: "mysql_server"
+
+  mysql_database: "NO_DATABASE"
+  mysql_users:
+    - "sysadmin@10.0.42%"
+  mysql_port: 3306
+  mysql_cluster: False
+  
+EOF
+
+# Let's inspect our hierarchy
+tree examples/$KHEOPS_NAMESPACE
+```
+
+    [01;34mexamples/ex1_enc[0m
+    ├── default.yml
+    └── [01;34mroles[0m
+        ├── mysql.yml
+        └── web.yml
+    
+    1 directory, 3 files
+
+
+
+```bash
+tail -n 999 examples/$KHEOPS_NAMESPACE/{*.yml,*/*.yml}
+```
+
+    ==> examples/ex1_enc/default.yml <==
+    ---
+    profile:
+      env: "NO_ENV"
+      product: "NO_PRODUCT"
+      
+    
+    ==> examples/ex1_enc/roles/mysql.yml <==
+    ---
+    profile:
+      product: "mysql_server"
+    
+      mysql_database: "NO_DATABASE"
+      mysql_users:
+        - "sysadmin@10.0.42%"
+      mysql_port: 3306
+      mysql_cluster: False
+      
+    
+    ==> examples/ex1_enc/roles/web.yml <==
+    ---
+    profile:
+      product: "httpd_server"
+    
+      web_top_domain: ""
+      web_app: "NO_APP"
+      web_port: 80
+      web_user_list:
+        - sysadmins
+      
+
+
+
+```bash
+kheops lookup -e node=web.infra.net -e role=web profile
+kheops lookup -e node=mysql.infra.net -e role=mysql profile
+```
+
+    profile:
+      env: NO_ENV
+      product: httpd_server
+      web_top_domain: ''
+      web_app: NO_APP
+      web_port: 80
+      web_user_list:
+      - sysadmins
+    
+    profile:
+      env: NO_ENV
+      product: mysql_server
+      mysql_database: NO_DATABASE
+      mysql_users:
+      - sysadmin@10.0.42%
+      mysql_port: 3306
+      mysql_cluster: false
+    
+
+
+## Per node override
+
+It's getting better, we can see that the profile key has been merged with the key values, across the different locations. 
+
+However, we will have those placeholders, and we want to have personalized value, depending if it's aweb server, it need an unique domain and some unique parameters. So let's create a `nodes` directory and place some data inside.
+
+
+
+
+```bash
+mkdir -p examples/$KHEOPS_NAMESPACE/nodes
+
+# We create a new web role
+cat > examples/$KHEOPS_NAMESPACE/nodes/web.infra.net.yml <<EOF
+---
+profile:
+  web_app: 'myapp'
+  web_user_list:
+    - domain_org
+    - domain_org_external
+  
+EOF
+
+# We create a new mysql role
+cat > examples/$KHEOPS_NAMESPACE/nodes/mysql.infra.net.yml <<EOF
+---
+profile:  
+  mysql_database: "app_domain_org"
+  mysql_users:
+    - "app_domain_org@10.0.51%"
+  
+EOF
+
+# Let's inspect our hierarchy
+tree examples/$KHEOPS_NAMESPACE
+```
+
+    [01;34mexamples/ex1_enc[0m
+    ├── default.yml
+    ├── [01;34mnodes[0m
+    │   ├── mysql.infra.net.yml
+    │   └── web.infra.net.yml
+    └── [01;34mroles[0m
+        ├── mysql.yml
+        └── web.yml
+    
+    2 directories, 5 files
+
+
+And we try again:
+
+
+```bash
+kheops lookup -e node=web.infra.net -e role=web profile
+kheops lookup -e node=mysql.infra.net -e role=mysql profile
+```
+
+    profile:
+      env: NO_ENV
+      product: httpd_server
+      web_top_domain: ''
+      web_app: myapp
+      web_port: 80
+      web_user_list:
+      - domain_org
+      - domain_org_external
+    
+    profile:
+      env: NO_ENV
+      product: mysql_server
+      mysql_database: app_domain_org
+      mysql_users:
+      - app_domain_org@10.0.51%
+      mysql_port: 3306
+      mysql_cluster: false
+    
+
+
+## Environment override
+
+Let's say you want to support environment, it's the same:
+
+
+```bash
+
+# We create a new dev environment
+cat > examples/$KHEOPS_NAMESPACE/env_dev.yml <<EOF
+---
+profile:
+  env: dev
+  
+  # We change the top domain for dev environment, and reduce the cache
+  web_top_domain: dev.infra.net
+  web_cache: 1m
+  
+  # We want a debug users
+  web_user_list:
+    - debug_user
+  mysql_users:
+    - debug@10.0.%
+
+  debug: true
+
+EOF
+
+# We create a new mysql role
+cat > examples/$KHEOPS_NAMESPACE/env_prod.yml <<EOF
+---
+profile:
+  env: prod
+  
+  # On production environment, we always want to use public faced domain and 12 hour cache.
+  web_top_domain: infra.com
+  web_cache: 12h
+  
+EOF
+
+# Let's inspect our hierarchy
+tree examples/$KHEOPS_NAMESPACE
+```
+
+    [01;34mexamples/ex1_enc[0m
+    ├── default.yml
+    ├── env_dev.yml
+    ├── env_prod.yml
+    ├── [01;34mnodes[0m
+    │   ├── mysql.infra.net.yml
+    │   └── web.infra.net.yml
+    └── [01;34mroles[0m
+        ├── mysql.yml
+        └── web.yml
+    
+    2 directories, 7 files
+
+
+So it's become quite easy to compare the difference between environment, with a simple variable switch:
+
+
+```bash
+kheops lookup -e node=web.infra.net -e role=web -e env=prod profile
+kheops lookup -e node=web.infra.net -e role=web -e env=dev profile
+```
+
+    profile:
+      env: prod
+      product: httpd_server
+      web_top_domain: infra.com
+      web_app: myapp
+      web_port: 80
+      web_user_list:
+      - domain_org
+      - domain_org_external
+      web_cache: 12h
+    
+    profile:
+      env: dev
+      product: httpd_server
+      web_top_domain: dev.infra.net
+      web_app: myapp
+      web_port: 80
+      web_user_list:
+      - domain_org
+      - domain_org_external
+      web_cache: 1m
+      mysql_users:
+      - debug@10.0.%
+      debug: true
+    
+
+
+Same for mysql:
+
+
+```bash
+kheops lookup -e node=mysql.infra.net -e role=mysql -e env=prod profile
+kheops lookup -e node=mysql.infra.net -e role=mysql -e env=dev profile
+```
+
+    profile:
+      env: prod
+      product: mysql_server
+      mysql_database: app_domain_org
+      mysql_users:
+      - app_domain_org@10.0.51%
+      mysql_port: 3306
+      mysql_cluster: false
+      web_top_domain: infra.com
+      web_cache: 12h
+    
+    profile:
+      env: dev
+      product: mysql_server
+      mysql_database: app_domain_org
+      mysql_users:
+      - app_domain_org@10.0.51%
+      mysql_port: 3306
+      mysql_cluster: false
+      web_top_domain: dev.infra.net
+      web_cache: 1m
+      web_user_list:
+      - debug_user
+      debug: true
+    
+
+
+You have to keep in mind you can query the key with a different scope, and get different views:
+
+
+```bash
+kheops lookup profile
+
+echo "==> Per environment view"
+kheops lookup -e env=prod profile
+kheops lookup -e env=dev profile
+
+echo "==> Per role and  environment view"
+kheops lookup -e role=mysql -e env=prod profile
+kheops lookup -e role=web -e env=prod profile
+
+echo "==> Per node view"
+kheops lookup -e node=web.infra.net -e role=web -e env=dev profile
+```
+
+    profile:
+      env: NO_ENV
+      product: NO_PRODUCT
+    
+    ==> Per environment view
+    profile:
+      env: prod
+      product: NO_PRODUCT
+      web_top_domain: infra.com
+      web_cache: 12h
+    
+    profile:
+      env: dev
+      product: NO_PRODUCT
+      web_top_domain: dev.infra.net
+      web_cache: 1m
+      web_user_list:
+      - debug_user
+      mysql_users:
+      - debug@10.0.%
+      debug: true
+    
+    ==> Per role and  environment view
+    profile:
+      env: prod
+      product: mysql_server
+      mysql_database: NO_DATABASE
+      mysql_users:
+      - sysadmin@10.0.42%
+      mysql_port: 3306
+      mysql_cluster: false
+      web_top_domain: infra.com
+      web_cache: 12h
+    
+    profile:
+      env: prod
+      product: httpd_server
+      web_top_domain: infra.com
+      web_app: NO_APP
+      web_port: 80
+      web_user_list:
+      - sysadmins
+      web_cache: 12h
+    
+    ==> Per node view
+    profile:
+      env: dev
+      product: httpd_server
+      web_top_domain: dev.infra.net
+      web_app: myapp
+      web_port: 80
+      web_user_list:
+      - domain_org
+      - domain_org_external
+      web_cache: 1m
+      mysql_users:
+      - debug@10.0.%
+      debug: true
+    
+
+
+Even if somwaht clunky, this method can help to troubleshoot wrong data by dichotomy.
+
+
+```bash
+
+```
+
+## Tooling and applications
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+## Troubleshooting
+
+Sometimes, it can may be hard to navigate across file and hierachy, but GNU Utils are here to help. There is a selection of small tips:
+
+
+```bash
+set -x
+
+: Find where a key has been defined
+: ==========================
+grep -r '^profile:' examples/$KHEOPS_NAMESPACE
+
+
+: Find where a key has been defined and 5 first lines
+: ==========================
+grep -r -A 5 'web_user_list:' examples/$KHEOPS_NAMESPACE
+
+
+: Search from anything related to database
+: ==========================
+grep -R -C 3  'database' examples/$KHEOPS_NAMESPACE
+
+set +x
+```
+
+    + : Find where a key has been defined
+    + : ==========================
+    + grep --colour=auto -r '^profile:' examples/ex1_enc
+    [35m[Kexamples/ex1_enc/env_prod.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+    [35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+    [35m[Kexamples/ex1_enc/roles/web.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+    [35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K  
+    [35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+    [35m[Kexamples/ex1_enc/default.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+    [35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+    + : Find where a key has been defined and 5 first lines
+    + : ==========================
+    + grep --colour=auto -r -A 5 web_user_list: examples/ex1_enc
+    [35m[Kexamples/ex1_enc/roles/web.yml[m[K[36m[K:[m[K  [01;31m[Kweb_user_list:[m[K
+    [35m[Kexamples/ex1_enc/roles/web.yml[m[K[36m[K-[m[K    - sysadmins
+    [35m[Kexamples/ex1_enc/roles/web.yml[m[K[36m[K-[m[K  
+    [36m[K--[m[K
+    [35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K:[m[K  [01;31m[Kweb_user_list:[m[K
+    [35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K-[m[K    - domain_org
+    [35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K-[m[K    - domain_org_external
+    [35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K-[m[K  
+    [36m[K--[m[K
+    [35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K:[m[K  [01;31m[Kweb_user_list:[m[K
+    [35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K    - debug_user
+    [35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K  mysql_users:
+    [35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K    - debug@10.0.%
+    [35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K
+    [35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K  debug: true
+    + : Search from anything related to database
+    + : ==========================
+    + grep --colour=auto -R -C 3 database examples/ex1_enc
+    [35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[Kprofile:
+    [35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K  product: "mysql_server"
+    [35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K
+    [35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K:[m[K  mysql_[01;31m[Kdatabase[m[K: "NO_DATABASE"
+    [35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K  mysql_users:
+    [35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K    - "sysadmin@10.0.42%"
+    [35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K  mysql_port: 3306
+    [36m[K--[m[K
+    [35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[K---
+    [35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[Kprofile:  
+    [35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K:[m[K  mysql_[01;31m[Kdatabase[m[K: "app_domain_org"
+    [35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[K  mysql_users:
+    [35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[K    - "app_domain_org@10.0.51%"
+    [35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[K  
+    + set +x
+
+
+
+```bash
+
+```
+
+The tail/head command is quite usefull to look at multiple files at the same time, it add a nice header for each file:
+
+
+```bash
+head -n 999 examples/ex1_enc/roles/*
+```
+
+    ==> examples/ex1_enc/roles/mysql.yml <==
+    ---
+    profile:
+      product: "mysql_server"
+    
+      mysql_database: "NO_DATABASE"
+      mysql_users:
+        - "sysadmin@10.0.42%"
+      mysql_port: 3306
+      mysql_cluster: False
+      
+    
+    ==> examples/ex1_enc/roles/web.yml <==
+    ---
+    profile:
+      product: "httpd_server"
+    
+      web_top_domain: ""
+      web_app: "NO_APP"
+      web_port: 80
+      web_user_list:
+        - sysadmins
+      
+
+
+You can also have a view of all files with this command:
+```
+find . -type f| xargs head -n 999 | less
+```
+
+From there, you will be able to have a nice overview of your data.
+
+You can even diff your change with this command. There is this simple trick to compare the data difference between 2 lookups:
+
+
+```bash
+diff -u \
+<(kheops lookup -e node=web.infra.net -e role=web -e env=prod profile) \
+<(kheops lookup -e node=web.infra.net -e role=web -e env=dev profile)
+```
+
+    --- /dev/fd/63	2022-02-14 13:45:59.223619144 -0500
+    +++ /dev/fd/62	2022-02-14 13:45:59.223619144 -0500
+    @@ -1,11 +1,14 @@
+     profile:
+    -  env: prod
+    +  env: dev
+       product: httpd_server
+    -  web_top_domain: infra.com
+    +  web_top_domain: dev.infra.net
+       web_app: myapp
+       web_port: 80
+       web_user_list:
+       - domain_org
+       - domain_org_external
+    -  web_cache: 12h
+    +  web_cache: 1m
+    +  mysql_users:
+    +  - debug@10.0.%
+    +  debug: true
+     
+
+
+
+
+You can also ask Kheops to explain you how he built the result, you can use the `-x` flag:
+
+
+```bash
+kheops lookup -e role=web profile -X
+```
+
+        INFO: Explain lookups:
+    +------------------------+------------------------------+
+    | Config                 | Runtime                      |
+    +------------------------+------------------------------+
+    |                        |                              |
+    | Config:{               | Runtime:{                    |
+    |   "path": "default",   |   "scope": {                 |
+    |   "backend": "file",   |     "role": "web"            |
+    |   "continue": true     |   },                         |
+    | }                      |   "key": "profile",          |
+    |                        |   "conf": {                  |
+    |                        |     "index": 0               |
+    |                        |   },                         |
+    |                        |   "raw_path": "default"      |
+    |                        | }                            |
+    |                        |                              |
+    | Config:{               | Runtime:{                    |
+    |   "path": "roles/web", |   "scope": {                 |
+    |   "backend": "file",   |     "role": "web"            |
+    |   "continue": true     |   },                         |
+    | }                      |   "key": "profile",          |
+    |                        |   "conf": {                  |
+    |                        |     "index": 1               |
+    |                        |   },                         |
+    |                        |   "raw_path": "roles/{role}" |
+    |                        | }                            |
+    +------------------------+------------------------------+
+        INFO: Explain candidates:
+    +----------------------------------------------------------------------------------+-------------------------------+------------------------------+
+    | Status                                                                           | Runtime                       | Key Value                    |
+    +----------------------------------------------------------------------------------+-------------------------------+------------------------------+
+    |                                                                                  |                               |                              |
+    | Status:{                                                                         | Runtime:{                     | Key:{                        |
+    |   "path": "/home/jez/volumes/data/prj/bell/dev/kheops/examples/ex1_enc/defau ... |   "scope": {                  |   "env": "NO_ENV",           |
+    |   "status": "found",                                                             |     "role": "web"             |   "product": "NO_PRODUCT"    |
+    |   "rel_path": "examples/ex1_enc/default.yml"                                     |   },                          | }                            |
+    | }                                                                                |   "key": "profile",           |                              |
+    |                                                                                  |   "conf": {                   |                              |
+    |                                                                                  |     "index": 0                |                              |
+    |                                                                                  |   },                          |                              |
+    |                                                                                  |   "raw_path": "default",      |                              |
+    |                                                                                  |   "backend_index": 0          |                              |
+    |                                                                                  | }                             |                              |
+    |                                                                                  |                               |                              |
+    | Status:{                                                                         | Runtime:{                     | Key:{                        |
+    |   "path": "/home/jez/volumes/data/prj/bell/dev/kheops/examples/ex1_enc/roles ... |   "scope": {                  |   "product": "httpd_server", |
+    |   "status": "found",                                                             |     "role": "web"             |   "web_top_domain": "",      |
+    |   "rel_path": "examples/ex1_enc/roles/web.yml"                                   |   },                          |   "web_app": "NO_APP",       |
+    | }                                                                                |   "key": "profile",           |   "web_port": 80,            |
+    |                                                                                  |   "conf": {                   |   "web_user_list": [         |
+    |                                                                                  |     "index": 1                |     "sysadmins"              |
+    |                                                                                  |   },                          |   ]                          |
+    |                                                                                  |   "raw_path": "roles/{role}", | }                            |
+    |                                                                                  |   "backend_index": 1          |                              |
+    |                                                                                  | }                             |                              |
+    +----------------------------------------------------------------------------------+-------------------------------+------------------------------+
+    profile:
+      env: NO_ENV
+      product: httpd_server
+      web_top_domain: ''
+      web_app: NO_APP
+      web_port: 80
+      web_user_list:
+      - sysadmins
+    
+
+
+
+```bash
+
+```

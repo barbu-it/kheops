@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Khéops 101 &mdash; Khéops 0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Introduction" href="../docs/learn/100.html" />
+    <link rel="prev" title="Learn" href="../docs/learn/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Khéops
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../docs/app/index.html">Application</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../docs/learn/index.html">Learn</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Khéops 101</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#command-line">Command line</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-a-hierarchy">Defining a hierarchy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#basic-hierarchy">Basic hierarchy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#roles">Roles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#per-node-override">Per node override</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#environment-override">Environment override</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tooling-and-applications">Tooling and applications</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/learn/100.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/learn/101.html">Learn 101</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/learn/102.html">Learn 102</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../docs/learn/105.html">Learn 105</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/guide/index.html">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">Python API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Khéops</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../docs/learn/index.html">Learn</a> &raquo;</li>
+      <li>Khéops 101</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/learn/learn101.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="kheops-101">
+<h1>Khéops 101<a class="headerlink" href="#kheops-101" title="Permalink to this headline"></a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="si">${</span><span class="nv">KHEOPS_EXAMPLES_DIR</span><span class="k">:-</span><span class="p">/dev/null</span><span class="si">}</span>
+<span class="nb">echo</span> <span class="nv">$PWD</span>
+<span class="nb">export</span> <span class="nv">KHEOPS_NAMESPACE</span><span class="o">=</span>ex1_enc 
+<span class="nb">export</span> <span class="nv">KHEOPS_CONFIG</span><span class="o">=</span>examples/kheops.yml
+rm -rf <span class="s2">&quot;examples/</span><span class="nv">$KHEOPS_NAMESPACE</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/home/jez/prj/bell/dev/kheops
+</pre></div>
+</div>
+<section id="command-line">
+<h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline"></a></h2>
+<p>Let’s check first that kheops works correclty, and start to read the manual.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops --help
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage: kheops [OPTIONS] COMMAND [ARGS]...
+
+  Khéops, hierarchical key/value store
+
+Options:
+  -v, --verbose                   [default: 0]
+  -c PATH                         Last name of person to greet.  [env var:
+                                  KHEOPS_CONFIG; default: kheops.yml]
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
+  --help                          Show this message and exit.
+
+Commands:
+  config
+  lookup  Lookup database
+</pre></div>
+</div>
+<p>So we have a working <code class="docutils literal notranslate"><span class="pre">kheops</span></code> command, and we will focus on the <code class="docutils literal notranslate"><span class="pre">lookup</span></code> command. On it’s simplest form, a lookup consists in querying a <code class="docutils literal notranslate"><span class="pre">key</span></code> for a given <code class="docutils literal notranslate"><span class="pre">scope</span></code>. The output of the <code class="docutils literal notranslate"><span class="pre">key</span></code> will change depending the <code class="docutils literal notranslate"><span class="pre">scope</span></code> value. A <code class="docutils literal notranslate"><span class="pre">key</span></code> is in simple word.</p>
+</section>
+<section id="defining-a-hierarchy">
+<h2>Defining a hierarchy<a class="headerlink" href="#defining-a-hierarchy" title="Permalink to this headline"></a></h2>
+<p>To illustrate how Khéops works, let’s start with a simple example, we will try to lookup the <code class="docutils literal notranslate"><span class="pre">profile</span></code> key of the following two (fictive) servers:</p>
+<ul class="simple">
+<li><p>web.domain.org: which act as a webserver role</p></li>
+<li><p>mysql.domain.org: which act as mysql role</p></li>
+</ul>
+<p>But first we need to create our hierarchy. It’s as simple as creating directories and put some json or yaml data into different files. Let’s create our hierarchy. We will first create the default profile:</p>
+<p>From our use case, we will build a lookup tree. We want to be able to organise data depending the 3 criterias:</p>
+<ul class="simple">
+<li><p>node: name of the node</p></li>
+<li><p>role: assigned role to the node</p></li>
+<li><p>environment: it can either be dev or prod</p></li>
+</ul>
+<p>Let’s create our lookup hierarchy:</p>
+<p>default:
+lookups:
+- path: default # Simplest form, just a path
+- path: “roles/{role}” # If list, it’s auto expanded like in bash
+- path: “env_{env}” # If list, it’s auto expanded like in bash
+- path: “nodes/{node}”</p>
+<p>So for a given key, Khéops will iterate all over those paths to find the requested <code class="docutils literal notranslate"><span class="pre">key</span></code> , and then it will merge all results. Some paths are variabilized, and those variable comes from the scope. The scope come along the <code class="docutils literal notranslate"><span class="pre">key</span></code>, it’s can be any metadata. For complex metadata you may want to store those in a file and load your scope with the <code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">&lt;yaml_scope_file&gt;</span></code> option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kheops</span> <span class="n">lookup</span> <span class="o">-</span><span class="n">e</span> <span class="o">&lt;</span><span class="n">var1</span><span class="o">=</span><span class="n">val1</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">e</span> <span class="o">&lt;</span><span class="n">var2</span><span class="o">=</span><span class="n">val2</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>A scope is completely optional while keys are required.</p>
+</section>
+<section id="basic-hierarchy">
+<h2>Basic hierarchy<a class="headerlink" href="#basic-hierarchy" title="Permalink to this headline"></a></h2>
+<p>Let’s create a firest hierachy, we will define a first basic hierarchy. In <code class="docutils literal notranslate"><span class="pre">kheops.yml</span></code>, we can find:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ex1_enc</span><span class="p">:</span>
+  
+  <span class="n">config</span><span class="p">:</span>
+    <span class="n">file_path_prefix</span><span class="p">:</span> <span class="s2">&quot;ex1_enc/&quot;</span>
+    <span class="n">file_path_suffix</span><span class="p">:</span> <span class="s2">&quot;/ansible&quot;</span>
+
+  <span class="n">lookups</span><span class="p">:</span>
+
+    <span class="o">-</span> <span class="n">path</span><span class="p">:</span> <span class="n">default</span>           <span class="c1"># Simplest form, just a path</span>
+    <span class="o">-</span> <span class="n">path</span><span class="p">:</span> <span class="s2">&quot;roles/</span><span class="si">{role}</span><span class="s2">&quot;</span>    <span class="c1"># If list, it&#39;s auto expanded like in bash</span>
+    <span class="o">-</span> <span class="n">path</span><span class="p">:</span> <span class="s2">&quot;env_</span><span class="si">{env}</span><span class="s2">&quot;</span>       <span class="c1"># If list, it&#39;s auto expanded like in bash</span>
+    <span class="o">-</span> <span class="n">path</span><span class="p">:</span> <span class="s2">&quot;nodes/</span><span class="si">{node}</span><span class="s2">&quot;</span>
+
+</pre></div>
+</div>
+<p>Now we have our hierachy, let’s create our files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># We create a fresh hierachy</span>
+mkdir -p examples/<span class="nv">$KHEOPS_NAMESPACE</span>
+
+<span class="c1"># We create a profile key, which is a dict</span>
+cat &gt; examples/<span class="nv">$KHEOPS_NAMESPACE</span>/default.yml <span class="s">&lt;&lt;EOF</span>
+<span class="s">---</span>
+<span class="s">profile:</span>
+<span class="s">  env: &quot;NO_ENV&quot;</span>
+<span class="s">  product: &quot;NO_PRODUCT&quot;</span>
+<span class="s">  </span>
+<span class="s">EOF</span>
+
+<span class="c1"># Let&#39;s inspect our hierarchy</span>
+tree examples/<span class="nv">$KHEOPS_NAMESPACE</span>
+cat examples/<span class="nv">$KHEOPS_NAMESPACE</span>/default.yml
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[01;34mexamples/ex1_enc[0m
+└── default.yml
+
+0 directories, 1 file
+---
+profile:
+  env: &quot;NO_ENV&quot;
+  product: &quot;NO_PRODUCT&quot;
+</pre></div>
+</div>
+<p>From this point, we defined our profile with two attribute, <code class="docutils literal notranslate"><span class="pre">team</span></code> and <code class="docutils literal notranslate"><span class="pre">product</span></code>. As it’s the default case, we set them both unconfigured.</p>
+<p>You are now already able to query your hierarchy:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops lookup profile
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>profile:
+  env: NO_ENV
+  product: NO_PRODUCT
+</pre></div>
+</div>
+<p>Good, no surprise. But, we mentionned we wanted to get the profile of two instances, this how would do that:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops lookup -e <span class="nv">node</span><span class="o">=</span>web.infra.net profile
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>profile:
+  env: NO_ENV
+  product: NO_PRODUCT
+</pre></div>
+</div>
+<p>Same result, let’s check how we can change this behavior.</p>
+</section>
+<section id="roles">
+<h2>Roles<a class="headerlink" href="#roles" title="Permalink to this headline"></a></h2>
+<p>However, same result as before, which is expected as we did not finished to configure our hierarchy. Among our instances, we identified 2 roles: web and mysql. Let’s create those two roles:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p examples/<span class="nv">$KHEOPS_NAMESPACE</span>/roles
+
+<span class="c1"># We create a new web role</span>
+cat &gt; examples/<span class="nv">$KHEOPS_NAMESPACE</span>/roles/web.yml <span class="s">&lt;&lt;EOF</span>
+<span class="s">---</span>
+<span class="s">profile:</span>
+<span class="s">  product: &quot;httpd_server&quot;</span>
+
+<span class="s">  web_top_domain: &quot;&quot;</span>
+<span class="s">  web_app: &quot;NO_APP&quot;</span>
+<span class="s">  web_port: 80</span>
+<span class="s">  web_user_list:</span>
+<span class="s">    - sysadmins</span>
+<span class="s">  </span>
+<span class="s">EOF</span>
+
+<span class="c1"># We create a new mysql role</span>
+cat &gt; examples/<span class="nv">$KHEOPS_NAMESPACE</span>/roles/mysql.yml <span class="s">&lt;&lt;EOF</span>
+<span class="s">---</span>
+<span class="s">profile:</span>
+<span class="s">  product: &quot;mysql_server&quot;</span>
+
+<span class="s">  mysql_database: &quot;NO_DATABASE&quot;</span>
+<span class="s">  mysql_users:</span>
+<span class="s">    - &quot;sysadmin@10.0.42%&quot;</span>
+<span class="s">  mysql_port: 3306</span>
+<span class="s">  mysql_cluster: False</span>
+<span class="s">  </span>
+<span class="s">EOF</span>
+
+<span class="c1"># Let&#39;s inspect our hierarchy</span>
+tree examples/<span class="nv">$KHEOPS_NAMESPACE</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[01;34mexamples/ex1_enc[0m
+├── default.yml
+└── [01;34mroles[0m
+    ├── mysql.yml
+    └── web.yml
+
+1 directory, 3 files
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tail -n <span class="m">999</span> examples/<span class="nv">$KHEOPS_NAMESPACE</span>/<span class="o">{</span>*.yml,*/*.yml<span class="o">}</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>==&gt; examples/ex1_enc/default.yml &lt;==
+---
+profile:
+  env: &quot;NO_ENV&quot;
+  product: &quot;NO_PRODUCT&quot;
+  
+
+==&gt; examples/ex1_enc/roles/mysql.yml &lt;==
+---
+profile:
+  product: &quot;mysql_server&quot;
+
+  mysql_database: &quot;NO_DATABASE&quot;
+  mysql_users:
+    - &quot;sysadmin@10.0.42%&quot;
+  mysql_port: 3306
+  mysql_cluster: False
+  
+
+==&gt; examples/ex1_enc/roles/web.yml &lt;==
+---
+profile:
+  product: &quot;httpd_server&quot;
+
+  web_top_domain: &quot;&quot;
+  web_app: &quot;NO_APP&quot;
+  web_port: 80
+  web_user_list:
+    - sysadmins
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops lookup -e <span class="nv">node</span><span class="o">=</span>web.infra.net -e <span class="nv">role</span><span class="o">=</span>web profile
+kheops lookup -e <span class="nv">node</span><span class="o">=</span>mysql.infra.net -e <span class="nv">role</span><span class="o">=</span>mysql profile
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>profile:
+  env: NO_ENV
+  product: httpd_server
+  web_top_domain: &#39;&#39;
+  web_app: NO_APP
+  web_port: 80
+  web_user_list:
+  - sysadmins
+
+profile:
+  env: NO_ENV
+  product: mysql_server
+  mysql_database: NO_DATABASE
+  mysql_users:
+  - sysadmin@10.0.42%
+  mysql_port: 3306
+  mysql_cluster: false
+</pre></div>
+</div>
+</section>
+<section id="per-node-override">
+<h2>Per node override<a class="headerlink" href="#per-node-override" title="Permalink to this headline"></a></h2>
+<p>It’s getting better, we can see that the profile key has been merged with the key values, across the different locations.</p>
+<p>However, we will have those placeholders, and we want to have personalized value, depending if it’s aweb server, it need an unique domain and some unique parameters. So let’s create a <code class="docutils literal notranslate"><span class="pre">nodes</span></code> directory and place some data inside.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir -p examples/<span class="nv">$KHEOPS_NAMESPACE</span>/nodes
+
+<span class="c1"># We create a new web role</span>
+cat &gt; examples/<span class="nv">$KHEOPS_NAMESPACE</span>/nodes/web.infra.net.yml <span class="s">&lt;&lt;EOF</span>
+<span class="s">---</span>
+<span class="s">profile:</span>
+<span class="s">  web_app: &#39;myapp&#39;</span>
+<span class="s">  web_user_list:</span>
+<span class="s">    - domain_org</span>
+<span class="s">    - domain_org_external</span>
+<span class="s">  </span>
+<span class="s">EOF</span>
+
+<span class="c1"># We create a new mysql role</span>
+cat &gt; examples/<span class="nv">$KHEOPS_NAMESPACE</span>/nodes/mysql.infra.net.yml <span class="s">&lt;&lt;EOF</span>
+<span class="s">---</span>
+<span class="s">profile:  </span>
+<span class="s">  mysql_database: &quot;app_domain_org&quot;</span>
+<span class="s">  mysql_users:</span>
+<span class="s">    - &quot;app_domain_org@10.0.51%&quot;</span>
+<span class="s">  </span>
+<span class="s">EOF</span>
+
+<span class="c1"># Let&#39;s inspect our hierarchy</span>
+tree examples/<span class="nv">$KHEOPS_NAMESPACE</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[01;34mexamples/ex1_enc[0m
+├── default.yml
+├── [01;34mnodes[0m
+│   ├── mysql.infra.net.yml
+│   └── web.infra.net.yml
+└── [01;34mroles[0m
+    ├── mysql.yml
+    └── web.yml
+
+2 directories, 5 files
+</pre></div>
+</div>
+<p>And we try again:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops lookup -e <span class="nv">node</span><span class="o">=</span>web.infra.net -e <span class="nv">role</span><span class="o">=</span>web profile
+kheops lookup -e <span class="nv">node</span><span class="o">=</span>mysql.infra.net -e <span class="nv">role</span><span class="o">=</span>mysql profile
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>profile:
+  env: NO_ENV
+  product: httpd_server
+  web_top_domain: &#39;&#39;
+  web_app: myapp
+  web_port: 80
+  web_user_list:
+  - domain_org
+  - domain_org_external
+
+profile:
+  env: NO_ENV
+  product: mysql_server
+  mysql_database: app_domain_org
+  mysql_users:
+  - app_domain_org@10.0.51%
+  mysql_port: 3306
+  mysql_cluster: false
+</pre></div>
+</div>
+</section>
+<section id="environment-override">
+<h2>Environment override<a class="headerlink" href="#environment-override" title="Permalink to this headline"></a></h2>
+<p>Let’s say you want to support environment, it’s the same:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># We create a new dev environment</span>
+cat &gt; examples/<span class="nv">$KHEOPS_NAMESPACE</span>/env_dev.yml <span class="s">&lt;&lt;EOF</span>
+<span class="s">---</span>
+<span class="s">profile:</span>
+<span class="s">  env: dev</span>
+<span class="s">  </span>
+<span class="s">  # We change the top domain for dev environment, and reduce the cache</span>
+<span class="s">  web_top_domain: dev.infra.net</span>
+<span class="s">  web_cache: 1m</span>
+<span class="s">  </span>
+<span class="s">  # We want a debug users</span>
+<span class="s">  web_user_list:</span>
+<span class="s">    - debug_user</span>
+<span class="s">  mysql_users:</span>
+<span class="s">    - debug@10.0.%</span>
+
+<span class="s">  debug: true</span>
+
+<span class="s">EOF</span>
+
+<span class="c1"># We create a new mysql role</span>
+cat &gt; examples/<span class="nv">$KHEOPS_NAMESPACE</span>/env_prod.yml <span class="s">&lt;&lt;EOF</span>
+<span class="s">---</span>
+<span class="s">profile:</span>
+<span class="s">  env: prod</span>
+<span class="s">  </span>
+<span class="s">  # On production environment, we always want to use public faced domain and 12 hour cache.</span>
+<span class="s">  web_top_domain: infra.com</span>
+<span class="s">  web_cache: 12h</span>
+<span class="s">  </span>
+<span class="s">EOF</span>
+
+<span class="c1"># Let&#39;s inspect our hierarchy</span>
+tree examples/<span class="nv">$KHEOPS_NAMESPACE</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[01;34mexamples/ex1_enc[0m
+├── default.yml
+├── env_dev.yml
+├── env_prod.yml
+├── [01;34mnodes[0m
+│   ├── mysql.infra.net.yml
+│   └── web.infra.net.yml
+└── [01;34mroles[0m
+    ├── mysql.yml
+    └── web.yml
+
+2 directories, 7 files
+</pre></div>
+</div>
+<p>So it’s become quite easy to compare the difference between environment, with a simple variable switch:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops lookup -e <span class="nv">node</span><span class="o">=</span>web.infra.net -e <span class="nv">role</span><span class="o">=</span>web -e <span class="nv">env</span><span class="o">=</span>prod profile
+kheops lookup -e <span class="nv">node</span><span class="o">=</span>web.infra.net -e <span class="nv">role</span><span class="o">=</span>web -e <span class="nv">env</span><span class="o">=</span>dev profile
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>profile:
+  env: prod
+  product: httpd_server
+  web_top_domain: infra.com
+  web_app: myapp
+  web_port: 80
+  web_user_list:
+  - domain_org
+  - domain_org_external
+  web_cache: 12h
+
+profile:
+  env: dev
+  product: httpd_server
+  web_top_domain: dev.infra.net
+  web_app: myapp
+  web_port: 80
+  web_user_list:
+  - domain_org
+  - domain_org_external
+  web_cache: 1m
+  mysql_users:
+  - debug@10.0.%
+  debug: true
+</pre></div>
+</div>
+<p>Same for mysql:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops lookup -e <span class="nv">node</span><span class="o">=</span>mysql.infra.net -e <span class="nv">role</span><span class="o">=</span>mysql -e <span class="nv">env</span><span class="o">=</span>prod profile
+kheops lookup -e <span class="nv">node</span><span class="o">=</span>mysql.infra.net -e <span class="nv">role</span><span class="o">=</span>mysql -e <span class="nv">env</span><span class="o">=</span>dev profile
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>profile:
+  env: prod
+  product: mysql_server
+  mysql_database: app_domain_org
+  mysql_users:
+  - app_domain_org@10.0.51%
+  mysql_port: 3306
+  mysql_cluster: false
+  web_top_domain: infra.com
+  web_cache: 12h
+
+profile:
+  env: dev
+  product: mysql_server
+  mysql_database: app_domain_org
+  mysql_users:
+  - app_domain_org@10.0.51%
+  mysql_port: 3306
+  mysql_cluster: false
+  web_top_domain: dev.infra.net
+  web_cache: 1m
+  web_user_list:
+  - debug_user
+  debug: true
+</pre></div>
+</div>
+<p>You have to keep in mind you can query the key with a different scope, and get different views:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops lookup profile
+
+<span class="nb">echo</span> <span class="s2">&quot;==&gt; Per environment view&quot;</span>
+kheops lookup -e <span class="nv">env</span><span class="o">=</span>prod profile
+kheops lookup -e <span class="nv">env</span><span class="o">=</span>dev profile
+
+<span class="nb">echo</span> <span class="s2">&quot;==&gt; Per role and  environment view&quot;</span>
+kheops lookup -e <span class="nv">role</span><span class="o">=</span>mysql -e <span class="nv">env</span><span class="o">=</span>prod profile
+kheops lookup -e <span class="nv">role</span><span class="o">=</span>web -e <span class="nv">env</span><span class="o">=</span>prod profile
+
+<span class="nb">echo</span> <span class="s2">&quot;==&gt; Per node view&quot;</span>
+kheops lookup -e <span class="nv">node</span><span class="o">=</span>web.infra.net -e <span class="nv">role</span><span class="o">=</span>web -e <span class="nv">env</span><span class="o">=</span>dev profile
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>profile:
+  env: NO_ENV
+  product: NO_PRODUCT
+
+==&gt; Per environment view
+profile:
+  env: prod
+  product: NO_PRODUCT
+  web_top_domain: infra.com
+  web_cache: 12h
+
+profile:
+  env: dev
+  product: NO_PRODUCT
+  web_top_domain: dev.infra.net
+  web_cache: 1m
+  web_user_list:
+  - debug_user
+  mysql_users:
+  - debug@10.0.%
+  debug: true
+
+==&gt; Per role and  environment view
+profile:
+  env: prod
+  product: mysql_server
+  mysql_database: NO_DATABASE
+  mysql_users:
+  - sysadmin@10.0.42%
+  mysql_port: 3306
+  mysql_cluster: false
+  web_top_domain: infra.com
+  web_cache: 12h
+
+profile:
+  env: prod
+  product: httpd_server
+  web_top_domain: infra.com
+  web_app: NO_APP
+  web_port: 80
+  web_user_list:
+  - sysadmins
+  web_cache: 12h
+
+==&gt; Per node view
+profile:
+  env: dev
+  product: httpd_server
+  web_top_domain: dev.infra.net
+  web_app: myapp
+  web_port: 80
+  web_user_list:
+  - domain_org
+  - domain_org_external
+  web_cache: 1m
+  mysql_users:
+  - debug@10.0.%
+  debug: true
+</pre></div>
+</div>
+<p>Even if somwaht clunky, this method can help to troubleshoot wrong data by dichotomy.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</section>
+<section id="tooling-and-applications">
+<h2>Tooling and applications<a class="headerlink" href="#tooling-and-applications" title="Permalink to this headline"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline"></a></h2>
+<p>Sometimes, it can may be hard to navigate across file and hierachy, but GNU Utils are here to help. There is a selection of small tips:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span> -x
+
+: Find where a key has been defined
+: <span class="o">==========================</span>
+grep -r <span class="s1">&#39;^profile:&#39;</span> examples/<span class="nv">$KHEOPS_NAMESPACE</span>
+
+
+: Find where a key has been defined and <span class="m">5</span> first lines
+: <span class="o">==========================</span>
+grep -r -A <span class="m">5</span> <span class="s1">&#39;web_user_list:&#39;</span> examples/<span class="nv">$KHEOPS_NAMESPACE</span>
+
+
+: Search from anything related to database
+: <span class="o">==========================</span>
+grep -R -C <span class="m">3</span>  <span class="s1">&#39;database&#39;</span> examples/<span class="nv">$KHEOPS_NAMESPACE</span>
+
+<span class="nb">set</span> +x
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+ : Find where a key has been defined
++ : ==========================
++ grep --colour=auto -r &#39;^profile:&#39; examples/ex1_enc
+[35m[Kexamples/ex1_enc/env_prod.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+[35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+[35m[Kexamples/ex1_enc/roles/web.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+[35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K  
+[35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+[35m[Kexamples/ex1_enc/default.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
+[35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K:[m[K[01;31m[Kprofile:[m[K
++ : Find where a key has been defined and 5 first lines
++ : ==========================
++ grep --colour=auto -r -A 5 web_user_list: examples/ex1_enc
+[35m[Kexamples/ex1_enc/roles/web.yml[m[K[36m[K:[m[K  [01;31m[Kweb_user_list:[m[K
+[35m[Kexamples/ex1_enc/roles/web.yml[m[K[36m[K-[m[K    - sysadmins
+[35m[Kexamples/ex1_enc/roles/web.yml[m[K[36m[K-[m[K  
+[36m[K--[m[K
+[35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K:[m[K  [01;31m[Kweb_user_list:[m[K
+[35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K-[m[K    - domain_org
+[35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K-[m[K    - domain_org_external
+[35m[Kexamples/ex1_enc/nodes/web.infra.net.yml[m[K[36m[K-[m[K  
+[36m[K--[m[K
+[35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K:[m[K  [01;31m[Kweb_user_list:[m[K
+[35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K    - debug_user
+[35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K  mysql_users:
+[35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K    - debug@10.0.%
+[35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K
+[35m[Kexamples/ex1_enc/env_dev.yml[m[K[36m[K-[m[K  debug: true
++ : Search from anything related to database
++ : ==========================
++ grep --colour=auto -R -C 3 database examples/ex1_enc
+[35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[Kprofile:
+[35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K  product: &quot;mysql_server&quot;
+[35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K
+[35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K:[m[K  mysql_[01;31m[Kdatabase[m[K: &quot;NO_DATABASE&quot;
+[35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K  mysql_users:
+[35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K    - &quot;sysadmin@10.0.42%&quot;
+[35m[Kexamples/ex1_enc/roles/mysql.yml[m[K[36m[K-[m[K  mysql_port: 3306
+[36m[K--[m[K
+[35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[K---
+[35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[Kprofile:  
+[35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K:[m[K  mysql_[01;31m[Kdatabase[m[K: &quot;app_domain_org&quot;
+[35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[K  mysql_users:
+[35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[K    - &quot;app_domain_org@10.0.51%&quot;
+[35m[Kexamples/ex1_enc/nodes/mysql.infra.net.yml[m[K[36m[K-[m[K  
++ set +x
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>The tail/head command is quite usefull to look at multiple files at the same time, it add a nice header for each file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>head -n <span class="m">999</span> examples/ex1_enc/roles/*
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>==&gt; examples/ex1_enc/roles/mysql.yml &lt;==
+---
+profile:
+  product: &quot;mysql_server&quot;
+
+  mysql_database: &quot;NO_DATABASE&quot;
+  mysql_users:
+    - &quot;sysadmin@10.0.42%&quot;
+  mysql_port: 3306
+  mysql_cluster: False
+  
+
+==&gt; examples/ex1_enc/roles/web.yml &lt;==
+---
+profile:
+  product: &quot;httpd_server&quot;
+
+  web_top_domain: &quot;&quot;
+  web_app: &quot;NO_APP&quot;
+  web_port: 80
+  web_user_list:
+    - sysadmins
+</pre></div>
+</div>
+<p>You can also have a view of all files with this command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">find</span> <span class="o">.</span> <span class="o">-</span><span class="nb">type</span> <span class="n">f</span><span class="o">|</span> <span class="n">xargs</span> <span class="n">head</span> <span class="o">-</span><span class="n">n</span> <span class="mi">999</span> <span class="o">|</span> <span class="n">less</span>
+</pre></div>
+</div>
+<p>From there, you will be able to have a nice overview of your data.</p>
+<p>You can even diff your change with this command. There is this simple trick to compare the data difference between 2 lookups:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>diff -u <span class="se">\</span>
+&lt;<span class="o">(</span>kheops lookup -e <span class="nv">node</span><span class="o">=</span>web.infra.net -e <span class="nv">role</span><span class="o">=</span>web -e <span class="nv">env</span><span class="o">=</span>prod profile<span class="o">)</span> <span class="se">\</span>
+&lt;<span class="o">(</span>kheops lookup -e <span class="nv">node</span><span class="o">=</span>web.infra.net -e <span class="nv">role</span><span class="o">=</span>web -e <span class="nv">env</span><span class="o">=</span>dev profile<span class="o">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>--- /dev/fd/63	2022-02-14 13:45:59.223619144 -0500
++++ /dev/fd/62	2022-02-14 13:45:59.223619144 -0500
+@@ -1,11 +1,14 @@
+ profile:
+-  env: prod
++  env: dev
+   product: httpd_server
+-  web_top_domain: infra.com
++  web_top_domain: dev.infra.net
+   web_app: myapp
+   web_port: 80
+   web_user_list:
+   - domain_org
+   - domain_org_external
+-  web_cache: 12h
++  web_cache: 1m
++  mysql_users:
++  - debug@10.0.%
++  debug: true
+</pre></div>
+</div>
+<p>You can also ask Kheops to explain you how he built the result, you can use the <code class="docutils literal notranslate"><span class="pre">-x</span></code> flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kheops lookup -e <span class="nv">role</span><span class="o">=</span>web profile -X
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>    INFO: Explain lookups:
++------------------------+------------------------------+
+| Config                 | Runtime                      |
++------------------------+------------------------------+
+|                        |                              |
+| Config:{               | Runtime:{                    |
+|   &quot;path&quot;: &quot;default&quot;,   |   &quot;scope&quot;: {                 |
+|   &quot;backend&quot;: &quot;file&quot;,   |     &quot;role&quot;: &quot;web&quot;            |
+|   &quot;continue&quot;: true     |   },                         |
+| }                      |   &quot;key&quot;: &quot;profile&quot;,          |
+|                        |   &quot;conf&quot;: {                  |
+|                        |     &quot;index&quot;: 0               |
+|                        |   },                         |
+|                        |   &quot;raw_path&quot;: &quot;default&quot;      |
+|                        | }                            |
+|                        |                              |
+| Config:{               | Runtime:{                    |
+|   &quot;path&quot;: &quot;roles/web&quot;, |   &quot;scope&quot;: {                 |
+|   &quot;backend&quot;: &quot;file&quot;,   |     &quot;role&quot;: &quot;web&quot;            |
+|   &quot;continue&quot;: true     |   },                         |
+| }                      |   &quot;key&quot;: &quot;profile&quot;,          |
+|                        |   &quot;conf&quot;: {                  |
+|                        |     &quot;index&quot;: 1               |
+|                        |   },                         |
+|                        |   &quot;raw_path&quot;: &quot;roles/{role}&quot; |
+|                        | }                            |
++------------------------+------------------------------+
+    INFO: Explain candidates:
++----------------------------------------------------------------------------------+-------------------------------+------------------------------+
+| Status                                                                           | Runtime                       | Key Value                    |
++----------------------------------------------------------------------------------+-------------------------------+------------------------------+
+|                                                                                  |                               |                              |
+| Status:{                                                                         | Runtime:{                     | Key:{                        |
+|   &quot;path&quot;: &quot;/home/jez/volumes/data/prj/bell/dev/kheops/examples/ex1_enc/defau ... |   &quot;scope&quot;: {                  |   &quot;env&quot;: &quot;NO_ENV&quot;,           |
+|   &quot;status&quot;: &quot;found&quot;,                                                             |     &quot;role&quot;: &quot;web&quot;             |   &quot;product&quot;: &quot;NO_PRODUCT&quot;    |
+|   &quot;rel_path&quot;: &quot;examples/ex1_enc/default.yml&quot;                                     |   },                          | }                            |
+| }                                                                                |   &quot;key&quot;: &quot;profile&quot;,           |                              |
+|                                                                                  |   &quot;conf&quot;: {                   |                              |
+|                                                                                  |     &quot;index&quot;: 0                |                              |
+|                                                                                  |   },                          |                              |
+|                                                                                  |   &quot;raw_path&quot;: &quot;default&quot;,      |                              |
+|                                                                                  |   &quot;backend_index&quot;: 0          |                              |
+|                                                                                  | }                             |                              |
+|                                                                                  |                               |                              |
+| Status:{                                                                         | Runtime:{                     | Key:{                        |
+|   &quot;path&quot;: &quot;/home/jez/volumes/data/prj/bell/dev/kheops/examples/ex1_enc/roles ... |   &quot;scope&quot;: {                  |   &quot;product&quot;: &quot;httpd_server&quot;, |
+|   &quot;status&quot;: &quot;found&quot;,                                                             |     &quot;role&quot;: &quot;web&quot;             |   &quot;web_top_domain&quot;: &quot;&quot;,      |
+|   &quot;rel_path&quot;: &quot;examples/ex1_enc/roles/web.yml&quot;                                   |   },                          |   &quot;web_app&quot;: &quot;NO_APP&quot;,       |
+| }                                                                                |   &quot;key&quot;: &quot;profile&quot;,           |   &quot;web_port&quot;: 80,            |
+|                                                                                  |   &quot;conf&quot;: {                   |   &quot;web_user_list&quot;: [         |
+|                                                                                  |     &quot;index&quot;: 1                |     &quot;sysadmins&quot;              |
+|                                                                                  |   },                          |   ]                          |
+|                                                                                  |   &quot;raw_path&quot;: &quot;roles/{role}&quot;, | }                            |
+|                                                                                  |   &quot;backend_index&quot;: 1          |                              |
+|                                                                                  | }                             |                              |
++----------------------------------------------------------------------------------+-------------------------------+------------------------------+
+profile:
+  env: NO_ENV
+  product: httpd_server
+  web_top_domain: &#39;&#39;
+  web_app: NO_APP
+  web_port: 80
+  web_user_list:
+  - sysadmins
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../docs/learn/index.html" class="btn btn-neutral float-left" title="Learn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../docs/learn/100.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Barbu IT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

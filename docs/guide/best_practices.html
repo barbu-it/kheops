@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn 104 &mdash; Khéops 0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Ansible" href="ansible/index.html" />
+    <link rel="prev" title="Guides" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Khéops
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../app/index.html">Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../learn/index.html">Learn</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Guides</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Learn 104</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ansible/index.html">Ansible</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">Python API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Khéops</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Guides</a> &raquo;</li>
+      <li>Learn 104</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/docs/guide/best_practices.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="learn-104">
+<h1>Learn 104<a class="headerlink" href="#learn-104" title="Permalink to this headline"></a></h1>
+<ul>
+<li><p>104: Best practices</p>
+<ul>
+<li><p>Going into IaC</p>
+<ul class="simple">
+<li><p>Use git to track your tree</p></li>
+</ul>
+<ul class="simple">
+<li><p>D.R.Y.</p>
+<ul>
+<li><p>Things are quite easily moving</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Code structure</p>
+<ul class="simple">
+<li><p>Profile and Class</p>
+<ul>
+<li><p>Role and profiles key lookup</p></li>
+</ul>
+</li>
+<li><p>Hierarchies</p>
+<ul>
+<li><p>Foreman</p></li>
+</ul>
+</li>
+<li><p>Use environnements, site, locatation …</p></li>
+<li><p>Common keys vs dedicated keys</p>
+<ul>
+<li><p>The profile key, default placeholder</p></li>
+</ul>
+</li>
+<li><p>The resource modele</p>
+<ul>
+<li><p>It’s like a puppet resource, a catalog of items to apply</p></li>
+<li><p>It’s possible to use this model with ansible, and it change radically the way Ansible can be used then. See integration.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Debugging</p>
+<ul class="simple">
+<li><p>Use the explain mode</p>
+<ul>
+<li><p>And trace mode</p></li>
+</ul>
+</li>
+<li><p>Use GNU tools</p>
+<ul>
+<li><p>tree</p></li>
+<li><p>grep -Rw <key> .</p></li>
+<li><p>git status -sb</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>With ansible.</p>
+<ul class="simple">
+<li><p>Use a strict naming scheme, apply your Ansible usual name schema into Kheops</p></li>
+<li><p>You can put some jinja variable into Kheops, Ansible will be able to replace and understand them during the runtime</p></li>
+<li><p>Dynamic inventories and ENC</p></li>
+<li><p>Apply products</p></li>
+<li><p>Apply roles/profiles pattern</p></li>
+<li><p>Use resource based roles =&gt; See my collection, it just works</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Guides" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ansible/index.html" class="btn btn-neutral float-right" title="Ansible" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Barbu IT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
